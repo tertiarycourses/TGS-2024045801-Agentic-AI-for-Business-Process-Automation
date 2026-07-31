@@ -5,6 +5,9 @@
 **Duration:** 2 days · 14 instructional hours
 **Conducted by:** Tertiary Infotech Academy Pte Ltd (UEN 201200696W)
 
+**Register:** [tertiarycourses.com.sg](https://www.tertiarycourses.com.sg/wsq-agentic-ai-for-business-process-automation.html) ·
+[MySkillsFuture course directory](https://www.myskillsfuture.gov.sg/content/portal/en/training-exchange/course-directory/course-detail.html?courseReferenceNumber=TGS-2024045801)
+
 Learners build five working automations in [n8n](https://n8n.io): a form-triggered workflow, a
 webhook-triggered AI agent behind a real website, an agentic chatbot bound by compliance rules, a
 human-in-the-loop approval chain, and a Retrieval-Augmented Generation chatbot grounded in an
@@ -67,6 +70,21 @@ Written Assessment (SAQ, 1 hour) covering the Knowledge statements, and a Practi
 
 > Assessment material is confidential. It is distributed via Google Drive only and is **never**
 > committed to this repository.
+
+## Repository layout
+
+```
+courseware/          the current build — deck, LP, LG (+ PDFs) and the LG Markdown mirror
+courseware/assets/   diagrams and screenshots placed on the slides
+courseware/archive/  superseded versions (kept locally, not tracked in git)
+labs/                the five hands-on labs — workflow JSON, websites and sample data
+.claude/skills/      the single-source build pipeline and the WSQ generators
+```
+
+Two folders are deliberately **not** in this repository:
+
+- `assessment/` — confidential question papers and answer keys; Google Drive only.
+- `reference/` — the source decks this courseware was derived from; third-party material.
 
 ---
 

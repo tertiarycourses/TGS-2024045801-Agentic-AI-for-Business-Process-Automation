@@ -18,3 +18,12 @@ __pycache__/
 
 # Superseded courseware versions are kept on disk but not in git.
 courseware/archive/
+
+# Source material this courseware was derived from — third-party, not ours to republish.
+**/reference/
+# ...but the wsq-slides reference IMPLEMENTATION is toolchain code the skill runs.
+!.claude/skills/**/reference/
+!.claude/skills/**/reference/**
+
+# Distribution archives (rebuildable — never pushed to GitHub)
+*.zip

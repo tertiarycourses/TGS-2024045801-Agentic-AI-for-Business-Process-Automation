@@ -54,5 +54,11 @@ echo "==> Render PDFs (pass 2 — with built TOC)"
 "$SOFFICE" --headless --convert-to pdf --outdir "$CW" "$LP" >/dev/null 2>&1
 "$SOFFICE" --headless --convert-to pdf --outdir "$CW" "$LG" >/dev/null 2>&1
 
+echo "==> Alignment test (PPT / LP / LG / labs must agree)"
+python3 "$HERE/check_alignment.py" || {
+  echo "!! ALIGNMENT FAILED — fix the issues above before shipping this build." >&2
+  exit 1
+}
+
 echo "==> Done. Artifacts in courseware/:"
 ls -1 "$CW"/*.pptx "$CW"/*.docx "$CW"/*.pdf

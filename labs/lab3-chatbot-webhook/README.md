@@ -28,7 +28,7 @@ The firm wants a chatbot. Compliance wants two things from it, non-negotiably:
 
 ## What you build
 
-Six nodes. One webhook, one agent, one reply.
+Seven nodes. One webhook in, the agent with its chat model and memory, one reply out.
 
 ```
    chat widget ──POST──▶ Chat Webhook ──▶ Normalize Chat Message ──▶ Investment Advisor AI

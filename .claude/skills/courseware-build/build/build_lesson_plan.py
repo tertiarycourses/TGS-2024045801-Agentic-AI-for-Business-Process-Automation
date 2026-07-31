@@ -64,10 +64,10 @@ SCHEDULE = {
      "Topic 1 (continued) — What is an AI agent: model, system instruction, memory and tools; "
      "webhooks as the front door; structured output. "+S("topic1_agent")),
     ("14:15","15:30",75,"lab",
-     f"Hands-on Lab 1 — {lab(1)['title']}. "+S("lab1")),
+     f"Hands-on {lab(1)['title']}. "+S("lab1")),
     ("15:30","15:45",15,"break","Tea break"),
     ("15:45","17:30",105,"lab",
-     f"Hands-on Lab 2 — {lab(2)['title']}. "+S("lab2")),
+     f"Hands-on {lab(2)['title']}. "+S("lab2")),
     ("17:30","18:00",30,"recap","Day 1 recap, Q&A and PM digital attendance"),
  ]),
  2: (C.DAY_THEMES[2], [
@@ -77,20 +77,20 @@ SCHEDULE = {
      "agentic automation, safe chatbot design and memory. "+S("topic2_chatbot")),
     ("10:15","10:30",15,"break","Tea break"),
     ("10:30","12:00",90,"lab",
-     f"Hands-on Lab 3 — {lab(3)['title']}: the contact gate and the four compliance probes. "
+     f"Hands-on {lab(3)['title']}: the contact gate and the four compliance probes. "
      +S("lab3")),
     ("12:00","13:00",60,"lunch","Lunch break"),
     ("13:00","13:45",45,"topic",
      "Topic 2 (continued) — Human in the loop: when a human belongs in the workflow, the approval "
      "pattern and building the accountability trail. "+S("topic2_hitl")),
     ("13:45","15:00",75,"lab",
-     f"Hands-on Lab 4 — {lab(4)['title']}: the approve and decline paths. "+S("lab4")),
+     f"Hands-on {lab(4)['title']}: the approve and decline paths. "+S("lab4")),
     ("15:00","15:15",15,"break","Tea break"),
     ("15:15","16:00",45,"topic",
      "Topic 3 — Retrieval-Augmented Generation: tokenization, embeddings, vector stores, chunking "
      "and grounding against hallucination. "+S("topic3_concepts")),
     ("16:00","17:15",75,"lab",
-     f"Hands-on Lab 5 — {lab(5)['title']}: ingestion and the grounded chatbot. "+S("lab5")),
+     f"Hands-on {lab(5)['title']}: ingestion and the grounded chatbot. "+S("lab5")),
     ("17:15","17:30",15,"recap",
      "Course recap, taking it back to work, Q&A. "+S("wrapup")),
     ("17:30","17:45",15,"assess",

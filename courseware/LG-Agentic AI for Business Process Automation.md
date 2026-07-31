@@ -400,7 +400,7 @@ Deck reference: Slides 90–105.
 
 **Goal**
 
-A Singapore investment advisory firm wants a chatbot on its lead-magnet website. Compliance imposes two non-negotiable rules: no visitor gets an answer until the firm can contact them, and the chatbot must never give financial advice. You build a six-node agentic workflow that enforces both — a contact gate, a fixed FAQ, and a refusal rule.
+A Singapore investment advisory firm wants a chatbot on its lead-magnet website. Compliance imposes two non-negotiable rules: no visitor gets an answer until the firm can contact them, and the chatbot must never give financial advice. You build a compact agentic workflow that enforces both — a contact gate, a fixed FAQ, and a refusal rule.
 
 **What you'll build**
 
@@ -417,7 +417,7 @@ Chat Webhook  →  Normalize  →  AI Agent (+ model + memory)  →  Respond to 
 **Step-by-step**
 
 1. Choose Workflows → Import from File and select lab3-chatbot-webhooks.json.
-   > *Why this step:* Six nodes only. The intelligence is in the system message, not in the size of the canvas.
+   > *Why this step:* A small canvas. The intelligence is in the system message, not in the number of nodes.
 
 2. Open Google Gemini Chat Model, select your Gemini credential, and confirm the model is gemini-2.5-flash with temperature 0.2.
    > *Why this step:* Low temperature keeps a compliance-bound chatbot consistent. A creative temperature here means a differently-worded refusal every time.

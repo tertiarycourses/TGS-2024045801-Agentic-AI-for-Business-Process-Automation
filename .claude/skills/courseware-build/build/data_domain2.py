@@ -9,7 +9,7 @@ DOMAIN2 = [
         objective="deploy an agentic chatbot on a website that operates within regulatory limits (A1, A2, K7, K8)",
         desc=("A Singapore investment advisory firm wants a chatbot on its lead-magnet website. "
               "Compliance imposes two non-negotiable rules: no visitor gets an answer until the firm can "
-              "contact them, and the chatbot must never give financial advice. You build a six-node "
+              "contact them, and the chatbot must never give financial advice. You build a compact "
               "agentic workflow that enforces both — a contact gate, a fixed FAQ, and a refusal rule."),
         build="Chat Webhook  →  Normalize  →  AI Agent (+ model + memory)  →  Respond to Chat",
         services="n8n Webhook, AI Agent, Google Gemini, Window Buffer Memory, Code node",
@@ -18,11 +18,12 @@ DOMAIN2 = [
                 "The Investment Advisor site with the chat widget open. Note the contact gate in "
                 "action — it asks for the visitor's name before it will answer anything.")],
         flows=[("flow-lab3.png",
-                "Six nodes: one webhook in, one agent with memory, one reply out. There is deliberately no "
+                "Seven nodes: a webhook in, a Set node, the agent with its chat model and memory, a response "
+                "body and a reply out. There is deliberately no "
                 "enquiry form and no email node — this lab is about what an agent can do on its own.")],
         steps=[
             ("Choose Workflows → Import from File and select lab3-chatbot-webhooks.json.", "",
-             "Six nodes only. The intelligence is in the system message, not in the size of the canvas."),
+             "A small canvas. The intelligence is in the system message, not in the number of nodes."),
             ("Open Google Gemini Chat Model, select your Gemini credential, and confirm the model is gemini-2.5-flash with temperature 0.2.", "",
              "Low temperature keeps a compliance-bound chatbot consistent. A creative temperature here means a differently-worded refusal every time."),
             ("Open the Chat Webhook node: note the path investment-advisor-chat and that Allowed Origins (CORS) is set to *.", "",

@@ -177,8 +177,13 @@ def tile_grid(title,items,kicker=None,cols=2,size=15,icons=None,accent=BLUE):
         txt(s,x+Inches(0.28),int(y+ch/2-bd/2),bd,bd,[[(ic,19,WHITE,True)]],align=PP_ALIGN.CENTER,anchor=MSO_ANCHOR.MIDDLE)
         tx=x+Inches(1.08); tw=cw-Inches(1.32)
         if isinstance(it,tuple):
+            # Shrink a long heading rather than let it wrap and push the body past
+            # the tile's bottom border. ~0.085in per char at (size+2)pt Arial bold.
+            hsize=size+2
+            avail_chars=int(tw/Inches(0.085)/((size+2)/15.0))
+            if len(it[0])>avail_chars: hsize=max(size-1, size+2-3)
             txt(s,tx,int(y+Inches(0.14)),tw,int(ch-Inches(0.2)),
-                [[(it[0],size+2,INK,True)],[(it[1],size-2,GREY,False)]],anchor=MSO_ANCHOR.MIDDLE,space=3)
+                [[(it[0],hsize,INK,True)],[(it[1],size-2,GREY,False)]],anchor=MSO_ANCHOR.MIDDLE,space=3)
         else:
             txt(s,tx,int(y+Inches(0.1)),tw,int(ch-Inches(0.16)),[[(it,size,INK,False)]],anchor=MSO_ANCHOR.MIDDLE)
     footer(s); return s
@@ -707,9 +712,10 @@ for t in C.TOPICS:
     # Topic recap: what you can now do, plus the key takeaways from each lab.
     # A takeaway may be a plain string (rendered as body text with no heading) or a
     # (label, text) pair. Never derive a heading by truncating the body — that
-    # produces a clipped duplicate of the sentence beneath it.
-    recap=[(f"Lab {a['num']} — you can now "+a["objective"].split("(")[0].strip(),
-            a["learned"][0][1] if isinstance(a["learned"][0],tuple) else a["learned"][0])
+    # produces a clipped duplicate of the sentence beneath it. Headings stay SHORT
+    # so they cannot wrap and push the body past the tile border.
+    recap=[(a["learned"][0][0] if isinstance(a["learned"][0],tuple) else f"Lab {a['num']}",
+            f"Lab {a['num']} — you can now "+a["objective"].split("(")[0].strip()+".")
            for a in acts]
     for a in acts:
         for x in a["learned"][1:3]:

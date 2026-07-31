@@ -60,8 +60,20 @@ deck, Lesson Plan and Learner Guide can never drift apart.
 bash .claude/skills/courseware-build/build/build_courseware.sh
 ```
 
-The build asserts that the Lesson Plan's slide references match the deck it just produced, and that
-each day totals the stated instructional hours. It fails loudly if either is untrue.
+The build fails loudly rather than shipping courseware that disagrees with itself. It asserts that:
+
+- the Lesson Plan's slide references match the deck it just produced;
+- each training day totals the stated instructional hours;
+- and — via `check_alignment.py` — that the PPT, LP, LG and `labs/` all agree:
+  every cited workflow file and n8n node name exists in the lab's JSON, no lab number is
+  duplicated, every LP slide range starts on the slide it claims, and the course code, TSC,
+  UEN and version read the same in all four artifacts.
+
+Run the alignment test on its own with:
+
+```bash
+python3 .claude/skills/courseware-build/build/check_alignment.py
+```
 
 ## Assessment
 

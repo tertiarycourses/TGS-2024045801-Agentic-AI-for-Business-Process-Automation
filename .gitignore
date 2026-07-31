@@ -1,0 +1,20 @@
+# Assessment material is CONFIDENTIAL — Google Drive only, never GitHub.
+assessment/
+**/assessment/
+*Answer*.docx
+*answer-key*
+*Marking Guide*
+
+# macOS / Office junk
+.DS_Store
+**/.DS_Store
+~$*
+.~lock.*#
+
+# Build scratch
+__pycache__/
+*.pyc
+.playwright-mcp/
+
+# Superseded courseware versions are kept on disk but not in git.
+courseware/archive/

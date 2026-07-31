@@ -1,0 +1,118 @@
+"""Topic 2 — Agentic Chatbot and Human in the Loop. Labs 3 and 4."""
+
+DOMAIN2 = [
+    dict(
+        num=3,
+        topic=2,
+        title="Lab 3 — Chatbot Webhook (Investment Advisor)",
+        short="Lab 3 — Chatbot Webhook",
+        objective="deploy an agentic chatbot on a website that operates within regulatory limits (A1, A2, K7, K8)",
+        desc=("A Singapore investment advisory firm wants a chatbot on its lead-magnet website. "
+              "Compliance imposes two non-negotiable rules: no visitor gets an answer until the firm can "
+              "contact them, and the chatbot must never give financial advice. You build a six-node "
+              "agentic workflow that enforces both — a contact gate, a fixed FAQ, and a refusal rule."),
+        build="Chat Webhook  →  Normalize  →  AI Agent (+ model + memory)  →  Respond to Chat",
+        services="n8n Webhook, AI Agent, Google Gemini, Window Buffer Memory, Code node",
+        folder="lab3-chatbot-webhook",
+        flows=[("flow-lab3.png",
+                "Six nodes: one webhook in, one agent with memory, one reply out. There is deliberately no "
+                "enquiry form and no email node — this lab is about what an agent can do on its own.")],
+        steps=[
+            ("Choose Workflows → Import from File and select lab3-chatbot-webhooks.json.", "",
+             "Six nodes only. The intelligence is in the system message, not in the size of the canvas."),
+            ("Open Google Gemini Chat Model, select your Gemini credential, and confirm the model is gemini-2.5-flash with temperature 0.2.", "",
+             "Low temperature keeps a compliance-bound chatbot consistent. A creative temperature here means a differently-worded refusal every time."),
+            ("Open the Chat Webhook node: note the path investment-advisor-chat and that Allowed Origins (CORS) is set to *.", "",
+             "Without CORS the workflow runs perfectly and the browser still shows 'Failed to fetch' — the reply is blocked on the way back."),
+            ("Open Investment Advisor AI and read the contact gate — the agent must collect name, telephone and email before answering anything.", "",
+             "The browser enforces the same gate. Ask yourself which of the two you would trust if you could keep only one — and which runs on a machine you control."),
+            ("Read the non-advisory rule: never recommend a product, predict a return, guarantee an outcome, or advise on the visitor's own circumstances.", "",
+             "These six prohibitions are a compliance control, not prompt-engineering polish. The firm is not licensed to give this advice."),
+            ("Read the nine FAQ pairs written into the system message, and note why they live in the prompt rather than in a vector store.", "",
+             "Nine short answers cost nothing to retrieve and a compliance officer can review them in one sitting. RAG is for knowledge too large or too changeable for that."),
+            ("Open Website Chat Memory and note that it is keyed on sessionId, so two visitors never see each other's conversation.", "",
+             "Contrast with Lab 2's onboarding agent, which has no memory at all — there, one applicant's data must never influence the next decision."),
+            ("Save and Activate the workflow, then copy the webhook Production URL.", "",
+             "The widget must work for every visitor, so it needs the Production URL rather than the single-shot Test URL."),
+            ("Serve the website folder and open it in your browser.", "python3 -m http.server 8000",
+             "Serving over http:// matches how the real site would run, and keeps the browser's security rules realistic."),
+            ("Scroll to Lab configuration, paste your webhook URL, then click Ask Advisor and complete the name, phone and email prompts.", "",
+             "Notice the suggested questions stay hidden until the contact gate is passed — there is no path to the agent that skips it."),
+            ("Work through sample-questions.csv, paying particular attention to the four compliance probes TC4 to TC7.", "",
+             "TC4 to TC7 are the ones that matter. A fluent, helpful answer to any of them is a regulatory failure."),
+        ],
+        test=("Ask 'Can you guarantee returns?' and 'Which stock should I buy?'. The agent must decline "
+              "both and offer a consultation. Then ask a question before giving your details — it must "
+              "ask for the missing detail and answer nothing."),
+        learned=[
+            ("The system message",
+             "An agentic chatbot's system message is a compliance control, not just a prompt."),
+            ("Defence in depth",
+             "The same rule enforced in the browser and in the agent is deliberate redundancy — only one of them runs on a machine you control."),
+            ("Session-keyed memory",
+             "Session-keyed memory gives context to follow-up questions without leaking between visitors."),
+            ("Prompt or RAG?",
+             "A small fixed FAQ belongs in the prompt; RAG is for knowledge too large or too changeable for that."),
+        ],
+    ),
+    dict(
+        num=4,
+        topic=2,
+        title="Lab 4 — Human in the Loop (Client Rapport Assistant)",
+        short="Lab 4 — Human in the Loop",
+        objective="apply a human approval gate so no AI-drafted communication is sent unsupervised (A1, A2, A3, K7, K8)",
+        desc=("Meridian Asset Management's relationship managers take three days to answer worried "
+              "clients. You build an agent that reads the client's concern and emotional tone, raises "
+              "compliance flags, and drafts a strictly non-advisory reply — but sends nothing. A licensed "
+              "manager receives the draft by email and clicks Approve or Decline. Only then does anything "
+              "reach the client; a decline reassigns the ticket to a named human."),
+        build="Webhook → Agent → Acknowledge → Log Draft → RM Approval (Send & Wait) → IF → Send / Reassign",
+        services="n8n Webhook, AI Agent, Google Gemini, Gmail Send-and-Wait, Google Sheets, IF node",
+        folder="lab4-human-in-the-loop",
+        flows=[("flow-lab4.png",
+                "The top row is the agent's territory — it classifies, flags and drafts. The bottom row is the "
+                "human's: the workflow pauses on RM Approval until a licensed person clicks Approve or Decline.")],
+        steps=[
+            ("Create a Google Sheet named exactly 'Meridian Client Rapport' with three tabs: Drafts, Approved_Replies and Handover_Queue.", "",
+             "Three tabs, not one. Separating what the agent proposed from what a human authorised is what makes the trail auditable."),
+            ("Import each of drafts.csv, approved-replies.csv and handover-queue.csv into the matching tab with File → Import → Replace current sheet, turning OFF 'Convert text to numbers, dates and formulas'.", "",
+             "Leave the conversion on and Sheets mangles reference numbers and dates into its own formats."),
+            ("Choose Workflows → Import from File and select lab4-human-in-the-loop.json.", "",
+             "Thirteen nodes, one agent, one human gate. Trace the two paths out of the IF node before you run it."),
+            ("Repoint the three Google Sheets nodes — Log Draft, Log Approved Reply and Assign to Human Agent — at YOUR spreadsheet.", "",
+             "They ship with a placeholder sheet ID and will fail until you change all three."),
+            ("Replace REPLACE_WITH_YOUR_EMAIL@example.com with your own address in RM Approval (Send To), Email Human Agent (Send To), Log Approved Reply and Assign to Human Agent.", "",
+             "You are playing the relationship manager. Four fields across four nodes — miss one and the approval email goes nowhere."),
+            ("Open Rapport AI Agent and read the six prohibitions — no recommendation, no forecast, no guarantee, no suitability claim, no market timing, no invented figures.", "",
+             "'When in doubt, say less and offer the call' does more compliance work than the six prohibitions above it."),
+            ("Read the six compliance flags and note which four escalate: ADVICE_REQUESTED, GUARANTEE_SOUGHT, VULNERABLE_CLIENT and LEGAL_OR_MEDIA_THREAT.", "",
+             "Those four cannot be answered by a drafted email at all. The correct output is a draft that says so and offers a call."),
+            ("Open Draft Parser and note that emotionalTone and urgency are enumerated fields, not prose — that is what lets a queue be sorted.", "",
+             "A manager needs to see at a glance that the angriest client has been waiting longest. Prose cannot be sorted."),
+            ("Open Send Approved Reply and find the regulatory disclaimer in the HTML letter. Note that the agent fills only the draftReply slot and never touches the disclaimer.", "",
+             "The most legally important sentence in the workflow is the one the model is not allowed anywhere near."),
+            ("Serve the website folder and open it in your browser.", "python3 -m http.server 8000",
+             "The page must load from a real http:// origin. Opening the file directly gives a file:// origin that CORS will reject."),
+            ("Paste your webhook URL into Lab configuration, choose TC2 from the demo dropdown, enter your own email and send.", "",
+             "TC2 asks 'what should I do?' — the case that must escalate. Use your own address; the reply is a real email."),
+            ("Observe three things: the widget's receipt, a new row in Drafts, and an approval email in your inbox with Approve and Decline buttons.", "",
+             "The draft now exists and no human has seen it. That gap is exactly what the Drafts tab is there to record."),
+            ("Look at the n8n canvas — the execution is paused on RM Approval and will stay there until a human decides. Click Approve and confirm the reply is sent and logged.", "",
+             "That pause is the entire lesson. The agent did everything except the one thing that mattered."),
+            ("Run TC4 and click Decline instead. Confirm nothing is sent to the client, the ticket lands in Handover_Queue with a named assignee, and that person is emailed.", "",
+             "A decline is a reassignment, not a deletion. The difference between a queue and an assignment is whether anyone is accountable for the silence."),
+        ],
+        test=("Run all eight rows of sample-queries.csv. When you are done Drafts has 8 rows, "
+              "Approved_Replies has 5 and Handover_Queue has 3 — and no accountability column is empty."),
+        learned=[
+            ("The approval gate",
+             "A Send-and-Wait node pauses the workflow until a named person authorises the action."),
+            ("Two separate logs",
+             "Separating what the agent proposed from what a human approved is what makes the trail auditable."),
+            ("A decline reassigns",
+             "A decline is a reassignment, not a deletion — someone must still owe the client an answer."),
+            ("Keep the model out",
+             "The most legally important sentence in a workflow should be the one the model cannot touch."),
+        ],
+    ),
+]

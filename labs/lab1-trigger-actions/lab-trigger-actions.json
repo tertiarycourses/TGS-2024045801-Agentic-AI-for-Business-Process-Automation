@@ -1,0 +1,63 @@
+{
+  "name": "Activity 1 — Flyer with QR Code (Form -> Email)",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.6,
+      "position": [
+        0,
+        0
+      ],
+      "id": "d2a35587-9bae-4f14-9bae-ce7dc4c134b3",
+      "name": "On form submission",
+      "webhookId": "95a0bf42-21c5-4b50-9e40-74929782c1fc"
+    },
+    {
+      "parameters": {
+        "subject": "New Enquiry",
+        "message": "=Hi <br> <br>\n\nThere is a new event signup. Below is the info: <br> <br>\n\nName:{{ $json.Name }} <br>\nEmail:{{ $json.Email }} <br>\nTel:{{ $json.Phone }} <br>\nMessage:{{ $json.Message }} <br>\n\n <br>\nAdmin  <br>\nABC Pte Ltd",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        208,
+        0
+      ],
+      "id": "94283169-398b-4b91-8029-358175ed6e10",
+      "name": "Send a message",
+      "webhookId": "03a340b8-7cae-4d9e-9bac-f89dd2a8b570",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "xhglhOJK9h9Yy6Fg",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "c0ddb9a7-8fd7-4a4f-a072-2d261b260ea9",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "fcdd11be6122db515fd1e031acff4a3eeab5f077f43f29bb025528511f775668"
+  },
+  "nodeGroups": [],
+  "id": "OhqBHtnN259s4BN4",
+  "tags": []
+}

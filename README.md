@@ -41,12 +41,12 @@ organisation's own documents.
 
 ## Courseware
 
-Current version **v1.1** — all artifacts live in [`courseware/`](courseware/); superseded versions are
+Current version **v1.2** — all artifacts live in [`courseware/`](courseware/); superseded versions are
 moved to `courseware/archive/`.
 
 | Artifact | File |
 |---|---|
-| Trainer slide deck | `courseware/Agentic AI for Business Process Automation-v1.1.pptx` (+ `.pdf`) |
+| Trainer slide deck | `courseware/Agentic AI for Business Process Automation-v1.2.pptx` (+ `.pdf`) |
 | Lesson Plan | `courseware/LP-Agentic AI for Business Process Automation.docx` (+ `.pdf`) |
 | Learner Guide | `courseware/LG-Agentic AI for Business Process Automation.docx` (+ `.pdf`) |
 | Learner Guide (Markdown mirror) | `courseware/LG-Agentic AI for Business Process Automation.md` |

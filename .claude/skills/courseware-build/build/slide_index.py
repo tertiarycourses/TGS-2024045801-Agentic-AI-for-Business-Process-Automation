@@ -97,6 +97,7 @@ for tp in C.TOPICS:
     for a in [x for x in ACT if x["topic"] == tnum]:
         l0 = _n + 1
         _adv()                               # activity overview
+        _adv(len(a.get("site", [])))         # application screenshot(s)
         _adv(len(a.get("flows", [])))        # workflow diagram(s)
         _adv(len(a["steps"]))                # step slides
         _adv()                               # test slide

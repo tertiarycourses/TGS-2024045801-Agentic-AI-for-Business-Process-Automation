@@ -61,9 +61,11 @@ VC_ROWS = [
   "Initial release — Learner Guide for Agentic AI for Business Process Automation, covering the "
   "five hands-on labs across n8n fundamentals, AI agents, agentic chatbots, human-in-the-loop "
   "approval and RAG. Aligned to TSC " + C.TSC_CODE + ".", C.TRAINER),
- (C.VERSION.lstrip("v"), C.VERSION_DATE,
+ ("1.1", "1 August 2026",
   "Added a 'Why this step' note to every lab step; lab headings de-duplicated; version-control "
-  "record added to the Markdown mirror and the mirror relocated beside the DOCX.", C.TRAINER),
+  "record added to the Markdown mirror and the mirror relocated beside the DOCX.", "Dr. Alfred Ang"),
+ (C.VERSION.lstrip("v"), C.VERSION_DATE,
+  """Added a screenshot of each lab's application — the four lab websites with their chat widgets open, plus the Lab 1 n8n canvas and sample flyer — to the slide deck and the Learner Guide.""", C.TRAINER),
 ]
 
 # ================================================================ content
@@ -365,6 +367,8 @@ for t in C.TOPICS:
         p(a["desc"])
         h3("What you'll build")
         p(a["build"]+f"   (Tools: {a['services']}.)")
+        for fn,cap in a.get("site",[]):
+            image(fn,cap)
         for fn,cap in LAB_FLOW_IMAGES.get(a["num"],[]):
             image(fn,cap)
         h3("Step-by-step")

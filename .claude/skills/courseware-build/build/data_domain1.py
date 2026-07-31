@@ -14,6 +14,12 @@ DOMAIN1 = [
         build="Form Trigger  →  Gmail (Send a message)",
         services="n8n Form Trigger, Gmail (OAuth2), Smart QR Code Generator",
         folder="lab1-trigger-actions",
+        site=[("site-lab1.png",
+                "The finished Lab 1 workflow on the n8n canvas — the Form Trigger fires on each "
+                "submission and the Gmail node sends the details to the administrator."),
+               ("site-lab1-flyer.png",
+                "A sample event flyer from a previous class. The QR code encodes the form's "
+                "Production URL, so anyone can sign up by scanning it with a phone.")],
         flows=[("flow-lab1.png",
                 "Two nodes. The Form Trigger decides WHEN the workflow runs; the Gmail node decides WHAT it does.")],
         steps=[
@@ -67,6 +73,9 @@ DOMAIN1 = [
         build="Webhook  →  Normalise  →  AI Agent (+3 tools)  →  Log Decision  →  Respond to Website",
         services="n8n Webhook, AI Agent, Google Gemini, Google Sheets, Gmail, Structured Output Parser",
         folder="lab2-webhook-agent",
+        site=[("site-lab2.png",
+                "The Marina Trust Bank site the webhook sits behind. The applicant submits here, the "
+                "AI Agent decides, and the page renders the decision as a coloured card.")],
         flows=[("flow-lab2.png",
                 "The main chain runs left to right; the three tools below are attached to the agent's Tool input — "
                 "the agent decides which to call, and when.")],

@@ -115,10 +115,12 @@ prodoc.add_version_control(doc,[
  ("1.0","31 July 2026",
   "Initial release — 2-day (14-hour) lesson plan for Agentic AI for Business Process Automation, "
   "aligned to the 5 hands-on labs and TSC "+C.TSC_CODE+".",C.TRAINER),
- (C.VERSION.lstrip("v"),C.VERSION_DATE,
+ ("1.1","1 August 2026",
   "Day 2 rescheduled so the final assessment follows instruction within the training day; daily "
   "timing now driven from a single source shared with the slide deck; assessment time stated "
-  "separately from instructional time.",C.TRAINER),
+  "separately from instructional time.","Dr. Alfred Ang"),
+ (C.VERSION.lstrip("v"),C.VERSION_DATE,
+  """Added a screenshot of each lab's application — the four lab websites with their chat widgets open, plus the Lab 1 n8n canvas and sample flyer — to the slide deck and the Learner Guide.""",C.TRAINER),
 ])
 prodoc.add_toc(doc)
 

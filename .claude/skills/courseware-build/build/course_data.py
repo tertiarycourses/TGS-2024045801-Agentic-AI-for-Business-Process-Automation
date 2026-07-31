@@ -12,7 +12,7 @@ Guiding principle: the course material must be 100% aligned to the WSQ TSC
 TITLE        = "Agentic AI for Business Process Automation"
 SHORT_TITLE  = "Agentic AI for Business Process Automation"   # used in output filenames
 COURSE_CODE  = "TGS-2024045801"
-VERSION      = "v1.1"
+VERSION      = "v1.2"
 VERSION_DATE = "1 August 2026"
 ORG          = "Tertiary Infotech Academy Pte Ltd"
 UEN          = "UEN: 201200696W"

@@ -14,6 +14,9 @@ DOMAIN2 = [
         build="Chat Webhook  →  Normalize  →  AI Agent (+ model + memory)  →  Respond to Chat",
         services="n8n Webhook, AI Agent, Google Gemini, Window Buffer Memory, Code node",
         folder="lab3-chatbot-webhook",
+        site=[("site-lab3.png",
+                "The Investment Advisor site with the chat widget open. Note the contact gate in "
+                "action — it asks for the visitor's name before it will answer anything.")],
         flows=[("flow-lab3.png",
                 "Six nodes: one webhook in, one agent with memory, one reply out. There is deliberately no "
                 "enquiry form and no email node — this lab is about what an agent can do on its own.")],
@@ -69,6 +72,9 @@ DOMAIN2 = [
         build="Webhook → Agent → Acknowledge → Log Draft → RM Approval (Send & Wait) → IF → Send / Reassign",
         services="n8n Webhook, AI Agent, Google Gemini, Gmail Send-and-Wait, Google Sheets, IF node",
         folder="lab4-human-in-the-loop",
+        site=[("site-lab4.png",
+                "The Meridian client portal. The widget states plainly that a licensed manager "
+                "reviews every reply — the human-in-the-loop promise made visible to the client.")],
         flows=[("flow-lab4.png",
                 "The top row is the agent's territory — it classifies, flags and drafts. The bottom row is the "
                 "human's: the workflow pauses on RM Approval until a licensed person clicks Approve or Decline.")],

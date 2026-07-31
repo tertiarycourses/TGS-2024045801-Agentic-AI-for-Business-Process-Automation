@@ -15,6 +15,9 @@ DOMAIN3 = [
         build="Ingestion: Drive → Split → Embed → Vector Store   ·   Answering: Webhook → Agent + Retriever → Respond",
         services="n8n Simple Vector Store, Google Gemini Embeddings, Google Drive, AI Agent, Webhook",
         folder="lab5-rag",
+        site=[("site-lab5.png",
+                "The Cook & Bake Academy site with the course assistant open. Every answer it gives "
+                "is grounded in the 20 brochures you ingested into the vector store.")],
         flows=[("flow-lab5-ingest.png",
                 "Ingestion — run once by hand. Twenty brochures are listed, downloaded, split (one brochure = "
                 "one chunk), embedded into 3072-dimensional vectors and inserted into the store."),

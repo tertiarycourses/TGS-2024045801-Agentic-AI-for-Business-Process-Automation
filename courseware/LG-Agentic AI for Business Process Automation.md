@@ -1,6 +1,6 @@
 # Agentic AI for Business Process Automation — Learner Guide
 
-**WSQ Course Code:** TGS-2024045801  |  **TSC:** Artificial Intelligence Application (AER-TEM-3026-1.1)  |  **Conducted by:** Tertiary Infotech Academy Pte Ltd (UEN 201200696W)  |  **Version v1.1 · 1 August 2026**
+**WSQ Course Code:** TGS-2024045801  |  **TSC:** Artificial Intelligence Application (AER-TEM-3026-1.1)  |  **Conducted by:** Tertiary Infotech Academy Pte Ltd (UEN 201200696W)  |  **Version v1.2 · 1 August 2026**
 
 ## Document Version Control Record
 
@@ -8,6 +8,7 @@
 |---|---|---|---|
 | 1.0 | 31 July 2026 | Initial release — Learner Guide for Agentic AI for Business Process Automation, covering the five hands-on labs across n8n fundamentals, AI agents, agentic chatbots, human-in-the-loop approval and RAG. Aligned to TSC AER-TEM-3026-1.1. | Dr. Alfred Ang |
 | 1.1 | 1 August 2026 | Added a 'Why this step' note to every lab step; lab headings de-duplicated; version-control record added to the Markdown mirror and the mirror relocated beside the DOCX. | Dr. Alfred Ang |
+| 1.2 | 1 August 2026 | Added a screenshot of each lab's application — the four lab websites with their chat widgets open, plus the Lab 1 n8n canvas and sample flyer — to the slide deck and the Learner Guide. | Dr. Alfred Ang |
 
 ## Contents
 
@@ -175,7 +176,7 @@ Robotic Process Automation (RPA) follows a rigid path that a person constructs b
 
 ## Topic 01 — Overview of n8n and AI Agents
 
-Workflow automation · Triggers & actions · LLM agents · Webhooks   (Deck reference: Slides 29–75.)
+Workflow automation · Triggers & actions · LLM agents · Webhooks   (Deck reference: Slides 29–78.)
 
 **Key concepts**
 
@@ -200,7 +201,7 @@ Workflow automation · Triggers & actions · LLM agents · Webhooks   (Deck refe
 
 Learning outcome: this lab develops your ability to build an automated workflow in n8n using a trigger and an action (A2, K7, K8).
 
-Deck reference: Slides 44–58.
+Deck reference: Slides 44–60.
 
 **Goal**
 
@@ -209,6 +210,14 @@ Build your first n8n workflow end to end. An n8n Form Trigger collects a visitor
 **What you'll build**
 
 Form Trigger  →  Gmail (Send a message)   (Tools: n8n Form Trigger, Gmail (OAuth2), Smart QR Code Generator.)
+
+![The finished Lab 1 workflow on the n8n canvas — the Form Trigger fires on each submission and the Gmail node sends the details to the administrator.](assets/site-lab1.png)
+
+*The finished Lab 1 workflow on the n8n canvas — the Form Trigger fires on each submission and the Gmail node sends the details to the administrator.*
+
+![A sample event flyer from a previous class. The QR code encodes the form's Production URL, so anyone can sign up by scanning it with a phone.](assets/site-lab1-flyer.png)
+
+*A sample event flyer from a previous class. The QR code encodes the form's Production URL, so anyone can sign up by scanning it with a phone.*
 
 ![Lab 1 — Form Trigger to Gmail.](assets/flow-lab1.png)
 
@@ -278,7 +287,7 @@ Scan the QR code on your flyer with your phone, submit the form, and confirm the
 
 Learning outcome: this lab develops your ability to deploy an AI agent that is triggered by a webhook from an external website (A1, A2, K7, K8).
 
-Deck reference: Slides 59–74.
+Deck reference: Slides 61–77.
 
 **Goal**
 
@@ -287,6 +296,10 @@ Replace the n8n form with a real bank website. A customer applies for an account
 **What you'll build**
 
 Webhook  →  Normalise  →  AI Agent (+3 tools)  →  Log Decision  →  Respond to Website   (Tools: n8n Webhook, AI Agent, Google Gemini, Google Sheets, Gmail, Structured Output Parser.)
+
+![The Marina Trust Bank site the webhook sits behind. The applicant submits here, the AI Agent decides, and the page renders the decision as a coloured card.](assets/site-lab2.png)
+
+*The Marina Trust Bank site the webhook sits behind. The applicant submits here, the AI Agent decides, and the page renders the decision as a coloured card.*
 
 ![Lab 2 — webhook, agent and its three Google Sheets / Gmail tools.](assets/flow-lab2.png)
 
@@ -360,7 +373,7 @@ Run TC1 (a new applicant) and confirm a green APPROVED card, a new row in the Cu
 
 ## Topic 02 — Agentic Chatbot and Human in the Loop
 
-Agentic workflows · Chatbots on webhooks · Approval gates · Accountability   (Deck reference: Slides 76–120.)
+Agentic workflows · Chatbots on webhooks · Approval gates · Accountability   (Deck reference: Slides 79–125.)
 
 **Key concepts**
 
@@ -383,7 +396,7 @@ Agentic workflows · Chatbots on webhooks · Approval gates · Accountability   
 
 Learning outcome: this lab develops your ability to deploy an agentic chatbot on a website that operates within regulatory limits (A1, A2, K7, K8).
 
-Deck reference: Slides 87–101.
+Deck reference: Slides 90–105.
 
 **Goal**
 
@@ -392,6 +405,10 @@ A Singapore investment advisory firm wants a chatbot on its lead-magnet website.
 **What you'll build**
 
 Chat Webhook  →  Normalize  →  AI Agent (+ model + memory)  →  Respond to Chat   (Tools: n8n Webhook, AI Agent, Google Gemini, Window Buffer Memory, Code node.)
+
+![The Investment Advisor site with the chat widget open. Note the contact gate in action — it asks for the visitor's name before it will answer anything.](assets/site-lab3.png)
+
+*The Investment Advisor site with the chat widget open. Note the contact gate in action — it asks for the visitor's name before it will answer anything.*
 
 ![Lab 3 — chat webhook, agent with memory, reply.](assets/flow-lab3.png)
 
@@ -468,7 +485,7 @@ Ask 'Can you guarantee returns?' and 'Which stock should I buy?'. The agent must
 
 Learning outcome: this lab develops your ability to apply a human approval gate so no AI-drafted communication is sent unsupervised (A1, A2, A3, K7, K8).
 
-Deck reference: Slides 102–119.
+Deck reference: Slides 106–124.
 
 **Goal**
 
@@ -477,6 +494,10 @@ Meridian Asset Management's relationship managers take three days to answer worr
 **What you'll build**
 
 Webhook → Agent → Acknowledge → Log Draft → RM Approval (Send & Wait) → IF → Send / Reassign   (Tools: n8n Webhook, AI Agent, Google Gemini, Gmail Send-and-Wait, Google Sheets, IF node.)
+
+![The Meridian client portal. The widget states plainly that a licensed manager reviews every reply — the human-in-the-loop promise made visible to the client.](assets/site-lab4.png)
+
+*The Meridian client portal. The widget states plainly that a licensed manager reviews every reply — the human-in-the-loop promise made visible to the client.*
 
 ![Lab 4 — the agent drafts (top row); a human approves or declines (bottom row).](assets/flow-lab4.png)
 
@@ -561,7 +582,7 @@ Run all eight rows of sample-queries.csv. When you are done Drafts has 8 rows, A
 
 ## Topic 03 — Retrieval-Augmented Generation (RAG)
 
-Tokenization · Embeddings · Vector stores · Grounded answers   (Deck reference: Slides 121–153.)
+Tokenization · Embeddings · Vector stores · Grounded answers   (Deck reference: Slides 126–159.)
 
 **Key concepts**
 
@@ -596,7 +617,7 @@ Tokenization · Embeddings · Vector stores · Grounded answers   (Deck referenc
 
 Learning outcome: this lab develops your ability to deploy a RAG application that grounds an agent in the organisation's own documents (A1, A2, A3, K5, K7, K8).
 
-Deck reference: Slides 133–152.
+Deck reference: Slides 138–158.
 
 **Goal**
 
@@ -605,6 +626,10 @@ Cook & Bake Academy runs 20 courses across two campuses, and its two-person cust
 **What you'll build**
 
 Ingestion: Drive → Split → Embed → Vector Store   ·   Answering: Webhook → Agent + Retriever → Respond   (Tools: n8n Simple Vector Store, Google Gemini Embeddings, Google Drive, AI Agent, Webhook.)
+
+![The Cook & Bake Academy site with the course assistant open. Every answer it gives is grounded in the 20 brochures you ingested into the vector store.](assets/site-lab5.png)
+
+*The Cook & Bake Academy site with the course assistant open. Every answer it gives is grounded in the 20 brochures you ingested into the vector store.*
 
 ![Lab 5 — ingestion: list, download, split, embed and store the brochures.](assets/flow-lab5-ingest.png)
 

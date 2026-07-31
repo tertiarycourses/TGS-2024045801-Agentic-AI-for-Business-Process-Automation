@@ -201,30 +201,28 @@ def flow_h(title,steps,kicker=None,color=BLUE):
             txt(s,int(x+cw-Inches(0.04)),int(y+ch/2-Inches(0.3)),int(gap+Inches(0.08)),Inches(0.6),
                 [[("▶",15,color,True)]],align=PP_ALIGN.CENTER,anchor=MSO_ANCHOR.MIDDLE)
     footer(s); return s
-def image_slide(title,imgname,caption="",kicker=None,accent=BLUE):
-    """Full-width diagram slide: a reference visual with a one-line caption beneath."""
+def image_slide(title,imgname,caption="",kicker=None,accent=BLUE,cap_size=13):
+    """Full-width diagram slide: a reference visual with a one-line caption beneath.
+    The image gets the whole content area minus a tight caption band, so a wide
+    screenshot fills the slide instead of floating as a thumbnail."""
     s=head(slide(),title,kicker,kcolor=accent)
     p=_asset(imgname)
-    AREA_TOP=Inches(2.05); AREA_BOT=Inches(6.45)   # space between the rule and the footer
-    CAP_H=Inches(0.85) if caption else 0
+    AREA_TOP=Inches(1.92); AREA_BOT=Inches(6.9)    # rule → footer
+    CAP_H=Inches(0.62) if caption else 0           # tight caption band
     if p:
         from PIL import Image
         iw,ih=Image.open(p).size
-        maxw=Inches(11.2); maxh=AREA_BOT-AREA_TOP-CAP_H
+        maxw=Inches(12.0); maxh=AREA_BOT-AREA_TOP-CAP_H
         scale=min(maxw/iw, maxh/ih)
-        # Tall/near-square images (screenshots) would otherwise render as small
-        # thumbnails in a wide frame — let them use the full available height.
-        if iw/ih < 1.6:
-            scale=maxh/ih
         w=int(iw*scale); h=int(ih*scale)
-        # centre the picture inside the area above the caption
         y=int(AREA_TOP+((AREA_BOT-CAP_H)-AREA_TOP-h)/2)
         s.shapes.add_picture(p,int((SW-w)/2),y,width=w,height=h)
-        cy=y+h+Inches(0.24)
+        cy=y+h+Inches(0.12)
     else:
         cy=Inches(2.4)
     if caption:
-        txt(s,Inches(0.85),cy,Inches(11.63),CAP_H or Inches(0.9),[[(caption,14,GREY,False)]],align=PP_ALIGN.CENTER)
+        txt(s,Inches(0.85),cy,Inches(11.63),CAP_H or Inches(0.9),
+            [[(caption,cap_size,GREY,False)]],align=PP_ALIGN.CENTER)
     footer(s); return s
 def trainer_slide(kicker,name,role,rows,initials,accent=BLUE):
     s=head(slide(),"About the Trainer",kicker,kcolor=accent)
@@ -695,6 +693,11 @@ for t in C.TOPICS:
     for a in acts:
         short=a.get("short", a["title"])
         activity_overview(f"LAB {a['num']}", a["title"], a["desc"], a["build"], a["services"], kicker=f"TOPIC {t['code']} · HANDS-ON")
+        # what the learner will actually see — the lab's website / n8n canvas
+        sites=a.get("site",[])
+        for img,cap in sites:
+            image_slide(short+" — What You'll Build", img, cap,
+                        kicker=f"LAB {a['num']} · THE APPLICATION", accent=VIOLET)
         flows=a.get("flows",[])
         for fi,(img,cap) in enumerate(flows):
             suffix=" — Workflow" if len(flows)==1 else (" — Ingestion Workflow" if fi==0 else " — Answering Workflow")

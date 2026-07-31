@@ -44,6 +44,9 @@ FOLDERS = {
     "learner_guide": ("Learner Guide", "learner guide"),
     "lesson_plan": ("Lesson Plan", "lesson plan"),
     "assessment": ("Assessment", "assessment"),
+    # The labs are a FOLDER of many files, not a single document, so the
+    # Activities/Lab URL links the folder itself (see take_folder below).
+    "activities": ("Activities", "activit"),
 }
 
 
@@ -159,11 +162,18 @@ def collect_links(root):
          "WA (SAQ) question paper .docx")
     # The practical instrument is EITHER a Case Study OR a Practical Performance — never both.
     take("caseStudyLink", "assessment",
-         lambda n: docx(n) and re.search(r"case study|\(cs\)", n, re.I),
+         # `^cs\b` mirrors the WA rule: papers are named "CS Assessment- <course> - vNN.docx"
+         # as often as "Case Study", and answer keys are already filtered out above.
+         lambda n: docx(n) and re.search(r"^\s*cs\b|case study|\(cs\)", n, re.I),
          "Case Study (CS) question paper .docx")
+    # "Practical Test" and "Practical Performance" are the same instrument — the house naming
+    # varies between courses (the cover page reads "PRACTICAL TEST (PP)" either way), so both
+    # spellings must resolve to the PP field. Without this a "Practical Test - ….docx" silently
+    # reports as missing and the LMS keeps serving whatever stale paper it already had.
     take("practicalPerformanceAssessmentLink", "assessment",
-         lambda n: docx(n) and re.search(r"^\s*pp\b|practical performance|\(pp\)", n, re.I),
-         "PP question paper .docx")
+         lambda n: docx(n) and re.search(
+             r"^\s*pp\b|practical performance|practical test|\(pp\)", n, re.I),
+         "PP / Practical Test question paper .docx")
 
     # A course has exactly ONE practical instrument — a Case Study or a PP, never both.
     # Whichever paper is on Drive IS the instrument; the absence of the other is not "missing",
@@ -177,7 +187,44 @@ def collect_links(root):
     if absent:
         missing[:] = [m for m in missing if not m.startswith(FIELD_LABELS[absent])]
 
+    # ---- Activities / labs. Unlike every field above this links a FOLDER, not a
+    # file: the labs are a whole tree (lab-NN markdown + the template library), and
+    # learners need the folder so they can open any of them.
+    take_folder("activitiesUrl", "activities", root, out, missing)
+
     return out, missing
+
+
+def take_folder(field, folder_key, root, out, missing):
+    """Link a Drive FOLDER (not a file) into an LMS URL field.
+
+    Every other field points at one document; the labs are a whole tree, so the
+    Activities/Lab URL has to be the folder itself.
+    """
+    canonical, hint = FOLDERS[folder_key]
+    # find_dir aborts the run when a folder is absent, which is right for the
+    # courseware folders but too harsh here: a course may legitimately have no
+    # labs. Resolve it leniently and report a miss instead.
+    dirs = rc(["lsjson", f"{REMOTE}:", "--dirs-only"], root, parse=True)
+    match = (next((d for d in dirs if d["Name"].strip().lower() == canonical.lower()), None)
+             or next((d for d in dirs if hint in d["Name"].strip().lower()), None))
+    if not match:
+        missing.append(f"{FIELD_LABELS[field]}: no '{canonical}' folder on Drive "
+                       f"(found: {', '.join(d['Name'].strip() for d in dirs) or 'nothing'})")
+        return
+    d = match["Name"]
+    # RECURSIVE count: the labs live in per-lab subfolders (lab1-…/, lab2-…/), so a
+    # top-level-only listing reports a fully populated Activities folder as empty.
+    entries = rc(["lsjson", f"{REMOTE}:{d}", "--files-only", "-R"], root, parse=True)
+    entries = [e for e in entries if not e.get("Path", "").startswith("archive/")]
+    if not entries:
+        missing.append(f"{FIELD_LABELS[field]}: Drive folder '{d.strip()}' holds no files — "
+                       f"run /gdrive-push first so the labs are uploaded")
+        return
+    # share the folder itself, then link it by id
+    rc(["link", f"{REMOTE}:{d}"], root)
+    url = f"https://drive.google.com/drive/folders/{match['ID']}"
+    out[field] = (f"{d.strip()}/ ({len(entries)} file(s))", url)
 
 
 # ------------------------------------------------------- course code (authoritative)
@@ -256,6 +303,8 @@ def check_link(url):
         return False, "NOT public — asks for access"
     m = re.search(r"<title>(.*?)</title>", html, re.S)
     name = (m.group(1) if m else "?").replace(" - Google Drive", "").strip()
+    if "/drive/folders/" in url:
+        return True, f"public folder, serves '{name}'"
     return True, f"public, serves '{name}'"
 
 
@@ -344,6 +393,7 @@ FIELD_LABELS = {
     "writtenAssessmentLink": "Written Assessment (question paper)",
     "caseStudyLink": "Case Study (question paper)",
     "practicalPerformanceAssessmentLink": "Practical Performance (question paper)",
+    "activitiesUrl": "Activities/Lab URL",
 }
 
 
@@ -356,6 +406,10 @@ def main():
     ap.add_argument("--dry-run", action="store_true", help="show the plan; do not write to LMS-TMS")
     ap.add_argument("--allow-missing", action="store_true",
                     help="update only the fields whose file exists on Drive, instead of aborting")
+    ap.add_argument("--only", metavar="FIELD", action="append",
+                    help="write ONLY these LMS fields (repeatable), e.g. --only activitiesUrl. "
+                         "Every other field is left exactly as it is on the LMS. Use when one "
+                         "field is verified good but others are still blocked on QA.")
     a = ap.parse_args()
 
     # The course code is taken FROM THE COURSEWARE ITSELF (deck cover / LG / LP), not from
@@ -409,6 +463,22 @@ def main():
 
     print("Resolving courseware files on Google Drive…")
     urls, missing = collect_links(root)
+
+    # --only: restrict the write to an explicit whitelist. Everything else is dropped from
+    # the payload entirely (not blanked), so untouched fields keep their current LMS value.
+    if a.only:
+        unknown = [f for f in a.only if f not in FIELD_LABELS]
+        if unknown:
+            raise SystemExit(f"--only: unknown field(s) {unknown}. "
+                             f"Valid: {', '.join(sorted(FIELD_LABELS))}")
+        absent = [f for f in a.only if f not in urls]
+        if absent:
+            raise SystemExit("--only: no file/folder resolved on Drive for "
+                             f"{[FIELD_LABELS[f] for f in absent]} — nothing to write.")
+        urls = {f: urls[f] for f in a.only}
+        missing = []   # the excluded fields are deliberately untouched, not "missing"
+        print(f"  --only: writing {len(urls)} field(s); all others left untouched on the LMS.")
+
     for field, (name, url) in urls.items():
         print(f"  {FIELD_LABELS[field]:<20} {name}\n  {'':<20} {url}")
 
@@ -458,11 +528,14 @@ def main():
         return after.get(field)
 
     def same_file(a, b):
-        """The LMS normalises Drive URLs (it drops ?usp=sharing), so compare by file ID."""
-        fid = lambda u: (re.search(r"/d/([\w-]+)|[?&]id=([\w-]+)", u or "") or None)
+        """The LMS normalises Drive URLs (it drops ?usp=sharing), so compare by ID.
+        Also matches /drive/folders/<id> for the Activities folder link."""
+        fid = lambda u: (re.search(r"/d/([\w-]+)|/folders/([\w-]+)|[?&]id=([\w-]+)",
+                                   u or "") or None)
         ma, mb = fid(a), fid(b)
         if ma and mb:
-            return (ma.group(1) or ma.group(2)) == (mb.group(1) or mb.group(2))
+            gid = lambda m: m.group(1) or m.group(2) or m.group(3)
+            return gid(ma) == gid(mb)
         return a == b
 
     for field, (name, url) in urls.items():
@@ -481,7 +554,7 @@ def main():
             print(f"  ✗ {must} was blanked by the update — investigate immediately.")
     if not ok:
         sys.exit(1)
-    print("\nAll four courseware URLs are live on the LMS-TMS course page.")
+    print(f"\nAll {len(urls)} courseware URLs are live on the LMS-TMS course page.")
 
 
 if __name__ == "__main__":

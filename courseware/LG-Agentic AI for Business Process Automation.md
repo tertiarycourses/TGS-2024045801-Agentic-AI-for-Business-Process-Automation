@@ -1,6 +1,6 @@
 # Agentic AI for Business Process Automation — Learner Guide
 
-**WSQ Course Code:** TGS-2024045801  |  **TSC:** Artificial Intelligence Application (AER-TEM-3026-1.1)  |  **Conducted by:** Tertiary Infotech Academy Pte Ltd (UEN 201200696W)  |  **Version v1.2 · 1 August 2026**
+**WSQ Course Code:** TGS-2024045801  |  **TSC:** Artificial Intelligence Application (AER-TEM-3026-1.1)  |  **Conducted by:** Tertiary Infotech Academy Pte Ltd (UEN 201200696W)  |  **Version v2.0 · 8 August 2026**
 
 ## Document Version Control Record
 
@@ -9,6 +9,7 @@
 | 1.0 | 31 July 2026 | Initial release — Learner Guide for Agentic AI for Business Process Automation, covering the five hands-on labs across n8n fundamentals, AI agents, agentic chatbots, human-in-the-loop approval and RAG. Aligned to TSC AER-TEM-3026-1.1. | Dr. Alfred Ang |
 | 1.1 | 1 August 2026 | Added a 'Why this step' note to every lab step; lab headings de-duplicated; version-control record added to the Markdown mirror and the mirror relocated beside the DOCX. | Dr. Alfred Ang |
 | 1.2 | 1 August 2026 | Added a screenshot of each lab's application — the four lab websites with their chat widgets open, plus the Lab 1 n8n canvas and sample flyer — to the slide deck and the Learner Guide. | Dr. Alfred Ang |
+| 2.0 | 8 August 2026 | Slide deck restyled to the house reference format. Lab step-by-step removed from the deck and now carried only by this guide, with a rendered n8n canvas screenshot per lab. New concept sections: trigger nodes, data-processing nodes, the four components of an AI agent, instruction design with worked examples, model parameters and temperature, MCP, webhooks (GET/POST, Test vs Production URL) and human-in-the-loop with guardrails. | Dr. Alfred Ang |
 
 ## Contents
 
@@ -176,7 +177,7 @@ Robotic Process Automation (RPA) follows a rigid path that a person constructs b
 
 ## Topic 01 — Overview of n8n and AI Agents
 
-Workflow automation · Triggers & actions · LLM agents · Webhooks   (Deck reference: Slides 29–78.)
+Workflow automation · Triggers & actions · LLM agents · Webhooks   (Deck reference: Slides 27–65.)
 
 **Key concepts**
 
@@ -194,6 +195,32 @@ Workflow automation · Triggers & actions · LLM agents · Webhooks   (Deck refe
 
 - **Webhooks** — A webhook is a URL that any external system can POST data to; it starts your workflow when called. It is the opposite of an HTTP Request node: there YOU call the outside world, here the outside world calls YOU. Set Allowed Origins (CORS) so a browser page may read the reply, and consider Authentication before anything goes to production — an open webhook costs you money every time a stranger calls it.
 
+- **Trigger nodes — what may start a workflow** — The trigger you choose is a statement about who or what is allowed to start the process. Manual Trigger runs on a click, for building and for one-off jobs such as the Lab 5 ingestion. Schedule Trigger runs on a clock. Form Trigger hosts a web form for you, and is Lab 1's front door. Webhook lets an external system call a URL you expose, and is the front door for Labs 2 to 5. Chat Trigger uses n8n's built-in chat window. App and email triggers fire on a new Gmail message, a new Sheets row or a new Drive file.
+
+- **Data-processing nodes — the workhorses** — Between the trigger and the output these nodes shape, route and transform the data. Edit Fields (Set) adds, renames or reshapes fields and is the node you reach for first when data is the wrong shape. IF and Switch branch the workflow — Lab 4 uses an IF to split the approved path from the reassignment path. Filter drops non-matching items; Merge combines branches; Split Out and Aggregate convert between one item holding a list and many items. Code runs JavaScript or Python for the small fraction a built-in node cannot do. HTTP Request calls any API on the internet.
+
+- **Where the data goes** — Google Sheets is the audit log in Labs 2 and 4 — Append Row is the workhorse operation. Gmail sends a message, and in Lab 4 its Send and Wait for Response operation turns email into an approval gate. A Vector Store holds embeddings for RAG. Respond to Webhook returns data to whoever called the webhook, which is what lets a web page render the agent's answer.
+
+- **The four components of an AI agent** — Every agent in this course is exactly four parts around one hub. The MODEL is the LLM that interprets language, reasons and chooses the next step. MEMORY keeps the conversation so a follow-up question still makes sense, keyed on a session ID. TOOLS are the abilities it may use — look up a Sheets row, search a vector store, send an email, call an API. INSTRUCTIONS are the system message: identity, scope, rules and refusals, always in force on every turn. Change any one of the four and you have a different agent.
+
+- **Model parameters — temperature and friends** — Settings on the chat-model node shape HOW the model answers, and the most important is temperature. A temperature of 0 to 0.3 is deterministic and repeatable — use it for classification, compliance decisions and data extraction, that is, any automation that must give the same answer twice. Around 0.7 is balanced and natural-sounding, the usual default for a customer-facing assistant. Above 1.0 is creative and surprising, suitable for marketing copy and never for a decision you must defend. Top-p is an alternative sampling control — tune temperature or top-p, never both. Max tokens caps the reply length and so caps your cost. Lab 3 uses temperature 0.2 so a compliance-bound chatbot refuses the same way every time.
+
+- **Popular LLM providers** — Any chat model plugs into the same AI Agent node, so you can swap the brain and keep the agent. This course uses Google Gemini, which also supplies the embeddings in Lab 5. OpenAI (gpt-4.1 and the cheaper mini tier), Anthropic Claude, Meta Llama and Mistral are all commonly used. Pick by task: small fast models for classification and guardrails, larger models for reasoning.
+
+- **Tools — and why the description matters** — Tools attach to the agent's Tool input, and the model decides when to call one based on the DESCRIPTION you write. Write that description for the model, not for a developer. Lab 2 attaches three tools — check for a duplicate customer, create the customer record, send the confirmation — and you can watch the agent choose between them on the canvas.
+
+- **Instructions — the four parts that constrain** — Every good agent instruction states four things. IDENTITY: who the agent is and for whom. SOURCE RULES: where answers may come from, for example 'answer only from the brochures returned by the tool'. REFUSALS: what is out of bounds, stated explicitly. ESCALATION: what to do at the boundary, for example 'if unsure, say so and offer a consultation'. Vague instructions produce confident wrong answers — every rule you skip, the model improvises.
+
+- **Good and bad instructions compared** — A bad instruction reads 'You are a helpful assistant. Answer the user's questions politely.' It has no identity, no source rules, no refusals and no escalation, so it will invent a course fee and guarantee an investment return — politely. A good instruction names the firm, limits the topics, points at a specific tool for factual questions, lists the prohibitions, and says what to do when unsure. The test is simple: you can try to break each line of a good instruction, and you cannot even test a vague one.
+
+- **MCP — the Model Context Protocol** — MCP is an open standard that gives agents a common plug for tools and data. Without it, every agent needs a custom integration for every tool: N agents and M tools means N times M connectors to build and maintain. With MCP you build one MCP server per system and any MCP-capable agent can use it — N plus M pieces, and the tools become reusable. It is often described as USB-C for AI tools. n8n sits on both sides: the MCP Server Trigger exposes your n8n workflows AS tools that Claude or an IDE can call, and the MCP Client Tool attaches external MCP servers to your own n8n agent.
+
+- **Webhooks — GET vs POST** — The HTTP method is part of the contract with the caller. With GET the data rides in the URL query string, for example ?email=alice@corp.com, so a browser can call it just by visiting the URL; you read it in n8n as {{ $json.query.email }}. GET suits a dashboard pulling data to display. With POST the data rides in the request body as JSON, which is what a web form or a chat widget sends; you read it as {{ $json.body.message }}. Every lab website in this course POSTs. Set the method on the Webhook node, and the caller must match it exactly.
+
+- **Webhook Test URL vs Production URL** — Every Webhook node gives you two URLs, and confusing them is the single most common webhook bug. The Test URL (/webhook-test/…) works only while you have clicked 'Listen for test event', handles exactly one call and then stops, shows the run live on the canvas, and dies when you leave the editor. The Production URL (/webhook/…) requires the workflow to be Active, is always on, accepts unlimited calls, and logs its runs under Executions rather than drawing them on the canvas. Your website must call the Production URL of an Active workflow.
+
+- **Configuring the Webhook node** — Four settings decide whether a browser's call succeeds. METHOD AND PATH give you the URL. ALLOWED ORIGINS (CORS) must permit the calling page, or the workflow will run perfectly and the browser will still refuse to read the reply — the classic 'Failed to fetch'. Set it to * in class and never in production. RESPONSE MODE should be 'Using Respond to Webhook Node' in every lab here, so the agent's answer travels back instead of an immediate 200 OK. AUTHENTICATION can be None for a demo, but Basic, Header or JWT for anything real — a public URL is a public door, and every call costs you model tokens.
+
 - **Structured output** — By default an agent returns a paragraph of prose, and prose cannot be branched on, sorted or coloured. A Structured Output Parser forces named fields such as decision, reason and riskFlags. An IF node can then route on decision, a Sheets node can log it, and a web page can colour the result card. Enumerate the allowed values so the field stays reliable.
 
 
@@ -201,7 +228,7 @@ Workflow automation · Triggers & actions · LLM agents · Webhooks   (Deck refe
 
 Learning outcome: this lab develops your ability to build an automated workflow in n8n using a trigger and an action (A2, K7, K8).
 
-Deck reference: Slides 44–60.
+Deck reference: Slides 58–61.
 
 **Goal**
 
@@ -219,9 +246,11 @@ Form Trigger  →  Gmail (Send a message)   (Tools: n8n Form Trigger, Gmail (OAu
 
 *A sample event flyer from a previous class. The QR code encodes the form's Production URL, so anyone can sign up by scanning it with a phone.*
 
-![Lab 1 — Form Trigger to Gmail.](assets/flow-lab1.png)
+**The workflow on the n8n canvas**
 
-*Lab 1 — Form Trigger to Gmail.*
+![The Lab 1 workflow on the n8n canvas. Two nodes: the Form Trigger decides WHEN the workflow runs, and the Gmail node decides WHAT it does.](assets/canvas-lab1.png)
+
+*The Lab 1 workflow on the n8n canvas. Two nodes: the Form Trigger decides WHEN the workflow runs, and the Gmail node decides WHAT it does.*
 
 **Step-by-step**
 
@@ -287,7 +316,7 @@ Scan the QR code on your flyer with your phone, submit the form, and confirm the
 
 Learning outcome: this lab develops your ability to deploy an AI agent that is triggered by a webhook from an external website (A1, A2, K7, K8).
 
-Deck reference: Slides 61–77.
+Deck reference: Slides 62–64.
 
 **Goal**
 
@@ -301,9 +330,11 @@ Webhook  →  Normalise  →  AI Agent (+3 tools)  →  Log Decision  →  Respo
 
 *The Marina Trust Bank site the webhook sits behind. The applicant submits here, the AI Agent decides, and the page renders the decision as a coloured card.*
 
-![Lab 2 — webhook, agent and its three Google Sheets / Gmail tools.](assets/flow-lab2.png)
+**The workflow on the n8n canvas**
 
-*Lab 2 — webhook, agent and its three Google Sheets / Gmail tools.*
+![The Lab 2 workflow on the n8n canvas. The main chain runs left to right; the chat model, output parser and three tools hang below the agent on its Tool input.](assets/canvas-lab2.png)
+
+*The Lab 2 workflow on the n8n canvas. The main chain runs left to right; the chat model, output parser and three tools hang below the agent on its Tool input.*
 
 **Step-by-step**
 
@@ -373,7 +404,7 @@ Run TC1 (a new applicant) and confirm a green APPROVED card, a new row in the Cu
 
 ## Topic 02 — Agentic Chatbot and Human in the Loop
 
-Agentic workflows · Chatbots on webhooks · Approval gates · Accountability   (Deck reference: Slides 79–125.)
+Agentic workflows · Chatbots on webhooks · Approval gates · Accountability   (Deck reference: Slides 66–77.)
 
 **Key concepts**
 
@@ -389,6 +420,12 @@ Agentic workflows · Chatbots on webhooks · Approval gates · Accountability   
 
 - **When to put a human in the loop** — When money moves; when it is a regulated communication; when the action is irreversible; when a person is vulnerable; when the stakes exceed the error rate; and when someone must be accountable. The question is never 'is the model good?' but 'what does one bad output cost?'
 
+- **Human in, on, and out of the loop** — There are three levels of human oversight, and the design question is which one a given process deserves. Human IN the loop means the workflow pauses and a named person must approve before the action happens — nothing reaches the customer unauthorised, which is Lab 4. Human ON the loop means the agent acts immediately while a person monitors and can intervene or reverse it, which suits high volume with low individual risk. Human OUT of the loop is fully autonomous, and is acceptable only where an error is cheap, reversible and detectable — never where money or a regulator is involved.
+
+- **How an approval suspends a running workflow** — A Send-and-Wait node stops the execution mid-flight. Look at the canvas and the run is genuinely sitting on the approval node; n8n holds the state, and it will wait for days if it has to. The Approve and Decline buttons in the email are simply two URLs, so clicking one resumes the execution down that branch and the approver has no new application to learn. A decline is a reassignment rather than a deletion, because someone still owes the client an answer.
+
+- **Guardrails — two gates around the agent** — Instructions shape what the agent intends; guardrails check what actually goes in and comes out. An INPUT guardrail screens the incoming message before the model ever sees it: block prompt injection such as 'ignore your instructions and…', strip personal data you must not process, and rate-limit and authenticate, because a public webhook is a public door. An OUTPUT guardrail checks the reply before it reaches a person: look for phrases you have banned such as guarantees and forecasts, validate the structured fields against the values you allow, and on any doubt route to a human rather than sending. Enforcing the same rule in the prompt AND in the workflow is deliberate redundancy — only one of the two runs on a machine you control.
+
 - **The accountability trail** — Log what the agent PROPOSED separately from what a human AUTHORISED. Keeping them apart is what lets an auditor ask whether anyone ever sent something a human never saw. Every approved action carries the name of the approver; every declined one is reassigned to a named person. No accountability column should ever be empty.
 
 
@@ -396,7 +433,7 @@ Agentic workflows · Chatbots on webhooks · Approval gates · Accountability   
 
 Learning outcome: this lab develops your ability to deploy an agentic chatbot on a website that operates within regulatory limits (A1, A2, K7, K8).
 
-Deck reference: Slides 90–105.
+Deck reference: Slides 71–73.
 
 **Goal**
 
@@ -410,9 +447,11 @@ Chat Webhook  →  Normalize  →  AI Agent (+ model + memory)  →  Respond to 
 
 *The Investment Advisor site with the chat widget open. Note the contact gate in action — it asks for the visitor's name before it will answer anything.*
 
-![Lab 3 — chat webhook, agent with memory, reply.](assets/flow-lab3.png)
+**The workflow on the n8n canvas**
 
-*Lab 3 — chat webhook, agent with memory, reply.*
+![The Lab 3 workflow on the n8n canvas. A small graph: webhook in, normalise, the agent with its chat model and session memory, then the reply back out.](assets/canvas-lab3.png)
+
+*The Lab 3 workflow on the n8n canvas. A small graph: webhook in, normalise, the agent with its chat model and session memory, then the reply back out.*
 
 **Step-by-step**
 
@@ -485,7 +524,7 @@ Ask 'Can you guarantee returns?' and 'Which stock should I buy?'. The agent must
 
 Learning outcome: this lab develops your ability to apply a human approval gate so no AI-drafted communication is sent unsupervised (A1, A2, A3, K7, K8).
 
-Deck reference: Slides 106–124.
+Deck reference: Slides 74–76.
 
 **Goal**
 
@@ -499,9 +538,11 @@ Webhook → Agent → Acknowledge → Log Draft → RM Approval (Send & Wait) �
 
 *The Meridian client portal. The widget states plainly that a licensed manager reviews every reply — the human-in-the-loop promise made visible to the client.*
 
-![Lab 4 — the agent drafts (top row); a human approves or declines (bottom row).](assets/flow-lab4.png)
+**The workflow on the n8n canvas**
 
-*Lab 4 — the agent drafts (top row); a human approves or declines (bottom row).*
+![Everything up to RM Approval is the agent's territory; the IF node after it splits into the approved path (top) and the reassignment path (bottom).](assets/canvas-lab4.png)
+
+*Everything up to RM Approval is the agent's territory; the IF node after it splits into the approved path (top) and the reassignment path (bottom).*
 
 **Step-by-step**
 
@@ -582,7 +623,7 @@ Run all eight rows of sample-queries.csv. When you are done Drafts has 8 rows, A
 
 ## Topic 03 — Retrieval-Augmented Generation (RAG)
 
-Tokenization · Embeddings · Vector stores · Grounded answers   (Deck reference: Slides 126–159.)
+Tokenization · Embeddings · Vector stores · Grounded answers   (Deck reference: Slides 78–90.)
 
 **Key concepts**
 
@@ -617,7 +658,7 @@ Tokenization · Embeddings · Vector stores · Grounded answers   (Deck referenc
 
 Learning outcome: this lab develops your ability to deploy a RAG application that grounds an agent in the organisation's own documents (A1, A2, A3, K5, K7, K8).
 
-Deck reference: Slides 138–158.
+Deck reference: Slides 87–90.
 
 **Goal**
 
@@ -631,13 +672,15 @@ Ingestion: Drive → Split → Embed → Vector Store   ·   Answering: Webhook 
 
 *The Cook & Bake Academy site with the course assistant open. Every answer it gives is grounded in the 20 brochures you ingested into the vector store.*
 
-![Lab 5 — ingestion: list, download, split, embed and store the brochures.](assets/flow-lab5-ingest.png)
+**The workflow on the n8n canvas**
 
-*Lab 5 — ingestion: list, download, split, embed and store the brochures.*
+![The ingestion workflow on the n8n canvas — run ONCE by hand. Twenty brochures are listed, downloaded, split, embedded and inserted into the vector store.](assets/canvas-lab5-ingest.png)
 
-![Lab 5 — answering: retrieve the nearest brochures, then answer from them.](assets/flow-lab5-agent.png)
+*The ingestion workflow on the n8n canvas — run ONCE by hand. Twenty brochures are listed, downloaded, split, embedded and inserted into the vector store.*
 
-*Lab 5 — answering: retrieve the nearest brochures, then answer from them.*
+![The answering workflow on the n8n canvas — runs on EVERY question. The Query Data Tool and its embedding model hang below the agent.](assets/canvas-lab5-agent.png)
+
+*The answering workflow on the n8n canvas — runs on EVERY question. The Query Data Tool and its embedding model hang below the agent.*
 
 **Step-by-step**
 

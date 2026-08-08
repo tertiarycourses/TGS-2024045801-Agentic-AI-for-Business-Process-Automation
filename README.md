@@ -2,7 +2,7 @@
 
 **WSQ Course Code:** TGS-2024045801
 **TSC:** Artificial Intelligence Application · AER-TEM-3026-1.1
-**Duration:** 2 days · 14 instructional hours
+**Duration:** 2 days · 16 instructional hours (9:30am–6:30pm, 8 hours/day)
 **Conducted by:** Tertiary Infotech Academy Pte Ltd (UEN 201200696W)
 
 **Register:** [tertiarycourses.com.sg](https://www.tertiarycourses.com.sg/wsq-agentic-ai-for-business-process-automation.html) ·
@@ -41,20 +41,38 @@ organisation's own documents.
 
 ## Courseware
 
-Current version **v1.2** — all artifacts live in [`courseware/`](courseware/); superseded versions are
+Current version **v2.0** — all artifacts live in [`courseware/`](courseware/); superseded versions are
 moved to `courseware/archive/`.
 
 | Artifact | File |
 |---|---|
-| Trainer slide deck | `courseware/Agentic AI for Business Process Automation-v1.2.pptx` (+ `.pdf`) |
+| Trainer slide deck | `courseware/Agentic AI for Business Process Automation-v2.0.pptx` (+ `.pdf`) |
 | Lesson Plan | `courseware/LP-Agentic AI for Business Process Automation.docx` (+ `.pdf`) |
 | Learner Guide | `courseware/LG-Agentic AI for Business Process Automation.docx` (+ `.pdf`) |
 | Learner Guide (Markdown mirror) | `courseware/LG-Agentic AI for Business Process Automation.md` |
 
+## What goes on a slide, and what goes in the Learner Guide
+
+The deck follows the house reference format: a kicker, a bold title, a one-line intro, then **one**
+visual structure — a chevron flow strip, outlined concept cards, a two-panel comparison, or a data
+table — closed by a takeaway band.
+
+**The click-by-click lab steps are deliberately not on the slides.** Each lab gets a single visual
+slide (workflow chevron + a screenshot of the real n8n canvas + a LAB band); the full steps live only
+in the Learner Guide. Keep it that way when editing — a step-by-step slide belongs in the LG.
+
+The lab canvas screenshots are **rendered from each lab's own workflow JSON** by `render_flows.py`,
+so the picture on the slide is the canvas the learner imports and cannot drift out of date:
+
+```bash
+python3 .claude/skills/courseware-build/build/render_flows.py   # -> courseware/assets/canvas-lab*.png
+```
+
 ## Building the courseware
 
-All artifacts are generated from a single source — `course_data.py` plus `data_domain1..3.py` — so the
-deck, Lesson Plan and Learner Guide can never drift apart.
+All artifacts are generated from a single source — `course_data.py` (metadata, outcomes, schedule),
+`concepts.py` (the teaching concepts, shared by the deck and the LG) and `data_domain1..3.py` (the
+labs) — so the deck, Lesson Plan and Learner Guide can never drift apart.
 
 ```bash
 bash .claude/skills/courseware-build/build/build_courseware.sh
@@ -63,7 +81,11 @@ bash .claude/skills/courseware-build/build/build_courseware.sh
 The build fails loudly rather than shipping courseware that disagrees with itself. It asserts that:
 
 - the Lesson Plan's slide references match the deck it just produced;
-- each training day totals the stated instructional hours;
+- each training day totals exactly 480 instructional minutes — 9:30am–6:30pm less the 1-hour lunch,
+  with the tea breaks counted within, which is the only reading that makes 8 hours arithmetically
+  possible on that day;
+- no lab intro or canvas caption is too long for its one-line band, so nothing ships truncated
+  mid-sentence;
 - and — via `check_alignment.py` — that the PPT, LP, LG and `labs/` all agree:
   every cited workflow file and n8n node name exists in the lab's JSON, no lab number is
   duplicated, every LP slide range starts on the slide it claims, and the course code, TSC,
@@ -87,11 +109,24 @@ Written Assessment (SAQ, 1 hour) covering the Knowledge statements, and a Practi
 
 ```
 courseware/          the current build — deck, LP, LG (+ PDFs) and the LG Markdown mirror
-courseware/assets/   diagrams and screenshots placed on the slides
+courseware/assets/   slide diagrams, n8n UI screenshots, and the generated canvas-lab*.png
 courseware/archive/  superseded versions (kept locally, not tracked in git)
 labs/                the five hands-on labs — workflow JSON, websites and sample data
 .claude/skills/      the single-source build pipeline and the WSQ generators
 ```
+
+The build modules under `.claude/skills/courseware-build/build/`:
+
+| File | Role |
+|---|---|
+| `course_data.py` | Metadata, learning outcomes, topics, daily timing — the single source for all four artifacts |
+| `concepts.py` | The teaching concepts, rendered as visual slides AND as Learner Guide sections |
+| `data_domain1..3.py` | Per-topic lab content: steps, canvas screenshots, chevron flows, takeaways |
+| `build_slides.py` | The deck engine and its visual component library |
+| `build_lesson_plan.py` | The Lesson Plan, including the 8-hour-per-day assertion |
+| `build_learner_guide.py` | The Learner Guide DOCX + its Markdown mirror |
+| `render_flows.py` | Renders each lab's n8n canvas from the lab's own workflow JSON |
+| `check_alignment.py` | Cross-artifact alignment test run by the build |
 
 Two folders are deliberately **not** in this repository:
 

@@ -7,7 +7,9 @@ DOMAIN1 = [
         title="Lab 1 — n8n Trigger and Action (Event Flyer with QR Code)",
         short="Lab 1 — n8n Trigger and Action",
         objective="build an automated workflow in n8n using a trigger and an action (A2, K7, K8)",
-        desc=("Build your first n8n workflow end to end. An n8n Form Trigger collects a visitor's "
+        desc=("Build your first n8n workflow end to end: a Form Trigger collects a visitor's details "
+              "and a Gmail action emails them to the event administrator."),
+        desc_long=("Build your first n8n workflow end to end. An n8n Form Trigger collects a visitor's "
               "details, and a Gmail action emails them to the event administrator. You then turn the "
               "form's public URL into a QR code and place it on an event flyer, so anyone can sign up "
               "by scanning it with a phone."),
@@ -20,8 +22,10 @@ DOMAIN1 = [
                ("site-lab1-flyer.png",
                 "A sample event flyer from a previous class. The QR code encodes the form's "
                 "Production URL, so anyone can sign up by scanning it with a phone.")],
-        flows=[("flow-lab1.png",
-                "Two nodes. The Form Trigger decides WHEN the workflow runs; the Gmail node decides WHAT it does.")],
+        canvas=[("canvas-lab1.png",
+                 "The Lab 1 workflow on the n8n canvas. Two nodes: the Form Trigger decides WHEN the workflow "
+                 "runs, and the Gmail node decides WHAT it does.")],
+        chev=[[("Form Trigger","visitor submits the sign-up"),("Gmail — Send a message","administrator is emailed")]],
         steps=[
             ("In n8n, click Workflows → Add workflow, and give it a name such as 'Lab 1 — Event Signup'.", "",
              "Name it now. On a shared instance a canvas called 'My workflow 7' is impossible to find again."),
@@ -65,7 +69,9 @@ DOMAIN1 = [
         title="Lab 2 — Webhook and AI Agent (Marina Trust Bank Onboarding)",
         short="Lab 2 — Webhook and AI Agent",
         objective="deploy an AI agent that is triggered by a webhook from an external website (A1, A2, K7, K8)",
-        desc=("Replace the n8n form with a real bank website. A customer applies for an account on your "
+        desc=("Replace the n8n form with a real bank website that POSTs to a webhook, where an AI "
+              "Agent applies the bank's onboarding rules using three tools."),
+        desc_long=("Replace the n8n form with a real bank website. A customer applies for an account on your "
               "own HTML page, which POSTs to an n8n Webhook. An AI Agent applies the bank's onboarding "
               "rules, calls Google Sheets tools to check for duplicates and create the customer record, "
               "emails a confirmation, and returns a structured decision that the page renders as a "
@@ -76,9 +82,10 @@ DOMAIN1 = [
         site=[("site-lab2.png",
                 "The Marina Trust Bank site the webhook sits behind. The applicant submits here, the "
                 "AI Agent decides, and the page renders the decision as a coloured card.")],
-        flows=[("flow-lab2.png",
-                "The main chain runs left to right; the three tools below are attached to the agent's Tool input — "
-                "the agent decides which to call, and when.")],
+        canvas=[("canvas-lab2.png",
+                 "The Lab 2 workflow on the n8n canvas. The main chain runs left to right; the chat model, "
+                 "output parser and three tools hang below the agent on its Tool input.")],
+        chev=[[("Webhook — POST","the bank site submits"),("Normalise","Set node tidies the fields"),("AI Agent","+ 3 tools + parser"),("Log Decision","Google Sheets audit row"),("Respond","decision returns to the page")]],
         steps=[
             ("Create a Google Sheet named 'Retail Banking Onboarding' with a Customers tab and an Onboarding_Log tab, and seed a few existing customers.", "",
              "The seeded rows are what make the duplicate test (TC2) meaningful — without them every applicant looks new."),

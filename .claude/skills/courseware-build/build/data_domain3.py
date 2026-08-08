@@ -7,8 +7,10 @@ DOMAIN3 = [
         title="Lab 5 — RAG Customer Care Chatbot (Cook & Bake Academy)",
         short="Lab 5 — RAG Customer Care Chatbot",
         objective="deploy a RAG application that grounds an agent in the organisation's own documents (A1, A2, A3, K5, K7, K8)",
-        desc=("Cook & Bake Academy runs 20 courses across two campuses, and its two-person customer care "
-              "team retypes the same answers all day. Every answer is already written in the course "
+        desc=("Cook & Bake Academy's customer care team retypes the same answers all day, and every "
+              "answer is already written in the course brochures."),
+        desc_long=("Cook & Bake Academy runs 20 courses across two campuses, and its two-person customer "
+              "care team retypes the same answers all day. Every answer is already written in the course "
               "brochures. You build the full RAG loop: an ingestion workflow that embeds all 20 brochures "
               "into a vector store, and a chatbot that retrieves only the brochures resembling each "
               "question and answers strictly from those."),
@@ -18,12 +20,14 @@ DOMAIN3 = [
         site=[("site-lab5.png",
                 "The Cook & Bake Academy site with the course assistant open. Every answer it gives "
                 "is grounded in the 20 brochures you ingested into the vector store.")],
-        flows=[("flow-lab5-ingest.png",
-                "Ingestion — run once by hand. Twenty brochures are listed, downloaded, split (one brochure = "
-                "one chunk), embedded into 3072-dimensional vectors and inserted into the store."),
-               ("flow-lab5-agent.png",
-                "Answering — runs on every question. The agent embeds the question with the SAME model, "
-                "retrieves the nearest brochures through the Query Data Tool, and answers only from those.")],
+        canvas=[("canvas-lab5-ingest.png",
+                 "The ingestion workflow on the n8n canvas — run ONCE by hand. Twenty brochures are listed, "
+                 "downloaded, split, embedded and inserted into the vector store."),
+                ("canvas-lab5-agent.png",
+                 "The answering workflow on the n8n canvas — runs on EVERY question. The Query Data Tool and "
+                 "its embedding model hang below the agent.")],
+        chev=[[("Manual Trigger","you run ingestion once"),("Drive — list + download","20 brochures"),("Splitter","1 brochure = 1 chunk"),("Embeddings","3072-dim vectors"),("Vector Store — Insert","stored, ready to search")],
+              [("Webhook — POST","a visitor asks a question"),("AI Agent","+ Query Data Tool"),("Retrieve","nearest brochures only"),("Respond","answer grounded in those")]],
         steps=[
             ("In Google Drive create a folder named 'brochures' and upload all 20 .txt files from the lab's brochures/ folder.", "",
              "That folder becomes the academy's single source of truth. When a fee changes, it changes here and nowhere else."),

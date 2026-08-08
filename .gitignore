@@ -1,6 +1,11 @@
 # Assessment material is CONFIDENTIAL — Google Drive only, never GitHub.
+# The folder is spelled "Assessment" on disk; the lowercase rules only match it
+# because this checkout has core.ignorecase=true. Spell both cases explicitly so
+# the papers stay excluded on a case-sensitive filesystem (Linux CI) too.
 assessment/
 **/assessment/
+Assessment/
+**/Assessment/
 *Answer*.docx
 *answer-key*
 *Marking Guide*
@@ -27,3 +32,4 @@ courseware/archive/
 
 # Distribution archives (rebuildable — never pushed to GitHub)
 *.zip
+.env

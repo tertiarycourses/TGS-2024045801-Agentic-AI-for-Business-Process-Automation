@@ -64,8 +64,15 @@ VC_ROWS = [
  ("1.1", "1 August 2026",
   "Added a 'Why this step' note to every lab step; lab headings de-duplicated; version-control "
   "record added to the Markdown mirror and the mirror relocated beside the DOCX.", "Dr. Alfred Ang"),
+ ("1.2", "1 August 2026",
+  "Added a screenshot of each lab's application — the four lab websites with their chat widgets open, "
+  "plus the Lab 1 n8n canvas and sample flyer — to the slide deck and the Learner Guide.", C.TRAINER),
  (C.VERSION.lstrip("v"), C.VERSION_DATE,
-  """Added a screenshot of each lab's application — the four lab websites with their chat widgets open, plus the Lab 1 n8n canvas and sample flyer — to the slide deck and the Learner Guide.""", C.TRAINER),
+  "Slide deck restyled to the house reference format. Lab step-by-step removed from the deck and now "
+  "carried only by this guide, with a rendered n8n canvas screenshot per lab. New concept sections: "
+  "trigger nodes, data-processing nodes, the four components of an AI agent, instruction design with "
+  "worked examples, model parameters and temperature, MCP, webhooks (GET/POST, Test vs Production "
+  "URL) and human-in-the-loop with guardrails.", C.TRAINER),
 ]
 
 # ================================================================ content
@@ -222,6 +229,94 @@ TOPIC_EXTRA_CONCEPTS = {
    "outside world calls YOU. Set Allowed Origins (CORS) so a browser page may read the reply, and "
    "consider Authentication before anything goes to production — an open webhook costs you money "
    "every time a stranger calls it."),
+  ("Trigger nodes — what may start a workflow",
+   "The trigger you choose is a statement about who or what is allowed to start the process. Manual "
+   "Trigger runs on a click, for building and for one-off jobs such as the Lab 5 ingestion. Schedule "
+   "Trigger runs on a clock. Form Trigger hosts a web form for you, and is Lab 1's front door. Webhook "
+   "lets an external system call a URL you expose, and is the front door for Labs 2 to 5. Chat Trigger "
+   "uses n8n's built-in chat window. App and email triggers fire on a new Gmail message, a new Sheets "
+   "row or a new Drive file."),
+  ("Data-processing nodes — the workhorses",
+   "Between the trigger and the output these nodes shape, route and transform the data. Edit Fields "
+   "(Set) adds, renames or reshapes fields and is the node you reach for first when data is the wrong "
+   "shape. IF and Switch branch the workflow — Lab 4 uses an IF to split the approved path from the "
+   "reassignment path. Filter drops non-matching items; Merge combines branches; Split Out and "
+   "Aggregate convert between one item holding a list and many items. Code runs JavaScript or Python "
+   "for the small fraction a built-in node cannot do. HTTP Request calls any API on the internet."),
+  ("Where the data goes",
+   "Google Sheets is the audit log in Labs 2 and 4 — Append Row is the workhorse operation. Gmail "
+   "sends a message, and in Lab 4 its Send and Wait for Response operation turns email into an "
+   "approval gate. A Vector Store holds embeddings for RAG. Respond to Webhook returns data to "
+   "whoever called the webhook, which is what lets a web page render the agent's answer."),
+  ("The four components of an AI agent",
+   "Every agent in this course is exactly four parts around one hub. The MODEL is the LLM that "
+   "interprets language, reasons and chooses the next step. MEMORY keeps the conversation so a "
+   "follow-up question still makes sense, keyed on a session ID. TOOLS are the abilities it may use — "
+   "look up a Sheets row, search a vector store, send an email, call an API. INSTRUCTIONS are the "
+   "system message: identity, scope, rules and refusals, always in force on every turn. Change any "
+   "one of the four and you have a different agent."),
+  ("Model parameters — temperature and friends",
+   "Settings on the chat-model node shape HOW the model answers, and the most important is "
+   "temperature. A temperature of 0 to 0.3 is deterministic and repeatable — use it for "
+   "classification, compliance decisions and data extraction, that is, any automation that must give "
+   "the same answer twice. Around 0.7 is balanced and natural-sounding, the usual default for a "
+   "customer-facing assistant. Above 1.0 is creative and surprising, suitable for marketing copy and "
+   "never for a decision you must defend. Top-p is an alternative sampling control — tune temperature "
+   "or top-p, never both. Max tokens caps the reply length and so caps your cost. Lab 3 uses "
+   "temperature 0.2 so a compliance-bound chatbot refuses the same way every time."),
+  ("Popular LLM providers",
+   "Any chat model plugs into the same AI Agent node, so you can swap the brain and keep the agent. "
+   "This course uses Google Gemini, which also supplies the embeddings in Lab 5. OpenAI (gpt-4.1 and "
+   "the cheaper mini tier), Anthropic Claude, Meta Llama and Mistral are all commonly used. Pick by "
+   "task: small fast models for classification and guardrails, larger models for reasoning."),
+  ("Tools — and why the description matters",
+   "Tools attach to the agent's Tool input, and the model decides when to call one based on the "
+   "DESCRIPTION you write. Write that description for the model, not for a developer. Lab 2 attaches "
+   "three tools — check for a duplicate customer, create the customer record, send the confirmation "
+   "— and you can watch the agent choose between them on the canvas."),
+  ("Instructions — the four parts that constrain",
+   "Every good agent instruction states four things. IDENTITY: who the agent is and for whom. SOURCE "
+   "RULES: where answers may come from, for example 'answer only from the brochures returned by the "
+   "tool'. REFUSALS: what is out of bounds, stated explicitly. ESCALATION: what to do at the "
+   "boundary, for example 'if unsure, say so and offer a consultation'. Vague instructions produce "
+   "confident wrong answers — every rule you skip, the model improvises."),
+  ("Good and bad instructions compared",
+   "A bad instruction reads 'You are a helpful assistant. Answer the user's questions politely.' It "
+   "has no identity, no source rules, no refusals and no escalation, so it will invent a course fee "
+   "and guarantee an investment return — politely. A good instruction names the firm, limits the "
+   "topics, points at a specific tool for factual questions, lists the prohibitions, and says what to "
+   "do when unsure. The test is simple: you can try to break each line of a good instruction, and you "
+   "cannot even test a vague one."),
+  ("MCP — the Model Context Protocol",
+   "MCP is an open standard that gives agents a common plug for tools and data. Without it, every "
+   "agent needs a custom integration for every tool: N agents and M tools means N times M connectors "
+   "to build and maintain. With MCP you build one MCP server per system and any MCP-capable agent can "
+   "use it — N plus M pieces, and the tools become reusable. It is often described as USB-C for AI "
+   "tools. n8n sits on both sides: the MCP Server Trigger exposes your n8n workflows AS tools that "
+   "Claude or an IDE can call, and the MCP Client Tool attaches external MCP servers to your own n8n "
+   "agent."),
+  ("Webhooks — GET vs POST",
+   "The HTTP method is part of the contract with the caller. With GET the data rides in the URL query "
+   "string, for example ?email=alice@corp.com, so a browser can call it just by visiting the URL; you "
+   "read it in n8n as {{ $json.query.email }}. GET suits a dashboard pulling data to display. With "
+   "POST the data rides in the request body as JSON, which is what a web form or a chat widget sends; "
+   "you read it as {{ $json.body.message }}. Every lab website in this course POSTs. Set the method "
+   "on the Webhook node, and the caller must match it exactly."),
+  ("Webhook Test URL vs Production URL",
+   "Every Webhook node gives you two URLs, and confusing them is the single most common webhook bug. "
+   "The Test URL (/webhook-test/…) works only while you have clicked 'Listen for test event', handles "
+   "exactly one call and then stops, shows the run live on the canvas, and dies when you leave the "
+   "editor. The Production URL (/webhook/…) requires the workflow to be Active, is always on, accepts "
+   "unlimited calls, and logs its runs under Executions rather than drawing them on the canvas. Your "
+   "website must call the Production URL of an Active workflow."),
+  ("Configuring the Webhook node",
+   "Four settings decide whether a browser's call succeeds. METHOD AND PATH give you the URL. ALLOWED "
+   "ORIGINS (CORS) must permit the calling page, or the workflow will run perfectly and the browser "
+   "will still refuse to read the reply — the classic 'Failed to fetch'. Set it to * in class and "
+   "never in production. RESPONSE MODE should be 'Using Respond to Webhook Node' in every lab here, so "
+   "the agent's answer travels back instead of an immediate 200 OK. AUTHENTICATION can be None for a "
+   "demo, but Basic, Header or JWT for anything real — a public URL is a public door, and every call "
+   "costs you model tokens."),
   ("Structured output",
    "By default an agent returns a paragraph of prose, and prose cannot be branched on, sorted or "
    "coloured. A Structured Output Parser forces named fields such as decision, reason and riskFlags. "
@@ -257,6 +352,29 @@ TOPIC_EXTRA_CONCEPTS = {
    "When money moves; when it is a regulated communication; when the action is irreversible; when a "
    "person is vulnerable; when the stakes exceed the error rate; and when someone must be "
    "accountable. The question is never 'is the model good?' but 'what does one bad output cost?'"),
+  ("Human in, on, and out of the loop",
+   "There are three levels of human oversight, and the design question is which one a given process "
+   "deserves. Human IN the loop means the workflow pauses and a named person must approve before the "
+   "action happens — nothing reaches the customer unauthorised, which is Lab 4. Human ON the loop "
+   "means the agent acts immediately while a person monitors and can intervene or reverse it, which "
+   "suits high volume with low individual risk. Human OUT of the loop is fully autonomous, and is "
+   "acceptable only where an error is cheap, reversible and detectable — never where money or a "
+   "regulator is involved."),
+  ("How an approval suspends a running workflow",
+   "A Send-and-Wait node stops the execution mid-flight. Look at the canvas and the run is genuinely "
+   "sitting on the approval node; n8n holds the state, and it will wait for days if it has to. The "
+   "Approve and Decline buttons in the email are simply two URLs, so clicking one resumes the "
+   "execution down that branch and the approver has no new application to learn. A decline is a "
+   "reassignment rather than a deletion, because someone still owes the client an answer."),
+  ("Guardrails — two gates around the agent",
+   "Instructions shape what the agent intends; guardrails check what actually goes in and comes out. "
+   "An INPUT guardrail screens the incoming message before the model ever sees it: block prompt "
+   "injection such as 'ignore your instructions and…', strip personal data you must not process, and "
+   "rate-limit and authenticate, because a public webhook is a public door. An OUTPUT guardrail "
+   "checks the reply before it reaches a person: look for phrases you have banned such as guarantees "
+   "and forecasts, validate the structured fields against the values you allow, and on any doubt "
+   "route to a human rather than sending. Enforcing the same rule in the prompt AND in the workflow "
+   "is deliberate redundancy — only one of the two runs on a machine you control."),
   ("The accountability trail",
    "Log what the agent PROPOSED separately from what a human AUTHORISED. Keeping them apart is what "
    "lets an auditor ask whether anyone ever sent something a human never saw. Every approved action "
@@ -311,14 +429,10 @@ TOPIC_IMAGES = {
       "A vector store holds the embeddings and returns the nearest matches to a query vector.")],
 }
 
-LAB_FLOW_IMAGES = {
- 1: [("flow-lab1.png","Lab 1 — Form Trigger to Gmail.")],
- 2: [("flow-lab2.png","Lab 2 — webhook, agent and its three Google Sheets / Gmail tools.")],
- 3: [("flow-lab3.png","Lab 3 — chat webhook, agent with memory, reply.")],
- 4: [("flow-lab4.png","Lab 4 — the agent drafts (top row); a human approves or declines (bottom row).")],
- 5: [("flow-lab5-ingest.png","Lab 5 — ingestion: list, download, split, embed and store the brochures."),
-     ("flow-lab5-agent.png","Lab 5 — answering: retrieve the nearest brochures, then answer from them.")],
-}
+# The lab canvas screenshots come from the lab data itself (a["canvas"]), which is
+# the same source the deck renders, so the guide can never show a different picture
+# of the workflow than the slide does. They are generated by render_flows.py from
+# each lab's own .json, so they also match the canvas the learner imports.
 
 TROUBLESHOOTING = {
  1: [["The test form does not open","Click Execute workflow first — the Form Trigger only serves its test form while listening."],
@@ -364,12 +478,15 @@ for t in C.TOPICS:
         p(f"Learning outcome: this lab develops your ability to {a['objective']}.")
         p(f"Deck reference: {slideref('lab'+str(a['num']))}.")
         h3("Goal")
-        p(a["desc"])
+        # "desc" is kept short enough for the deck's one-line intro; where a lab
+        # also carries "desc_long", the guide prints the fuller framing instead.
+        p(a.get("desc_long") or a["desc"])
         h3("What you'll build")
         p(a["build"]+f"   (Tools: {a['services']}.)")
         for fn,cap in a.get("site",[]):
             image(fn,cap)
-        for fn,cap in LAB_FLOW_IMAGES.get(a["num"],[]):
+        h3("The workflow on the n8n canvas")
+        for fn,cap in a.get("canvas",[]):
             image(fn,cap)
         h3("Step-by-step")
         # steps may be (instruction, command) or (instruction, command, why)

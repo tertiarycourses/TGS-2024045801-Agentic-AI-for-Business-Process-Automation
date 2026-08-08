@@ -31,6 +31,17 @@ def _field(paragraph, instr, default=""):
     run._r.append(b); run._r.append(it); run._r.append(sep); run._r.append(t); run._r.append(end)
     return run
 
+def _break_before(p):
+    """Make this paragraph start a new page, without emitting a break character.
+
+    A run-level page break leaves the rest of its own paragraph on the next page;
+    when the preceding content already reaches the page boundary that shows up as
+    an entirely blank page. pageBreakBefore moves the paragraph itself instead."""
+    pPr = p._p.get_or_add_pPr()
+    el = OxmlElement("w:pageBreakBefore"); pPr.append(el)
+    p.paragraph_format.space_after = Pt(0)
+    return p
+
 def _center(p):
     p.alignment = WD_ALIGN_PARAGRAPH.CENTER; return p
 
@@ -97,7 +108,11 @@ def add_version_control(doc, rows):
         cells = t.add_row().cells
         for i, val in enumerate(row):
             cells[i].text = ""; rr = cells[i].paragraphs[0].add_run(str(val)); rr.font.size = Pt(9.5)
-    doc.add_paragraph().add_run().add_break(WD_BREAK.PAGE)
+    # Start the next section on a fresh page via page-break-BEFORE on an empty
+    # paragraph, rather than a break character inside it: a break character leaves
+    # its own paragraph behind on the following page, which renders as a blank page
+    # whenever the table above already runs close to the page boundary.
+    _break_before(doc.add_paragraph())
 
 def add_toc(doc, levels="1-3"):
     h = doc.add_paragraph(); r = h.add_run("TABLE OF CONTENTS")
@@ -106,7 +121,7 @@ def add_toc(doc, levels="1-3"):
     p = doc.add_paragraph()
     _field(p, f'TOC \\o "{levels}" \\h \\z \\u',
            default="Right-click and choose “Update Field”, or press F9, to build the table of contents.")
-    doc.add_paragraph().add_run().add_break(WD_BREAK.PAGE)
+    _break_before(doc.add_paragraph())
 
 def add_page_numbers(doc, left_text=""):
     sec = doc.sections[0]; footer = sec.footer; footer.is_linked_to_previous = False

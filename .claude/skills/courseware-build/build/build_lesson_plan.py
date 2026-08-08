@@ -47,6 +47,10 @@ def lab(n):
 
 # ------------------------------------------------ schedule (single source of truth for timing)
 # (start, end, minutes, kind, activity_text)
+#
+# WSQ rule: each training day is 9:30am–6:30pm with a 1-hour lunch, giving exactly
+# 480 minutes (8 hours) of instructional time. Tea breaks are counted WITHIN the
+# instructional total; only lunch is excluded. The self-check below enforces this.
 SCHEDULE = {
  1: (C.DAY_THEMES[1], [
     ("9:30","10:00",30,"admin",
@@ -57,51 +61,64 @@ SCHEDULE = {
      "Process Automation, business value and use cases. "+S("foundation")),
     ("11:00","11:15",15,"break","Tea break"),
     ("11:15","12:30",75,"topic",
-     "Topic 1 — Overview of n8n and AI Agents: what n8n is, hosting options, credentials, nodes, "
-     "triggers and actions, JSON and expressions, execution modes. "+S("topic1_concepts")),
+     "Topic 1 — Overview of n8n and AI Agents: what n8n is, hosting options, credentials, node types, "
+     "trigger nodes, data-processing nodes, JSON and expressions, execution modes. "+S("topic1_concepts")),
     ("12:30","13:30",60,"lunch","Lunch break"),
-    ("13:30","14:15",45,"topic",
-     "Topic 1 (continued) — What is an AI agent: model, system instruction, memory and tools; "
-     "webhooks as the front door; structured output. "+S("topic1_agent")),
-    ("14:15","15:30",75,"lab",
+    ("13:30","14:45",75,"topic",
+     "Topic 1 (continued) — AI agents: the four components (model, memory, tools, instructions), "
+     "popular LLM providers, model parameters and temperature, instruction design with worked "
+     "examples, and MCP. "+S("topic1_agent")),
+    ("14:45","15:45",60,"topic",
+     "Topic 1 (continued) — Webhooks: the inbound URL, webhook vs HTTP Request, GET vs POST, "
+     "Test vs Production URL, webhook configuration and structured output. "+S("topic1_webhook")),
+    ("15:45","16:00",15,"break","Tea break"),
+    ("16:00","17:00",60,"lab",
      f"Hands-on {lab(1)['title']}. "+S("lab1")),
-    ("15:30","15:45",15,"break","Tea break"),
-    ("15:45","17:30",105,"lab",
+    ("17:00","18:15",75,"lab",
      f"Hands-on {lab(2)['title']}. "+S("lab2")),
-    ("17:30","18:00",30,"recap","Day 1 recap, Q&A and PM digital attendance"),
+    ("18:15","18:30",15,"recap","Day 1 recap, Q&A and PM digital attendance"),
  ]),
  2: (C.DAY_THEMES[2], [
-    ("9:00","9:15",15,"recap","Day 1 recap and mandatory digital attendance (AM)"),
-    ("9:15","10:15",60,"topic",
-     "Topic 2 — Agentic Chatbot and Human in the Loop: what an agentic workflow is, rule-based vs "
-     "agentic automation, safe chatbot design and memory. "+S("topic2_chatbot")),
-    ("10:15","10:30",15,"break","Tea break"),
-    ("10:30","12:00",90,"lab",
-     f"Hands-on {lab(3)['title']}: the contact gate and the four compliance probes. "
-     +S("lab3")),
-    ("12:00","13:00",60,"lunch","Lunch break"),
-    ("13:00","13:45",45,"topic",
-     "Topic 2 (continued) — Human in the loop: when a human belongs in the workflow, the approval "
-     "pattern and building the accountability trail. "+S("topic2_hitl")),
-    ("13:45","15:00",75,"lab",
+    ("9:30","9:45",15,"recap","Day 1 recap and mandatory digital attendance (AM)"),
+    ("9:45","11:00",75,"topic",
+     "Topic 2 — Agentic Chatbot and Human in the Loop: human in, on and out of the loop; how an "
+     "approval suspends a running workflow; when a human belongs in the workflow; and guardrails. "
+     +S("topic2_hitl")),
+    ("11:00","11:15",15,"break","Tea break"),
+    ("11:15","12:30",75,"lab",
+     f"Hands-on {lab(3)['title']}: the contact gate and the four compliance probes. "+S("lab3")),
+    ("12:30","13:30",60,"lunch","Lunch break"),
+    ("13:30","15:00",90,"lab",
      f"Hands-on {lab(4)['title']}: the approve and decline paths. "+S("lab4")),
     ("15:00","15:15",15,"break","Tea break"),
-    ("15:15","16:00",45,"topic",
-     "Topic 3 — Retrieval-Augmented Generation: tokenization, embeddings, vector stores, chunking "
-     "and grounding against hallucination. "+S("topic3_concepts")),
-    ("16:00","17:15",75,"lab",
+    ("15:15","16:30",75,"topic",
+     "Topic 3 — Retrieval-Augmented Generation: why retrieval rather than a bigger prompt, the RAG "
+     "pipeline, tokenization and embeddings, chunking, vector stores and grounding. "+S("topic3_concepts")),
+    ("16:30","18:00",90,"lab",
      f"Hands-on {lab(5)['title']}: ingestion and the grounded chatbot. "+S("lab5")),
-    ("17:15","17:30",15,"recap",
+    ("18:00","18:30",30,"recap",
      "Course recap, taking it back to work, Q&A. "+S("wrapup")),
-    ("17:30","17:45",15,"assess",
+    ("18:30","18:45",15,"assess",
      "Briefing for Assessment and Assessment digital attendance"),
-    ("17:45","18:45",60,"assess",
-     "Written Assessment (WA) — Short-Answer Questions (SAQ), 1 hour, open book"),
     ("18:45","19:45",60,"assess",
+     "Written Assessment (WA) — Short-Answer Questions (SAQ), 1 hour, open book"),
+    ("19:45","20:45",60,"assess",
      "Practical Performance (PP) — hands-on n8n build tasks, 1 hour, open book. "
      "TRAQOM survey and Assessment digital attendance"),
  ]),
 }
+
+# Enforce the WSQ 8-hour rule at build time rather than trusting the table above.
+#
+# 9:30am-6:30pm is 540 elapsed minutes; removing the 1-hour lunch leaves exactly
+# 480. So the tea breaks are necessarily counted WITHIN the instructional time —
+# excluding them as well would make the rule arithmetically unsatisfiable.
+# Instructional minutes therefore exclude lunch and the assessment block only.
+for _d,(_theme,_rows) in SCHEDULE.items():
+    _instr=sum(m for _s,_e,m,k,_t in _rows if k not in ("lunch","assess"))
+    assert _instr==480, (
+        f"Day {_d} has {_instr} instructional minutes; the WSQ rule requires exactly 480 "
+        "(8 hours: 9:30am-6:30pm less a 1-hour lunch, tea breaks counted within).")
 
 # ------------------------------------------------ build document
 doc=Document()
@@ -119,8 +136,17 @@ prodoc.add_version_control(doc,[
   "Day 2 rescheduled so the final assessment follows instruction within the training day; daily "
   "timing now driven from a single source shared with the slide deck; assessment time stated "
   "separately from instructional time.","Dr. Alfred Ang"),
+ ("1.2","1 August 2026",
+  "Added a screenshot of each lab's application — the four lab websites with their chat widgets "
+  "open, plus the Lab 1 n8n canvas and sample flyer — to the slide deck and the Learner Guide.",
+  C.TRAINER),
  (C.VERSION.lstrip("v"),C.VERSION_DATE,
-  """Added a screenshot of each lab's application — the four lab websites with their chat widgets open, plus the Lab 1 n8n canvas and sample flyer — to the slide deck and the Learner Guide.""",C.TRAINER),
+  "Slide deck restyled to the house reference format (visual concept cards, chevron flow strips, "
+  "comparison panels and takeaway bands). Lab step slides removed from the deck; the click-by-click "
+  "steps now live only in the Learner Guide, and each lab carries a rendered screenshot of its own "
+  "n8n canvas. Concept coverage expanded: trigger nodes, data-processing nodes, the four components "
+  "of an AI agent, instruction design, model parameters, MCP, webhooks (GET/POST, Test vs Production "
+  "URL) and human-in-the-loop with guardrails.",C.TRAINER),
 ])
 prodoc.add_toc(doc)
 
@@ -132,8 +158,9 @@ info=[("Course Title",C.TITLE),("WSQ Course Reference",C.COURSE_CODE),
       ("TSC Title / Code",f"{C.TSC_TITLE}  ·  {C.TSC_CODE}"),
       ("Training Provider",C.ORG+"  ("+C.UEN.replace('UEN: ','UEN ')+")"),
       ("Duration",f"{C.DAYS} days · {C.HOURS_PER_DAY} training hours per day ({C.TRAINING_HOURS} hours)"),
+      # TIMING_NOTE is a complete sentence, so it takes no article in front of it.
       ("Daily Timing",f"Day 1: {C.DAY_TIMES[1]}.  Day 2: {C.DAY_TIMES[2]}.  "
-                      f"A {C.TIMING_NOTE}."),
+                      f"{C.TIMING_NOTE}."),
       ("Mode","Instructor-led, hands-on workflow-automation labs built in n8n"),
       ("Trainer",C.TRAINER)]
 t=doc.add_table(rows=0,cols=2); t.style="Table Grid"
@@ -195,14 +222,16 @@ for day,(theme,rows) in SCHEDULE.items():
         set_cell(cells[1],f"{mins} min",size=9.5,fill=fill)
         set_cell(cells[2],text,bold=(kind in ("topic","assess")),size=9.5,fill=fill)
         if kind=="assess": assessing+=mins
-        elif kind not in ("lunch","break"): training+=mins
+        # Tea breaks count within the instructional time; only lunch is excluded.
+        elif kind!="lunch": training+=mins
     for row in tbl.rows:
         row.cells[0].width=Inches(1.0); row.cells[1].width=Inches(0.8); row.cells[2].width=Inches(4.9)
     p=doc.add_paragraph()
     note=f"Instructional time: {training} minutes ({training//60} hours)."
     if assessing:
         note+=("  Assessment: 2 hours (WA 1 hour + PP 1 hour), plus a 15-minute briefing.")
-    note+="  Tea breaks and lunch are additional to instructional time."
+    note+=("  The day runs 9:30 am - 6:30 pm: the 1-hour lunch is excluded from "
+           "instructional time and the tea breaks are counted within it.")
     r=p.add_run(note); r.italic=True; r.font.size=Pt(9.5); r.font.color.rgb=GREY
     grand_train+=training; grand_assess+=assessing
     assert training==EXPECT, f"Day {day} instructional minutes = {training}, expected {EXPECT}"

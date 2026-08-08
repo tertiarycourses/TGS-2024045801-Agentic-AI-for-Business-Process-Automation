@@ -7,7 +7,9 @@ DOMAIN2 = [
         title="Lab 3 — Chatbot Webhook (Investment Advisor)",
         short="Lab 3 — Chatbot Webhook",
         objective="deploy an agentic chatbot on a website that operates within regulatory limits (A1, A2, K7, K8)",
-        desc=("A Singapore investment advisory firm wants a chatbot on its lead-magnet website. "
+        desc=("A compliance-bound chatbot for an investment advisory firm: no answer until the firm "
+              "can contact the visitor, and never any financial advice."),
+        desc_long=("A Singapore investment advisory firm wants a chatbot on its lead-magnet website. "
               "Compliance imposes two non-negotiable rules: no visitor gets an answer until the firm can "
               "contact them, and the chatbot must never give financial advice. You build a compact "
               "agentic workflow that enforces both — a contact gate, a fixed FAQ, and a refusal rule."),
@@ -17,10 +19,10 @@ DOMAIN2 = [
         site=[("site-lab3.png",
                 "The Investment Advisor site with the chat widget open. Note the contact gate in "
                 "action — it asks for the visitor's name before it will answer anything.")],
-        flows=[("flow-lab3.png",
-                "Seven nodes: a webhook in, a Set node, the agent with its chat model and memory, a response "
-                "body and a reply out. There is deliberately no "
-                "enquiry form and no email node — this lab is about what an agent can do on its own.")],
+        canvas=[("canvas-lab3.png",
+                 "The Lab 3 workflow on the n8n canvas. A small graph: webhook in, normalise, the agent with "
+                 "its chat model and session memory, then the reply back out.")],
+        chev=[[("Chat Webhook — POST","the widget sends a message"),("Normalize","Code node shapes the input"),("AI Agent","Gemini 0.2 + window memory"),("Respond to Chat","reply returns to the widget")]],
         steps=[
             ("Choose Workflows → Import from File and select lab3-chatbot-webhooks.json.", "",
              "A small canvas. The intelligence is in the system message, not in the number of nodes."),
@@ -65,7 +67,9 @@ DOMAIN2 = [
         title="Lab 4 — Human in the Loop (Client Rapport Assistant)",
         short="Lab 4 — Human in the Loop",
         objective="apply a human approval gate so no AI-drafted communication is sent unsupervised (A1, A2, A3, K7, K8)",
-        desc=("Meridian Asset Management's relationship managers take three days to answer worried "
+        desc=("An agent reads a worried client's concern, flags compliance risks and drafts a reply — "
+              "but sends nothing until a licensed manager approves it."),
+        desc_long=("Meridian Asset Management's relationship managers take three days to answer worried "
               "clients. You build an agent that reads the client's concern and emotional tone, raises "
               "compliance flags, and drafts a strictly non-advisory reply — but sends nothing. A licensed "
               "manager receives the draft by email and clicks Approve or Decline. Only then does anything "
@@ -76,9 +80,10 @@ DOMAIN2 = [
         site=[("site-lab4.png",
                 "The Meridian client portal. The widget states plainly that a licensed manager "
                 "reviews every reply — the human-in-the-loop promise made visible to the client.")],
-        flows=[("flow-lab4.png",
-                "The top row is the agent's territory — it classifies, flags and drafts. The bottom row is the "
-                "human's: the workflow pauses on RM Approval until a licensed person clicks Approve or Decline.")],
+        canvas=[("canvas-lab4.png",
+                 "Everything up to RM Approval is the agent's territory; the IF node after it splits into "
+                 "the approved path (top) and the reassignment path (bottom).")],
+        chev=[[("Webhook","client sends a concern"),("AI Agent","classify · flag · draft"),("Log Draft","before any human sees it"),("RM Approval","Send & Wait — PAUSED"),("IF","Approve → send · Decline → reassign")]],
         steps=[
             ("Create a Google Sheet named exactly 'Meridian Client Rapport' with three tabs: Drafts, Approved_Replies and Handover_Queue.", "",
              "Three tabs, not one. Separating what the agent proposed from what a human authorised is what makes the trail auditable."),

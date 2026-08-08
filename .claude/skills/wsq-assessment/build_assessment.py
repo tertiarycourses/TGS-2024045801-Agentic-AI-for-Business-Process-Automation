@@ -41,8 +41,8 @@ for _cand in (os.path.join(REPO, ".claude/skills/tertiary-lesson-plan"),
 import prodoc  # cover page + version control + page numbers (same as LP/LG)
 
 # ─── EDIT PER COURSE ────────────────────────────────────────────────────────
-TITLE       = "Agentic AI for Business Process Automation"
-COURSE_CODE = "TGS-2024045801"
+TITLE       = "Application Integration with Docker and Kubernetes"
+COURSE_CODE = "TGS-2021010366"
 # ────────────────────────────────────────────────────────────────────────────
 # The cover page renders prodoc's module-level TGS constant. Override it so the
 # assessment cover shows THIS course's ref (works with either prodoc version —
@@ -60,388 +60,239 @@ def _logo(name):
             return p
     return None
 ORG_LOGO    = _logo("tertiary-infotech-logo.png")
-COURSE_LOGO = _logo("n8n-logo.png")   # None if absent → Tertiary-only cover (as LP/LG)
+COURSE_LOGO = _logo("docker-k8s-course-logo.png")   # None if absent → Tertiary-only cover (as LP/LG)
 
-Q_VER, A_VER = "v1", "v1"   # single standardised version across all four files
+Q_VER, A_VER = "v5", "v5"   # single standardised version across all four files
 BRAND = RGBColor(0x1F, 0x6F, 0xEB); DARK = RGBColor(0x11, 0x18, 0x27); GREY = RGBColor(0x55, 0x5B, 0x66)
 # Assessments carry the cover page only — no Document Version Control Record.
 
-# ---------------------------------------------------------------- WRITTEN (KNOWLEDGE) — K1..K8
+# ---------------------------------------------------------------- WRITTEN (KNOWLEDGE)
+# (criterion, context, question, [model-answer points]) — each traces to the course slides.
 WRITTEN = [
  ("K1",
-  "A business team is investigating how agentic AI could be introduced into their workflows to boost "
-  "productivity and take over routine tasks. Before choosing a tool they want to be clear about what "
-  "\"agentic\" actually adds over the generative AI they already use.",
-  "Explain what agentic AI is, and describe how it differs from generative AI. In your answer, refer to how "
-  "each one behaves when given a task.",
-  ["Generative AI creates content — text, images or code — in response to a prompt. It answers once and then "
-   "stops, and it relies on the user to supply the context and the goal.",
-   "Agentic AI is given a GOAL rather than a prompt. It uses the reasoning power of a large language model to "
-   "break a complex task into simpler ones.",
-   "An agent runs a loop: it observes the situation, chooses an action, acts on the world through a TOOL, "
-   "observes the result, and repeats until the goal is met.",
-   "An agent therefore takes actions and reaches real systems (a spreadsheet, an inbox, an API); a generative "
-   "model only produces an answer for a human to act on.",
-   "Example contrast: generative AI = \"draft me an email\"; agentic AI = \"read the enquiry, check the CRM, "
-   "reply to the customer and log the decision\".",
-   "(Slides: The Evolution of AI · Agentic AI is AI that does the work · How an AI Agent Works · "
-   "Agentic AI vs Generative AI)"]),
-
+  "Containers have largely replaced virtual machines as the unit of application packaging. A VM virtualises "
+  "hardware and runs a full guest operating system on a hypervisor, while a container packages just the "
+  "application and its dependencies.",
+  "What are the differences between a Virtual Machine and a container, and why do these differences matter in "
+  "modern application development?",
+  ["A VM virtualises hardware and runs a full guest OS on a hypervisor; a container shares the host OS kernel "
+   "and packages only the application plus its dependencies.",
+   "VMs are heavier: gigabytes in size, boot in seconds–minutes, and carry hypervisor overhead "
+   "(e.g. VMware, VirtualBox, EC2).",
+   "Containers are lighter: megabytes in size, start in milliseconds, with minimal overhead "
+   "(e.g. Docker, containerd).",
+   "Why it matters: containers pack many more workloads per host, give consistent 'build once, run anywhere' "
+   "environments, and start/scale fast — ideal for microservices and CI/CD. "
+   "(Slides: Why Containers — Virtual Machines vs Containers / How It Works — Docker Architecture)"]),
  ("K2",
-  "A logistics company wants to automate the handling of delivery-exception emails. Their analyst has been "
-  "told that n8n workflows are built from nodes, and that the first node is special.",
-  "Describe how an n8n workflow is structured. In your answer explain what a trigger is, what an action is, "
-  "and how data passes from one node to the next.",
-  ["An n8n workflow is a set of NODES wired together on a visual canvas; data flows along the connections from "
-   "one node to the next.",
-   "A TRIGGER is the first node and decides WHEN the workflow runs — for example a Form Trigger, a Webhook, a "
-   "Schedule, a Chat Trigger or a Manual trigger.",
-   "An ACTION decides WHAT the workflow does — send a Gmail message, append a Google Sheets row, call an HTTP "
-   "API, or write to a database.",
-   "Logic nodes (IF, Switch, Merge, Split Out, Code, Edit Fields) control the flow between them; AI nodes "
-   "(AI Agent, Chat Model, Memory, Embeddings, Vector Store, Tools) add reasoning.",
-   "Data travels as a list of ITEMS, each a JSON object of key/value pairs. Each node reads the previous "
-   "node's output and adds to it.",
-   "A later node reads an earlier value with an EXPRESSION, e.g. {{ $json.Name }}. Expressions work in any "
-   "field — subject lines, URLs, conditions and message bodies. The field must be in Expression mode, not "
-   "Fixed mode, or n8n prints the braces literally.",
-   "(Slides: The Building Blocks — n8n Nodes · Triggers and Actions · Data, JSON and Expressions. Lab 1.)"]),
-
+  "A Docker image is built automatically from a text recipe. Getting the instructions and their order right "
+  "controls both what the image contains and how fast it rebuilds.",
+  "How do you create a Docker image, and what are the key instructions in a Dockerfile?",
+  ["A Dockerfile is a text recipe of instructions Docker runs to build an image automatically; you build it "
+   "with `docker build -t <name> .`.",
+   "Key instructions: FROM (base image), WORKDIR, COPY, RUN, ENV, EXPOSE, VOLUME, and CMD / ENTRYPOINT.",
+   "Each instruction creates a cached layer; unchanged layers are reused for fast rebuilds. Order matters — put "
+   "rarely-changing steps first (COPY requirements.txt + RUN pip install BEFORE COPY . .) to keep dependencies "
+   "cached, and use a .dockerignore to keep junk out of the build context.",
+   "CMD sets a default, overridable command; ENTRYPOINT sets a fixed executable with args appended. "
+   "(Slides: Building Images — What is a Dockerfile? / Layers & Cache / CMD vs ENTRYPOINT)"]),
  ("K3",
-  "A bank is about to put an AI agent in front of customers. The compliance officer asks to see \"the thing "
-  "that controls what it will and will not say\" before approving the launch.",
-  "Explain what a system instruction is and why it matters. Provide one example of a system instruction you "
-  "would write for a customer-service agent, and state four rules a good system instruction should contain.",
-  ["A system instruction defines the agent's ROLE, SCOPE, PROHIBITIONS and ROUTING RULES. It is the main "
-   "control surface for the agent's behaviour — in a regulated setting it is a compliance control, not "
-   "prompt-engineering polish.",
-   "Example: \"You are the customer-service assistant for Marina Trust Bank. Answer only questions about "
-   "account opening, branch locations and opening hours. Use the customer_lookup tool for any question about "
-   "an existing account. Never give financial or investment advice, and never state a fee that the tool did "
-   "not return. If you do not know, say so and offer to connect the customer to a human.\"",
-   "Rule 1 — State the role plainly, and narrowly. A chatbot for one job refuses far more reliably than a "
-   "general assistant.",
-   "Rule 2 — Give the scope and the limits: what it must answer, and what it must refuse.",
-   "Rule 3 — Say which tool to use for which kind of question, explicitly.",
-   "Rule 4 — Tell it to say \"I don't know\" rather than invent an answer; and ask for a specific output "
-   "format when something downstream depends on it.",
-   "Then test it with real questions — including the ones you most fear being asked — and refine.",
-   "(Slides: The Four Parts of an n8n AI Agent · Writing a Good System Instruction · Designing a Safe Agentic "
-   "Chatbot. Labs 2, 3, 4.)"]),
-
+  "Docker runs containers on a single host. As applications grow you need to run and manage many containers "
+  "reliably across a cluster of machines.",
+  "What are the benefits of using Kubernetes for deploying and managing containerised applications?",
+  ["Docker runs containers on one host; Kubernetes orchestrates them across a cluster of nodes.",
+   "It self-heals (restarts failed Pods), scales workloads up and down, and performs rolling updates with no "
+   "downtime.",
+   "It is declarative: you describe the desired state in YAML and Kubernetes continuously makes it true; "
+   "kubectl is the CLI (get / describe / apply / delete / scale / rollout).",
+   "Architecture: a Control Plane (API Server, etcd, Scheduler, Controller Manager) drives Worker Nodes "
+   "(kubelet, kube-proxy) that run your Pods. "
+   "(Slides: Orchestration — Why Kubernetes? / How It Works — Cluster Architecture)"]),
  ("K4",
-  "An insurer runs two automations. The first routes claim forms by claim type using fixed rules. The second "
-  "reads free-text complaint emails and decides how to handle each one. The team is debating whether both "
-  "should be built the same way.",
-  "Compare a rule-based (RPA) workflow with an agentic workflow. Explain the strengths and weaknesses of each, "
-  "and state which of the two automations above suits which approach, and why.",
-  ["A RULE-BASED (RPA) workflow has every branch wired by hand — IF/Switch on exact values. It is predictable, "
-   "easy to audit and cheap to run, but it breaks on anything the designer did not foresee.",
-   "An AGENTIC workflow is one where the LLM makes the routing decisions. It understands free text and intent "
-   "and handles cases nobody anticipated, but it needs guardrails, logging and testing.",
-   "In an agentic workflow you still design the process, the guardrails and the tools; what you hand over is "
-   "the JUDGEMENT about which path a particular case should take.",
-   "Claim forms by claim type → rule-based. The input is structured, the rules are fixed and high-volume, and "
-   "determinism is worth more than flexibility.",
-   "Free-text complaint emails → agentic. The input is language, the cases vary, and no fixed branch could "
-   "cover them.",
-   "This is the shift from Robotic Process Automation (RPA), which constructs the workflow manually and only "
-   "handles rigid tasks, to Agentic Process Automation (APA), where an agent orchestrates the workflow and "
-   "handles rigid and flexible tasks alike.",
-   "(Slides: What is an Agentic Workflow · Rule-Based Workflow vs Agentic Workflow · From RPA to Agentic "
-   "Process Automation)"]),
-
+  "In Kubernetes a Pod's IP address changes every time it restarts, scales or is updated, so clients cannot "
+  "target Pods directly. Services solve this.",
+  "Why do Pods need Services, and what are the main types of Service in Kubernetes and how does each function?",
+  ["Pod IPs change on every restart, scale or update, so you can't rely on them; a Service gives a stable "
+   "address and load-balances across the Pods it selects (by labels).",
+   "ClusterIP — internal only; reachable from inside the cluster for service-to-service traffic (the default).",
+   "NodePort — opens a fixed port (30000–32767) on every node, giving external access to the Service.",
+   "LoadBalancer — provisions an external (cloud) load balancer with a single external IP, extending NodePort; "
+   "the labs use ClusterIP and NodePort. "
+   "(Slide: Networking — Why Services?)"]),
  ("K5",
-  "A retailer's website needs a chat widget that reaches an AI agent running in n8n. The developer asks how "
-  "the browser is supposed to start a workflow that lives on another server.",
-  "Explain what a webhook is and how it differs from an HTTP Request node. In your answer describe the "
-  "difference between the Test URL and the Production URL, and state two settings you must configure before a "
-  "public website can use the webhook.",
-  ["A WEBHOOK is a URL that any external system can send data to (usually an HTTP POST). It starts your "
-   "workflow when it is called — the website, an app, a payment provider or another workflow.",
-   "It is the OPPOSITE direction from an HTTP Request node: with an HTTP Request node YOUR workflow calls the "
-   "outside world; with a Webhook the outside world calls YOU.",
-   "The TEST URL (/webhook-test/…) works only while you have clicked \"Listen for test event\", and accepts "
-   "exactly ONE request. It shows the incoming data live on the canvas while you build.",
-   "The PRODUCTION URL (/webhook/…) works only while the workflow is ACTIVE, and accepts unlimited requests. "
-   "Switch to it the moment anyone but you needs the page to work. A QR code or website pointing at a Test URL "
-   "works exactly once and then returns 404.",
-   "Setting 1 — Allowed Origins (CORS). Without it the n8n execution succeeds but the browser refuses to read "
-   "the reply (the classic \"Failed to fetch\"). '*' is acceptable in class, never in production.",
-   "Setting 2 — Authentication (None / Basic Auth / Header Auth / JWT). An open webhook can be called by "
-   "anyone who learns the URL, and every call costs you an LLM invocation.",
-   "Also relevant: the HTTP method (GET carries data in the query string; POST carries a JSON body, which is "
-   "what a chat widget sends), and the Respond mode, so a \"Respond to Webhook\" node can return the agent's "
-   "answer to the caller.",
-   "(Slides: Webhooks — the Front Door to Your Agent · Test vs Production Execution. Labs 2, 3, 4, 5.)"]),
-
- ("K6",
-  "A wealth-management firm wants an AI assistant to draft replies to worried clients. Compliance will not "
-  "approve an agent that emails clients on its own, but the firm still wants the speed benefit.",
-  "Explain what human-in-the-loop means and how it is implemented in an n8n workflow. State four situations in "
-  "which you would insist on a human approval step, and explain what the workflow must record so that the "
-  "process is auditable.",
-  ["HUMAN-IN-THE-LOOP means some actions are too consequential to automate: the workflow PAUSES until a named "
-   "person approves or declines. The agent may do everything except the one thing that matters — sending.",
-   "In n8n this is the Gmail \"Send and Wait for Response\" node. It emails the approver with Approve and "
-   "Decline buttons, and the execution genuinely pauses on the canvas until a button is clicked.",
-   "An IF node then routes on the decision: the true branch performs the action; the false branch reassigns "
-   "the case instead of discarding it.",
-   "Situation 1 — Money moves: payments, refunds, credit decisions.",
-   "Situation 2 — It is a regulated communication: a licensed firm writing to a client about their money, "
-   "health or legal position.",
-   "Situation 3 — The action is irreversible: sending an email, deleting a record, publishing content.",
-   "Situation 4 — A person is vulnerable, or the stakes exceed the model's error rate. The question is never "
-   "\"is the model good?\" but \"what does one bad output cost?\"",
-   "For the audit trail, log what the agent PROPOSED separately from what a human AUTHORISED. Keeping them "
-   "apart is what lets an auditor ask whether anyone ever sent something a human never saw.",
-   "Every approved action carries the NAME of the approver; every declined one is reassigned to a NAMED "
-   "person. No accountability column should ever be empty — a decline is a reassignment, not a deletion.",
-   "(Slides: Human in the Loop · The Human-in-the-Loop Pattern · When to Put a Human in the Loop · Building "
-   "the Audit Trail. Lab 4.)"]),
-
- ("K7",
-  "A training academy's chatbot keeps quoting course fees that do not exist. The academy has 20 course "
-  "brochures that contain every correct answer, and someone suggests simply pasting all of them into the "
-  "agent's prompt.",
-  "Explain what Retrieval-Augmented Generation (RAG) is and why it is preferable to pasting all the documents "
-  "into the prompt. Describe the steps of the RAG pipeline, and explain the role of embeddings and chunking.",
-  ["RAG (Retrieval-Augmented Generation) retrieves the few documents that RESEMBLE the question and gives the "
-   "model only those, instead of everything. The model reads what matters rather than the whole corpus.",
-   "Why not paste everything: for 20 short brochures it would work, but add 200 more and the prompt exceeds "
-   "the model's context window; long prompts also degrade quality because models attend less well to the "
-   "middle of a long context; and you pay for every token on every question whether it was relevant or not.",
-   "Pipeline — INGESTION (run once): collect the source documents → split them into chunks → embed each chunk "
-   "into a vector → store the vectors in a vector store.",
-   "Pipeline — RETRIEVAL (every question): embed the question with the SAME model → retrieve the nearest "
-   "chunks from the store → the LLM answers from what was retrieved.",
-   "EMBEDDINGS: text is first split into tokens, then an embedding model turns a chunk into a vector — a list "
-   "of numbers positioned so text about similar things lands close together. \"How much is the sourdough "
-   "course?\" lands near the sourdough brochure and far from the sushi one, even though they share no words.",
-   "CHUNKING is the single biggest lever on RAG quality. The right chunk is the smallest piece of text that "
-   "still answers a question on its own. Too small and a brochure is sliced so the course name is separated "
-   "from its fee — retrieval finds one without the other. Too large and irrelevant text crowds the prompt.",
-   "In the lab, chunk size 4000 with overlap 0 makes one brochure exactly one vector, so the fee is never "
-   "separated from the course it belongs to.",
-   "A VECTOR STORE holds the embeddings and finds nearest neighbours fast. n8n's Simple Vector Store needs no "
-   "setup but is wiped when n8n restarts; production uses Pinecone, Supabase (pgvector) or Qdrant.",
-   "(Slides: What is RAG · Why Not Just Paste Everything · The RAG Pipeline · Chunking — the Biggest Lever · "
-   "Choosing a Vector Store. Lab 5.)"]),
-
- ("K8",
-  "You are deploying the academy's RAG chatbot. During testing it answers \"I don't have that in our course "
-  "information\" to every question, and on another occasion invents an instructor's name. Both must be fixed "
-  "before go-live.",
-  "Describe the procedure for deploying a RAG application in n8n, and explain how you would diagnose these two "
-  "failures. State the instructions you would give the agent to keep its answers grounded.",
-  ["Deployment procedure — INGESTION: put the source documents in a Drive folder; import the ingestion "
-   "workflow; point it at your folder; set the memory key / index name; configure the splitter (chunk size and "
-   "overlap); select the embeddings credential; turn Clear Store ON so re-running replaces rather than "
-   "duplicates; then run it once.",
-   "Deployment procedure — ANSWERING: import the agent workflow; point the retrieval tool at the SAME memory "
-   "key / index; select the SAME embeddings model; write the grounding instructions; set the webhook path and "
-   "CORS; activate and copy the Production URL into the website.",
-   "Diagnosing \"I don't have that\" for everything: the memory key on the retrieval tool does not match the "
-   "one used at ingestion, so the agent is searching an empty store. This is the most common failure and it "
-   "raises no error anywhere. Other causes: the ingestion workflow was never run, or n8n restarted and wiped "
-   "the in-memory store.",
-   "Diagnosing an invented instructor name: the agent did not call the retrieval tool, or called it and "
-   "ignored the result. Check the execution log to confirm the tool actually ran. Fix the INSTRUCTION, not the "
-   "documents — then ask what else it might invent that you have not thought to test.",
-   "Also verify the ingestion and retrieval embedding models are IDENTICAL — a question embedded by one model "
-   "cannot be compared against documents embedded by another; the comparison silently returns nonsense. And "
-   "the store's dimension must match the model's output (gemini-embedding-001 = 3072).",
-   "Grounding instructions: always call the tool before answering any factual question; base every factual "
-   "claim on what the tool returned; say \"I don't have that in our course information\" when the documents "
-   "are silent; never invent a fee, a date, a duration, a course code, an instructor name or a discount; and "
-   "never mention the vector store or that you are searching documents.",
-   "Test with deliberate traps: ask about a course that does not exist, a person no document names, and a "
-   "discount never offered. Any confident answer is a failure, however fluent.",
-   "(Slides: The Rules That Keep RAG Working · Grounding an Agent Against Hallucination. Lab 5, including the "
-   "TC7–TC9 hallucination probes.)"]),
+  "Not every workload runs forever. Alongside long-running Deployments, Kubernetes provides objects for work "
+  "that finishes.",
+  "What is the difference between a Job and a CronJob in Kubernetes, and when should each be used?",
+  ["A Job runs one or more Pods to completion — it runs to success and then stops, and does not restart on "
+   "success; use it for finite batch work (e.g. a one-off TaskBoard report or a database migration).",
+   "A CronJob runs Jobs on a schedule using standard cron syntax; use it for recurring scheduled work "
+   "(e.g. a nightly cleanup or backup).",
+   "Contrast with a Deployment, which keeps long-running Pods alive indefinitely (like a web server) — "
+   "Jobs and CronJobs are for work that is meant to finish. "
+   "(Slides: Persist & Schedule — Storage & Batch Workloads / Lab 19 — Jobs & CronJobs)"]),
 ]
 
-# ---------------------------------------------------------------- PRACTICAL (ACTIVITY-BASED) — A1..A3
+# ---------------------------------------------------------------- PRACTICAL (ACTIVITY-BASED)
 SCENARIO = (
- "Meridian Business Services is a Singapore firm that runs events, handles customer enquiries through its "
- "website, and answers the same questions about its training courses all day long. Repetitive administrative "
- "work is slowing the team down and replies to customers take too long.\n\n"
- "You have been engaged to automate three of their processes with n8n. You will build a workflow that captures "
- "event sign-ups, deploy an AI agent behind their public website with a human approval step so that nothing "
- "reaches a customer unchecked, and stand up a Retrieval-Augmented Generation chatbot grounded in the firm's "
- "own course documents.\n\n"
- "Complete the three tasks below. Each mirrors a hands-on lab you built in class. For every task, paste a "
- "screenshot of your working n8n canvas and of the result (the email received, the approval message, or the "
- "chatbot's answer) as evidence.")
+ "You have joined a startup as a DevOps engineer. The team is shipping a small web application and you own the "
+ "full path from a single container to a Kubernetes cluster: containerise a Flask app and publish it to Docker "
+ "Hub, stand up a multi-service stack with Docker Compose, then migrate the workload to Kubernetes — deploying "
+ "and troubleshooting a Pod, exposing it with a Service, and giving it persistent storage. Complete the four "
+ "tasks below; each mirrors a hands-on activity you did in class. For each task, paste your Dockerfile / YAML "
+ "and a screenshot of your output as evidence.")
 
-BOX_CAP = "Paste your n8n workflow screenshot and the result screenshot in the box below"
-
+# (label, criterion, task prompt, box caption, model-answer build steps citing the activity)
+BOX_CAP = "Paste your Dockerfile / YAML and a screenshot of your output in the box below"
 PRACTICAL = [
- ("Task 1", "A2",
-  "Deploy an automated workflow according to plan (trigger and action). Meridian runs an evening networking "
-  "event and needs sign-ups collected without anyone re-typing them. "
-  "Part A — Build an n8n workflow with an n8n Form Trigger titled \"Meridian Event Signup\", carrying four "
-  "fields: Name (Text), Email (Email), Phone (Number) and Message (Textarea), with Name and Email marked as "
-  "required. "
-  "Part B — Add a Gmail node using the \"Send a message\" operation. Set To to the event administrator's "
-  "address and Subject to \"New Enquiry\", and build the message body from the submitted fields using "
-  "expressions so the email shows the sign-up's name, email, phone and message. "
-  "Part C — Save the workflow, set it Active, copy the Form's PRODUCTION URL, and generate a QR code for that "
-  "URL that could be printed on the event flyer. State why the Production URL must be used here rather than "
-  "the Test URL. "
-  "Evidence: the canvas, the received email, and the QR code. (Lab 1 — n8n Trigger and Action.)",
+ ("Task 1", "LO1",
+  "Containerise a Flask application (Docker). You are given a simple Flask note-taking app (app.py and "
+  "requirements.txt). "
+  "Part A — Write a Dockerfile that: uses python:3.12-slim; sets WORKDIR to /app; copies requirements.txt and "
+  "installs deps with pip install --no-cache-dir; copies the rest of the code; sets ENV DATA_DIR=/app/data and "
+  "APP_PORT=5000; declares /app/data as a VOLUME; EXPOSEs 5000; and runs the app with python app.py. "
+  "Part B — Build the image as notes-app, run it with the container port mapped to 5001 on the host, add a note "
+  "with curl -X POST -d \"note=Hello Docker\" http://localhost:5001/add and view it with curl "
+  "http://localhost:5001/notes. "
+  "Part C — Tag the image as <your-username>/notes-app:v1, push it to Docker Hub, and state the command someone "
+  "else would run to pull and use it. (Labs 3-4 — Build image · Lab 9 — Docker Hub.)",
   BOX_CAP,
-  "Part A — Form Trigger:\n"
-  "  • Workflows → Add workflow; add an 'n8n Form Trigger' node.\n"
-  "  • Form Title: Meridian Event Signup (plus a short description).\n"
-  "  • Add fields: Name (Text, required), Email (Email, required), Phone (Number), Message (Textarea).\n"
-  "  • The field NAMES become the JSON keys the next node reads.\n\n"
-  "Part B — Gmail action:\n"
-  "  • Add a Gmail node after the trigger; operation = 'Send a message'.\n"
-  "  • Connect the Gmail credential (OAuth2) via 'Sign in with Google'.\n"
-  "  • To = the administrator's address; Subject = New Enquiry.\n"
-  "  • Switch the Message field to EXPRESSION mode (not Fixed) and build the body, e.g.:\n"
-  "      Name: {{ $json.Name }}\n"
-  "      Email: {{ $json.Email }}\n"
-  "      Tel: {{ $json.Phone }}\n"
-  "      Message: {{ $json.Message }}\n"
-  "  • In Fixed mode n8n prints the braces literally — this is the usual reason the email shows\n"
-  "    {{ $json.Name }} instead of a value.\n\n"
-  "Part C — Publish:\n"
-  "  • Execute workflow, submit a test entry, confirm the email arrives.\n"
-  "  • Save and toggle the workflow ACTIVE; copy the Form's Production URL.\n"
-  "  • Paste it into a QR generator (e.g. alfredang.github.io/qrcodegenerator) and download the PNG.\n"
-  "  • WHY the Production URL: the Test URL only answers while 'Listen for test event' is armed and\n"
-  "    accepts exactly ONE request. A QR code encoding a Test URL scans perfectly and works once,\n"
-  "    then returns 404 for everyone else. The Production URL works whenever the workflow is Active.\n\n"
-  "Acceptable evidence: canvas showing Form Trigger → Gmail; the received email with real values;\n"
-  "the QR code image."),
-
- ("Task 2", "A1",
-  "Implement an AI agent application, in collaboration with the service provider's platform, with human "
-  "oversight. Meridian wants an AI assistant to answer customer messages from its website — but the manager "
-  "must approve every reply before a customer sees it. "
-  "Part A — Build a workflow starting with a Webhook node (method POST, a named path, Allowed Origins set so a "
-  "browser page may read the reply, and Respond set to use a 'Respond to Webhook' node). "
-  "Part B — Add an AI Agent with a chat model attached. Write a system instruction that defines its role for "
-  "Meridian, states its scope, and lists at least three explicit prohibitions. Configure it to return a "
-  "structured output containing at least a draft reply and a priority or category field, and explain why "
-  "structured output is used instead of prose. "
-  "Part C — Add the human approval step: acknowledge the customer immediately, log the agent's draft, then use "
-  "Gmail \"Send and Wait for Response\" to email the manager with Approve/Decline buttons. Add an IF node so "
-  "that Approve sends the reply and logs it, while Decline sends nothing to the customer and instead reassigns "
-  "the case to a named person. "
-  "Evidence: the canvas, the approval email, and proof that a declined case sent nothing to the customer. "
-  "(Labs 2, 3 and 4 — Webhook and AI Agent · Chatbot Webhook · Human in the Loop.)",
+  "Part A — Dockerfile:\n"
+  "FROM python:3.12-slim\n"
+  "WORKDIR /app\n"
+  "COPY requirements.txt .\n"
+  "RUN pip install --no-cache-dir -r requirements.txt\n"
+  "COPY . .\n"
+  "ENV DATA_DIR=/app/data\n"
+  "ENV APP_PORT=5000\n"
+  "VOLUME /app/data\n"
+  "EXPOSE 5000\n"
+  "CMD [\"python\", \"app.py\"]\n\n"
+  "Part B — Build & run:\n"
+  "docker build -t notes-app .\n"
+  "docker run -d -p 5001:5000 notes-app\n"
+  "curl -X POST -d \"note=Hello Docker\" http://localhost:5001/add\n"
+  "curl http://localhost:5001/notes\n\n"
+  "Part C — Push to Docker Hub:\n"
+  "docker tag notes-app <your-username>/notes-app:v1\n"
+  "docker login\n"
+  "docker push <your-username>/notes-app:v1\n"
+  "# Someone else pulls & runs:\n"
+  "docker pull <your-username>/notes-app:v1\n"
+  "docker run -p 5001:5000 <your-username>/notes-app:v1"),
+ ("Task 2", "LO2",
+  "Deploy a multi-service site with Docker Compose. Stand up a WordPress site backed by a MySQL database. "
+  "Part A — Write a docker-compose.yml with two services: db using image mysql:8.0 with env "
+  "MYSQL_ROOT_PASSWORD=rootpass, MYSQL_DATABASE=wordpress, MYSQL_USER=wpuser, MYSQL_PASSWORD=wppass and a named "
+  "volume db-data mounted at /var/lib/mysql; and wordpress using image wordpress:latest, mapping host port 8080 "
+  "to container port 80, with env WORDPRESS_DB_HOST=db, WORDPRESS_DB_USER=wpuser, WORDPRESS_DB_PASSWORD=wppass, "
+  "WORDPRESS_DB_NAME=wordpress, and depends_on db. "
+  "Part B — Start the stack with docker compose up -d, confirm both services with docker compose ps, and open "
+  "http://localhost:8080 to reach the WordPress setup page. (Labs 10-12 — Docker Compose.)",
   BOX_CAP,
-  "Part A — Webhook front door:\n"
-  "  • Add a Webhook node. HTTP Method = POST; Path = e.g. meridian-customer-query.\n"
-  "  • Respond = 'Using Respond to Webhook Node' so the agent's answer can be returned to the caller.\n"
-  "  • Options → Allowed Origins (CORS) = * so the browser page is permitted to read the reply.\n"
-  "    Without CORS the n8n execution succeeds but the browser reports 'Failed to fetch'.\n"
-  "  • Use the Test URL with 'Listen for test event' while building; switch to the Production URL\n"
-  "    (workflow Active) once the website must work for anyone else.\n"
-  "  • Add a Set/Code node to normalise the incoming fields from $json.body.\n\n"
-  "Part B — The agent:\n"
-  "  • Add an AI Agent node; attach a Chat Model (Google Gemini or OpenAI) credential.\n"
-  "  • System instruction must state the ROLE, the SCOPE and the PROHIBITIONS, e.g.:\n"
-  "      'You are the customer-care assistant for Meridian Business Services. Answer only questions\n"
-  "       about our events, courses and opening hours. Never quote a price that was not supplied to\n"
-  "       you. Never promise a delivery date. Never give financial, legal or medical advice. If you\n"
-  "       do not know, say so and offer to have a colleague follow up.'\n"
-  "  • Attach a Structured Output Parser requiring named fields, e.g. draftReply, category, urgency.\n"
-  "  • WHY structured output: prose cannot be branched on, sorted, logged into columns or coloured.\n"
-  "    A named field lets the IF node route, the Sheets node log, and the page render the result.\n"
-  "    Enumerate the allowed values (e.g. urgency = Low/Medium/High) so the field stays reliable.\n\n"
-  "Part C — The human gate:\n"
-  "  • Respond to Webhook immediately with a small acknowledgement (a reference and a status) so the\n"
-  "    customer is not left waiting — do NOT return the internal classification fields.\n"
-  "  • Google Sheets → append the agent's draft to a 'Drafts' tab BEFORE any human sees it.\n"
-  "  • Gmail → 'Send and Wait for Response' addressed to the manager, approval type Approve/Decline,\n"
-  "    body carrying the customer's own words and the drafted reply. The execution now PAUSES on the\n"
-  "    canvas until a person clicks.\n"
-  "  • IF node on the approval result:\n"
-  "      true  → Gmail send the approved reply to the customer; append to 'Approved_Replies' with the\n"
-  "              approver's NAME.\n"
-  "      false → send NOTHING to the customer; append to a 'Handover_Queue' tab stamped with a named\n"
-  "              assignee, and email that person to follow up.\n"
-  "  • A decline is a REASSIGNMENT, not a deletion — someone must still owe the customer an answer,\n"
-  "    and no accountability column may be left empty.\n\n"
-  "Acceptable evidence: canvas showing Webhook → Agent → Acknowledge → Log → Send-and-Wait → IF →\n"
-  "both branches; the approval email with both buttons; the Drafts/Approved/Handover rows; and proof\n"
-  "that the declined case produced no customer email."),
-
- ("Task 3", "A3",
-  "Identify and report issues with an AI application and its data (RAG deployment and troubleshooting). "
-  "Meridian's website chatbot must answer questions about their courses using ONLY the firm's own course "
-  "documents, and must never invent a fee. "
-  "Part A — Build the ingestion workflow: read the course documents from a Google Drive folder, split them so "
-  "that one document becomes one chunk, embed them, and insert them into a vector store. State the chunk size "
-  "and overlap you used and justify that choice, and explain why Clear Store must be ON when re-running. "
-  "Part B — Build the answering workflow: a Webhook, an AI Agent with the vector store attached as a retrieval "
-  "tool, and a Respond to Webhook node. Write the grounding instructions that stop it inventing answers. "
-  "Part C — Test and REPORT. Run at least one question that the documents answer correctly, and at least two "
-  "deliberate traps — a course the firm does not offer, and a detail no document contains (such as an "
-  "instructor's name). Record what the chatbot answered in each case. Then state, for each of the following "
-  "symptoms, the most likely cause and the fix: (i) every question returns \"I don't have that\"; (ii) the "
-  "chatbot quotes a fee that appears in no document; (iii) every document is returned twice in the results. "
-  "Evidence: both canvases, the chatbot's answers to your test questions, and your written issue report. "
-  "(Lab 5 — RAG Customer Care Chatbot, including the TC7–TC9 hallucination probes.)",
+  "Part A — docker-compose.yml:\n"
+  "services:\n"
+  "  db:\n"
+  "    image: mysql:8.0\n"
+  "    environment:\n"
+  "      MYSQL_ROOT_PASSWORD: rootpass\n"
+  "      MYSQL_DATABASE: wordpress\n"
+  "      MYSQL_USER: wpuser\n"
+  "      MYSQL_PASSWORD: wppass\n"
+  "    volumes:\n"
+  "      - db-data:/var/lib/mysql\n"
+  "  wordpress:\n"
+  "    image: wordpress:latest\n"
+  "    ports:\n"
+  "      - \"8080:80\"\n"
+  "    environment:\n"
+  "      WORDPRESS_DB_HOST: db\n"
+  "      WORDPRESS_DB_USER: wpuser\n"
+  "      WORDPRESS_DB_PASSWORD: wppass\n"
+  "      WORDPRESS_DB_NAME: wordpress\n"
+  "    depends_on:\n"
+  "      - db\n"
+  "volumes:\n"
+  "  db-data:\n\n"
+  "Part B — Run & verify:\n"
+  "docker compose up -d\n"
+  "docker compose ps        # both services Up\n"
+  "# Browse http://localhost:8080 -> WordPress setup page"),
+ ("Task 3", "LO3",
+  "Deploy and troubleshoot a Pod in Kubernetes. "
+  "1) Create the namespace ckad-prep. 2) In it, create a Pod named mypod with image nginx:2.3.5 exposing port "
+  "80. 3) Identify why the container will not start and write the root cause to pod-error.txt. 4) Change the "
+  "Pod's image to nginx:1.15.12. 5) List the Pod and confirm it is Running. 6) Shell into the container, run ls, "
+  "note the output, and exit. 7) Retrieve the Pod's IP address. 8) Run a temporary busybox Pod, shell in and "
+  "wget the nginx Pod on port 80. 9) Show the logs of mypod. 10) Delete the Pod and the namespace. "
+  "(Labs 13-14 — Pods & Namespaces.)",
   BOX_CAP,
-  "Part A — Ingestion (run once):\n"
-  "  • Manual Trigger → Google Drive 'List files in folder' (point at YOUR documents folder) →\n"
-  "    Google Drive 'Download file' → Vector Store (Insert).\n"
-  "  • Attach a Default Data Loader and a Recursive Character Text Splitter.\n"
-  "  • Chunk size 4000, overlap 0 → one brochure/document becomes exactly ONE vector.\n"
-  "    JUSTIFICATION: the right chunk is the smallest text that still answers a question on its own.\n"
-  "    A document is ~2.7 KB, so 4000 does not split it. The default 1000-character splitter would\n"
-  "    slice it into three, and the fragment naming the course would not be the fragment carrying the\n"
-  "    fee — retrieval would find one without the other and the bot would say it doesn't know the price.\n"
-  "  • Attach an Embeddings node (e.g. Google Gemini gemini-embedding-001 → 3072 dimensions).\n"
-  "  • Set a UNIQUE memory key / index name (e.g. meridian_<your-name>) — on a shared instance the key\n"
-  "    is a global namespace, and the default would mix your documents with everyone else's.\n"
-  "  • Clear Store = ON: re-running then REPLACES the documents instead of storing them twice. With it\n"
-  "    off, a second run duplicates every document and every search returns each one twice.\n"
-  "  • Execute the workflow once and confirm the expected number of vectors was inserted.\n\n"
-  "Part B — Answering (runs per question):\n"
-  "  • Webhook (POST, path set, CORS allowed) → AI Agent → Respond to Webhook.\n"
-  "  • Attach the Vector Store as a RETRIEVAL TOOL to the agent, with the SAME memory key as ingestion\n"
-  "    and the SAME embeddings model. Low temperature (e.g. 0.1) — fees are not creative writing.\n"
-  "  • Grounding instructions:\n"
-  "      – Always call the retrieval tool before answering any factual question.\n"
-  "      – Base every factual claim on what the tool returned.\n"
-  "      – If the documents do not answer it, say 'I don't have that in our course information.'\n"
-  "      – Never invent a fee, a date, a duration, a course code, an instructor name or a discount.\n"
-  "      – Never mention the vector store or that you are searching documents.\n"
-  "  • Activate, copy the Production URL, and set it in the website's script.\n\n"
-  "Part C — Test results and issue report:\n"
-  "  • Correct case: a question the documents answer → the bot quotes the document's exact figure.\n"
-  "  • Trap 1 (a course not offered) → must say it is not offered, and may suggest the closest courses\n"
-  "    that ARE offered. A confident description of the non-existent course is a FAILURE.\n"
-  "  • Trap 2 (an instructor's name no document contains) → must say it is not in the course\n"
-  "    information. Inventing a plausible name is a FAILURE — fix the INSTRUCTION, not the documents.\n"
-  "  (i) Every question returns 'I don't have that':\n"
-  "      CAUSE — the memory key / index name on the retrieval tool does not match the one used at\n"
-  "      ingestion, so the agent is searching an empty store. This is the most common failure and it\n"
-  "      raises no error anywhere. Also check the ingestion workflow actually ran, and whether n8n\n"
-  "      restarted and wiped the in-memory store.\n"
-  "      FIX — make the two keys identical; re-run ingestion; for production use a persistent vector\n"
-  "      database (Pinecone / Supabase / Qdrant) instead of the in-memory store.\n"
-  "  (ii) A fee that appears in no document:\n"
-  "      CAUSE — the agent did not call the retrieval tool, or called it and ignored the result; the\n"
-  "      grounding instruction is missing or too weak. Confirm in the execution log whether the tool\n"
-  "      actually ran.\n"
-  "      FIX — instruct it to always call the tool first, to answer only from what came back, and to\n"
-  "      say 'I don't have that' otherwise; then re-test the traps.\n"
-  "  (iii) Every document returned twice:\n"
-  "      CAUSE — Clear Store was off and the ingestion workflow was run more than once, so each\n"
-  "      document is stored twice.\n"
-  "      FIX — turn Clear Store ON and re-run the ingestion once to replace the contents.\n"
-  "  • Also verify the ingestion and retrieval EMBEDDING MODELS are identical — a question embedded by\n"
-  "    one model cannot be compared against documents embedded by another; the comparison silently\n"
-  "    returns nonsense rather than failing. The store's dimension must equal the model's output.\n\n"
-  "Acceptable evidence: both canvases; the chatbot's answers to the correct question and both traps;\n"
-  "and a written report naming a cause and a fix for each of the three symptoms."),
+  "1. Create namespace:\n"
+  "kubectl create namespace ckad-prep\n"
+  "2. Create the Pod (bad image):\n"
+  "kubectl run mypod --image=nginx:2.3.5 --port=80 -n ckad-prep\n"
+  "3. Diagnose — image nginx:2.3.5 does not exist -> ImagePullBackOff:\n"
+  "kubectl get pod -n ckad-prep            # STATUS: ImagePullBackOff\n"
+  "kubectl describe pod mypod -n ckad-prep # Events: manifest not found\n"
+  "echo \"Image nginx:2.3.5 does not exist on Docker Hub.\" > pod-error.txt\n"
+  "4. Fix the image:\n"
+  "kubectl set image pod mypod mypod=nginx:1.15.12 -n ckad-prep\n"
+  "5. Verify Running:\n"
+  "kubectl get pod -n ckad-prep            # STATUS: Running\n"
+  "6. Shell in (run ls, then exit):\n"
+  "kubectl exec -it mypod -n ckad-prep -- /bin/sh\n"
+  "7. Pod IP:\n"
+  "kubectl get pods -o wide -n ckad-prep\n"
+  "8. wget from a temporary busybox Pod:\n"
+  "kubectl run busybox --image=busybox --rm -it --restart=Never -n ckad-prep -- wget -O- <pod-ip>:80\n"
+  "9. Render logs:\n"
+  "kubectl logs mypod -n ckad-prep\n"
+  "10. Clean up:\n"
+  "kubectl delete pod mypod -n ckad-prep\n"
+  "kubectl delete namespace ckad-prep"),
+ ("Task 4", "LO4",
+  "Kubernetes Services and persistent storage. "
+  "Part A — Create a deployment named myapp with 2 replicas of image nginx exposing container port 80. Expose "
+  "it so it is reachable from inside the cluster, and verify with a temporary busybox Pod running wget against "
+  "the Service. Then change the Service type so the Pods are reachable from outside the cluster and wget it "
+  "from outside. "
+  "Part B — Create a PersistentVolume my-pv of 1Gi using hostPath /tmp/k8s-data, and a PersistentVolumeClaim "
+  "my-pvc requesting 500Mi; verify the PVC is Bound. Create a Pod storage-pod (image busybox) that mounts the "
+  "PVC at /data and writes \"hello from storage\" to /data/message.txt. Delete and recreate the Pod, verify the "
+  "data persists, then clean up all resources. (Labs 15 — Deployments · 17 — Services · 18 — Storage.)",
+  BOX_CAP,
+  "Part A — Routing traffic:\n"
+  "kubectl create deployment myapp --image=nginx --replicas=2 --port=80\n"
+  "kubectl expose deployment myapp --port=80 --target-port=80          # ClusterIP\n"
+  "kubectl run tmp --image=busybox --rm -it --restart=Never -- wget -O- myapp:80\n"
+  "# External access — switch to NodePort:\n"
+  "kubectl delete service myapp\n"
+  "kubectl expose deployment myapp --type=NodePort --port=80 --target-port=80\n"
+  "kubectl get svc myapp                      # note the 3xxxx NodePort\n"
+  "wget -O- localhost:<NodePort>\n\n"
+  "Part B — Persistent storage:\n"
+  "# pv.yaml\n"
+  "apiVersion: v1\n"
+  "kind: PersistentVolume\n"
+  "metadata: { name: my-pv }\n"
+  "spec:\n"
+  "  capacity: { storage: 1Gi }\n"
+  "  accessModes: [ReadWriteOnce]\n"
+  "  hostPath: { path: /tmp/k8s-data }\n"
+  "# pvc.yaml\n"
+  "apiVersion: v1\n"
+  "kind: PersistentVolumeClaim\n"
+  "metadata: { name: my-pvc }\n"
+  "spec:\n"
+  "  accessModes: [ReadWriteOnce]\n"
+  "  resources: { requests: { storage: 500Mi } }\n"
+  "kubectl apply -f pv.yaml && kubectl apply -f pvc.yaml\n"
+  "kubectl get pv,pvc                          # STATUS: Bound\n"
+  "# storage-pod mounts my-pvc at /data and writes message.txt\n"
+  "kubectl apply -f pod.yaml\n"
+  "kubectl exec storage-pod -- cat /data/message.txt   # hello from storage\n"
+  "kubectl delete pod storage-pod && kubectl apply -f pod.yaml\n"
+  "kubectl exec storage-pod -- cat /data/message.txt   # data persists\n"
+  "kubectl delete pod storage-pod; kubectl delete pvc my-pvc; kubectl delete pv my-pv"),
 ]
 
 # ---------------------------------------------------------------- doc helpers
@@ -461,25 +312,6 @@ def para(doc, text, size=11, bold=False, italic=False, color=None, after=6, befo
 def heading(doc, text, size=13):
     para(doc, text, size=size, bold=True, color=BRAND, after=6, before=8)
 
-def _wrap_mono(lines, width=68):
-    """Hard-wrap monospace model-answer lines, preserving each line's own indent so
-    continuations align under their parent bullet instead of falling to column 0."""
-    import textwrap
-    out = []
-    for ln in lines:
-        if len(ln) <= width:
-            out.append(ln); continue
-        indent = len(ln) - len(ln.lstrip(" "))
-        # continuation lines indent two extra spaces past the parent's text start
-        cont = " " * (indent + 2)
-        wrapped = textwrap.wrap(
-            ln.strip(), width=width - indent,
-            initial_indent="", subsequent_indent="",
-            break_long_words=False, break_on_hyphens=False) or [""]
-        out.append(" " * indent + wrapped[0])
-        out.extend(cont + w for w in wrapped[1:])
-    return out
-
 def answer_box(doc, lines=None, code=None, height_pt=90):
     """1x1 bordered box. `lines` → bullet-style model answer; `code` → monospace
     code/YAML/command block (indentation preserved); neither → empty answer space."""
@@ -489,10 +321,7 @@ def answer_box(doc, lines=None, code=None, height_pt=90):
     if code:
         run = cell.paragraphs[0].add_run("Suggestive answers (not exhaustive):")
         run.bold = True; run.font.size = Pt(10.5)
-        # Consolas 9pt fits ~68 chars in the cell once the box padding is taken off. Hard-wrap longer lines here
-        # so Word never soft-wraps a continuation back to column 0 (which destroys the
-        # indentation) or splits a token mid-word.
-        for ln in _wrap_mono(code.split("\n")):
+        for ln in code.split("\n"):
             b = cell.add_paragraph(style=None)
             b.paragraph_format.space_after = Pt(0); b.paragraph_format.space_before = Pt(0)
             rr = b.add_run(ln if ln else " ")
@@ -632,7 +461,7 @@ def build_pp(answers):
     para(doc, f"Course Code: {COURSE_CODE}", size=11, color=GREY, align=WD_ALIGN_PARAGRAPH.CENTER, after=12)
     if not answers:
         # Page 2 — candidate information, instructions and grading; the problem begins on the next page.
-        candidate_block(doc); instructions(doc, "1 hour")   # matches the original TMS paper
+        candidate_block(doc); instructions(doc, "90 minutes")
         grading(doc, "Candidate has successfully completed all PP tasks and can explain the overall "
                      "functions and features used to achieve them.")
         page_break(doc)

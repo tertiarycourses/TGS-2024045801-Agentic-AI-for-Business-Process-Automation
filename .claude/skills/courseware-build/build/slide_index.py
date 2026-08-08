@@ -10,10 +10,18 @@ import sys, os
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import course_data as C
+import concepts as CN
 from data_domain1 import DOMAIN1
 from data_domain2 import DOMAIN2
 from data_domain3 import DOMAIN3
 ACT = DOMAIN1 + DOMAIN2 + DOMAIN3
+
+# concepts that are followed by an illustrating n8n screenshot slide.
+# MUST match CONCEPT_IMAGES in build_slides.py.
+CONCEPT_IMAGE_KEYS = {
+    "trigger_nodes", "data_nodes", "test_vs_prod_exec", "what_is_webhook",
+    "webhook_vs_http", "rag_pipeline", "chunking", "vector_stores",
+}
 
 _n = 0
 def _adv(k=1):
@@ -43,7 +51,7 @@ _adv()      # Skills Framework (TSC)
 _adv()      # TSC Abilities and Knowledge
 _adv()      # Lesson Plan overview
 _adv()      # Learning Outcomes
-_adv()      # Course Outline
+_adv()      # Course Journey — Five Connected Labs
 _adv()      # Criteria for Funding
 _adv()      # Briefing for Assessment
 _adv()      # Assessment
@@ -54,9 +62,7 @@ _mark("admin", a0, _n)
 f0 = _n + 1
 _adv()      # section: Why Agentic AI
 _adv()      # Evolution of AI
-_adv()      # big statement: agentic AI does the work
 _adv()      # image: agent loop
-_adv()      # Agentic vs Generative
 _adv()      # image: RPA -> APA
 _adv()      # Business value
 _adv()      # Use cases
@@ -64,46 +70,46 @@ _adv()      # Platform tiers
 _mark("foundation", f0, _n)
 
 # ---- TOPICS ----
-# per-topic extra teaching slide counts, in build order (must match build_slides.py)
-EXTRA_COUNTS = {1: 12, 2: 8, 3: 6}
-# concept images per topic
-CONCEPT_IMAGES = {3: 3}
-# sub-marks inside topic 1 / 2 / 3 used by the lesson plan
 for tp in C.TOPICS:
     tnum = tp["num"]
     t0 = _n + 1
-    _adv()                                   # section divider
-    _adv()                                   # key concepts tile grid
-    ci = CONCEPT_IMAGES.get(tnum, 0)
-    if ci:
-        c0 = _n + 1
-        _adv(ci)                             # concept image slides
-    extra_start = _n + 1
-    _adv(EXTRA_COUNTS[tnum])                 # rich teaching slides
-    extra_end = _n
+    _adv()                                       # section divider
 
+    keys = CN.TOPIC_CONCEPTS[tnum]
+    c0 = _n + 1
+    for k in keys:
+        _adv()                                   # the concept slide
+        if k in CONCEPT_IMAGE_KEYS:
+            _adv()                               # its n8n screenshot
+    c_end = _n
+
+    # sub-marks the lesson plan refers to
     if tnum == 1:
-        # 12 extras: 7 on the platform/nodes/data/execution, then 5 agent-focused
-        _mark("topic1_concepts", t0, extra_start + 6)
-        _mark("topic1_agent",   extra_start + 7, extra_end)
+        # topic 1 concepts run: platform/nodes/data (through "credentials"),
+        # then the agent block, then the webhook block
+        def _upto(key):
+            n = c0
+            for k in keys:
+                n += 1 + (1 if k in CONCEPT_IMAGE_KEYS else 0)
+                if k == key:
+                    return n - 1
+            return c_end
+        _mark("topic1_concepts", t0, _upto("credentials"))
+        _mark("topic1_agent", _upto("credentials") + 1, _upto("mcp_in_n8n"))
+        _mark("topic1_webhook", _upto("mcp_in_n8n") + 1, c_end)
     elif tnum == 2:
-        # 8 extras: 4 on agentic chatbots, then 4 on human-in-the-loop
-        _mark("topic2_chatbot", t0, extra_start + 3)
-        _mark("topic2_hitl",    extra_start + 4, extra_end)
+        _mark("topic2_hitl", t0, c_end)
     elif tnum == 3:
-        _mark("topic3_concepts", t0, extra_end)
+        _mark("topic3_concepts", t0, c_end)
 
-    _adv()                                   # cards3 "Hands-On Labs"
     for a in [x for x in ACT if x["topic"] == tnum]:
         l0 = _n + 1
-        _adv()                               # activity overview
-        _adv(len(a.get("site", [])))         # application screenshot(s)
-        _adv(len(a.get("flows", [])))        # workflow diagram(s)
-        _adv(len(a["steps"]))                # step slides
-        _adv()                               # test slide
-        _adv()                               # what you learned
+        _adv(max(1, len(a.get("canvas", []))))   # one lab slide per workflow canvas
+        _adv(len(a.get("site", [])))             # the application screenshot(s)
+        _adv()                                   # verify + debrief
         _mark(f"lab{a['num']}", l0, _n)
-    _adv()                                   # topic recap
+    if tnum in (1, 2):
+        _adv()                                   # lunch / tea break divider
     _mark(f"topic{tnum}_all", t0, _n)
 
 # ---- CLOSE ----
@@ -112,10 +118,10 @@ _adv()      # section: Wrap-up
 _adv()      # What You Achieved
 _adv()      # Taking This Back to Work
 _mark("wrapup", w0, _n)
+_adv()      # Support
 _adv()      # Assessment
 _adv()      # Assessment Flow
 _adv()      # Digital Attendance
-_adv()      # Support
 _adv()      # Thank You
 
 TOTAL = _n

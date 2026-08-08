@@ -12,14 +12,14 @@ Guiding principle: the course material must be 100% aligned to the WSQ TSC
 TITLE        = "Agentic AI for Business Process Automation"
 SHORT_TITLE  = "Agentic AI for Business Process Automation"   # used in output filenames
 COURSE_CODE  = "TGS-2024045801"
-VERSION      = "v1.2"
-VERSION_DATE = "1 August 2026"
+VERSION      = "v2.0"
+VERSION_DATE = "8 August 2026"
 ORG          = "Tertiary Infotech Academy Pte Ltd"
 UEN          = "UEN: 201200696W"
 TRAINER      = "Dr. Alfred Ang"
 DAYS         = 2
-HOURS_PER_DAY = 7          # 14 training hours over 2 days
-TRAINING_HOURS = 14
+HOURS_PER_DAY = 8          # 16 training hours over 2 days
+TRAINING_HOURS = 16
 
 # ------------------------------------------------------------------ Skills Framework
 TSC_TITLE = "Artificial Intelligence Application"
@@ -102,10 +102,11 @@ DAY_THEMES = {
 # SINGLE SOURCE for the timing text. The deck's Lesson Plan slide and the LP's
 # Course Information table both render these, so they can never contradict.
 DAY_TIMES = {
-    1: "9:30 am – 6:00 pm",
-    2: "9:00 am – 5:30 pm instruction, assessment to 7:45 pm",
+    1: "9:30 am – 6:30 pm",
+    2: "9:30 am – 6:30 pm instruction, assessment to 8:45 pm",
 }
-TIMING_NOTE = "1-hour lunch and two 15-minute tea breaks, additional to instructional time"
+TIMING_NOTE = ("Each day is 8 instructional hours: a 1-hour lunch is excluded, and the two "
+               "15-minute tea breaks are counted within the instructional time")
 
 def timing_summary():
     """One-line timing description used on the deck's Lesson Plan slide."""

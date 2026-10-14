@@ -10,7 +10,7 @@
 | 1.1 | 1 August 2026 | Added a 'Why this step' note to every lab step; lab headings de-duplicated; version-control record added to the Markdown mirror and the mirror relocated beside the DOCX. | Dr. Alfred Ang |
 | 1.2 | 1 August 2026 | Added a screenshot of each lab's application — the four lab websites with their chat widgets open, plus the Lab 1 n8n canvas and sample flyer — to the slide deck and the Learner Guide. | Dr. Alfred Ang |
 | 2.0 | 8 August 2026 | Slide deck restyled to the house reference format. Lab step-by-step removed from the deck and now carried only by this guide, with a rendered n8n canvas screenshot per lab. New concept sections: trigger nodes, data-processing nodes, the four components of an AI agent, instruction design with worked examples, model parameters and temperature, MCP, webhooks (GET/POST, Test vs Production URL) and human-in-the-loop with guardrails. | Dr. Alfred Ang |
-| 2.1 | 15 October 2026 | Topic 1 now opens with the modern view of agentic automation, replacing the separate Foundation section: a brief history of AI 2023–2026 (prompt, context and harness engineering to AI agents), agentic AI vs AI agents, workflow first vs AI first, the trend of using Claude Code and Codex to build workflows, the five principles of AI security and why workflow first is more secure, and the business value of workflow-first agentic automation. | Dr. Alfred Ang |
+| 2.1 | 15 October 2026 | Topic 1 now opens with the modern view of agentic automation, replacing the separate Foundation section: a brief history of AI 2023–2026 (prompt, context and harness engineering to AI agents), agentic AI vs AI agents, workflow first vs agent first, the trend of using Claude Code and Codex to build workflows, the five principles of AI security and why workflow first is more secure, and the business value of workflow-first agentic automation. | Dr. Alfred Ang |
 
 ## Contents
 
@@ -164,22 +164,22 @@ Agentic AI uses the reasoning power of a large language model to run a complex t
 
 **Agentic AI vs AI agents**
 
-The two terms are often used loosely; in this course they mean different things. AGENTIC AI is the umbrella term for the whole system — any system in which AI pursues a goal over many steps, planning, acting through tools, checking the result and adapting. It includes the orchestration, the data, the guardrails and the human approvals, and it can be built as a workflow with AI steps or around one or more agents. An AI AGENT is one building block inside it: a single LLM given a goal, tools, memory and instructions, which decides its own next step in a loop and chooses which tool to call and when. In n8n that is the AI Agent node with its Chat Model, Memory and Tools. The best agentic systems use agents only where judgement is needed.
+AGENTIC AI is the broad category: any AI system that pursues a goal over many steps — it plans, acts through tools, checks the result and adapts. It is usually started by a person or a trigger and stops when the task is done; a Claude Code or Codex session, or an n8n workflow with AI steps, are agentic AI. AI AGENTS are a special type of agentic AI system that exists 24/7. They are usually installed in the cloud so they serve all the time, with no laptop needing to be open: they wait for events — messages, emails, webhooks, schedules — act on them around the clock, and keep their memory across conversations and days. OpenClaw, Hermes Agent and an n8n agent running on a cloud instance behind a webhook are AI agents. Every AI agent is agentic AI, but not every agentic AI is an AI agent — the difference is that an AI agent is always on.
 
-**Workflow first vs AI first**
+**Workflow first vs agent first**
 
-There are two ways to build agentic automation. WORKFLOW FIRST is the modern form of rule-based (RPA-style) automation: you design the path, and AI is added only at the steps that need judgement. AI FIRST hands the path to an AI agent, which decides the steps and tools at run time.
+There are two ways to build agentic automation. WORKFLOW FIRST is the modern form of rule-based (RPA-style) automation: the workflow owns the path, and its steps can be ordinary nodes, AI nodes or even AI Agent nodes — exactly as in n8n, where an AI Agent node sits inside a workflow. AGENT FIRST hands the whole path to an AI agent, which decides the steps and tools at run time.
 
-|  | Workflow First | AI First (AI Agent) |
+|  | Workflow First | Agent First |
 |---|---|---|
-| Who decides the path | You design the steps; AI handles individual nodes | The agent decides the steps and tools at run time |
+| Who decides the path | The workflow — steps may be AI nodes or AI Agent nodes | The agent decides the steps and tools at run time |
 | Behaviour | Deterministic — same input, same path, every time | Probabilistic — the path can change between runs |
 | Efficiency | More effort to design every branch up front | Efficient — one instruction replaces many hand-built branches |
 | Reliability & testing | Easy to test, debug and certify step by step | Harder to test; edge cases surface in production |
 | Cost & speed | An LLM call only where needed — cheap and fast | An LLM call at every step — more tokens, more latency |
 | Best for | Repeatable, regulated, high-volume processes | Open-ended tasks with unpredictable inputs |
 
-Workflow first is more deterministic; AI first is more efficient. Because reliability matters most in business, companies try to make as much of a process deterministic as possible. (Source: n8n, In The Loop 2026 opening keynote and product direction.)
+Workflow first is more deterministic; agent first is more efficient. Because reliability matters most in business, companies try to make as much of a process deterministic as possible. (Source: n8n, In The Loop 2026 opening keynote and product direction.)
 
 **The trend: AI agents build the workflow**
 
@@ -201,7 +201,7 @@ In n8n these map to scoped credentials per node, approval gates (Gmail Send and 
 
 A fixed path limits the blast radius: a manipulated AI step — for example one hit by a prompt injection — cannot reach tools that are not wired to it.
 
-| Principle | Workflow First | AI First (AI Agent) |
+| Principle | Workflow First | Agent First |
 |---|---|---|
 | Data control | Each node sees only the fields wired into it | The agent can reach any data its tools expose |
 | Permission control | Each credential is scoped to one node and one action | The agent holds every tool's rights at once |

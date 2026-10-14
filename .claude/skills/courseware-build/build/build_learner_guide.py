@@ -74,7 +74,7 @@ VC_ROWS = [
   "worked examples, model parameters and temperature, MCP, webhooks (GET/POST, Test vs Production "
   "URL) and human-in-the-loop with guardrails.", C.TRAINER),
  (C.VERSION.lstrip("v"), C.VERSION_DATE,
-  "Topic 1 now opens with the modern view of agentic automation, replacing the separate Foundation section: a brief history of AI 2023–2026 (prompt, context and harness engineering to AI agents), agentic AI vs AI agents, workflow first vs AI first, the trend of using Claude Code and Codex to build workflows, the five principles of AI security and why workflow first is more secure, and the business value of workflow-first agentic automation.", C.TRAINER),
+  "Topic 1 now opens with the modern view of agentic automation, replacing the separate Foundation section: a brief history of AI 2023–2026 (prompt, context and harness engineering to AI agents), agentic AI vs AI agents, workflow first vs agent first, the trend of using Claude Code and Codex to build workflows, the five principles of AI security and why workflow first is more secure, and the business value of workflow-first agentic automation.", C.TRAINER),
 ]
 
 # ================================================================ content
@@ -177,27 +177,31 @@ def topic1_intro_lg():
      ["Example","\"Draft me an email\"","\"Read the enquiry, check the CRM, reply and log it\""],
     ])
     h3("Agentic AI vs AI agents")
-    p("The two terms are often used loosely; in this course they mean different things. AGENTIC AI is "
-      "the umbrella term for the whole system — any system in which AI pursues a goal over many steps, "
-      "planning, acting through tools, checking the result and adapting. It includes the orchestration, "
-      "the data, the guardrails and the human approvals, and it can be built as a workflow with AI "
-      "steps or around one or more agents. An AI AGENT is one building block inside it: a single LLM "
-      "given a goal, tools, memory and instructions, which decides its own next step in a loop and "
-      "chooses which tool to call and when. In n8n that is the AI Agent node with its Chat Model, "
-      "Memory and Tools. The best agentic systems use agents only where judgement is needed.")
-    h3("Workflow first vs AI first")
+    p("AGENTIC AI is the broad category: any AI system that pursues a goal over many steps — it "
+      "plans, acts through tools, checks the result and adapts. It is usually started by a person or "
+      "a trigger and stops when the task is done; a Claude Code or Codex session, or an n8n workflow "
+      "with AI steps, are agentic AI. AI AGENTS are a special type of agentic AI system that exists "
+      "24/7. They are usually installed in the cloud so they serve all the time, with no laptop "
+      "needing to be open: they wait for events — messages, emails, webhooks, schedules — act on them "
+      "around the clock, and keep their memory across conversations and days. OpenClaw, Hermes Agent "
+      "and an n8n agent running on a cloud instance behind a webhook are AI agents. Every AI agent is "
+      "agentic AI, but not every agentic AI is an AI agent — the difference is that an AI agent is "
+      "always on.")
+    h3("Workflow first vs agent first")
     p("There are two ways to build agentic automation. WORKFLOW FIRST is the modern form of rule-based "
-      "(RPA-style) automation: you design the path, and AI is added only at the steps that need "
-      "judgement. AI FIRST hands the path to an AI agent, which decides the steps and tools at run time.")
-    table(["","Workflow First","AI First (AI Agent)"],[
-     ["Who decides the path","You design the steps; AI handles individual nodes","The agent decides the steps and tools at run time"],
+      "(RPA-style) automation: the workflow owns the path, and its steps can be ordinary nodes, AI "
+      "nodes or even AI Agent nodes — exactly as in n8n, where an AI Agent node sits inside a "
+      "workflow. AGENT FIRST hands the whole path to an AI agent, which decides the steps and tools "
+      "at run time.")
+    table(["","Workflow First","Agent First"],[
+     ["Who decides the path","The workflow — steps may be AI nodes or AI Agent nodes","The agent decides the steps and tools at run time"],
      ["Behaviour","Deterministic — same input, same path, every time","Probabilistic — the path can change between runs"],
      ["Efficiency","More effort to design every branch up front","Efficient — one instruction replaces many hand-built branches"],
      ["Reliability & testing","Easy to test, debug and certify step by step","Harder to test; edge cases surface in production"],
      ["Cost & speed","An LLM call only where needed — cheap and fast","An LLM call at every step — more tokens, more latency"],
      ["Best for","Repeatable, regulated, high-volume processes","Open-ended tasks with unpredictable inputs"],
     ])
-    p("Workflow first is more deterministic; AI first is more efficient. Because reliability matters "
+    p("Workflow first is more deterministic; agent first is more efficient. Because reliability matters "
       "most in business, companies try to make as much of a process deterministic as possible. "
       "(Source: n8n, In The Loop 2026 opening keynote and product direction.)")
     h3("The trend: AI agents build the workflow")
@@ -220,7 +224,7 @@ def topic1_intro_lg():
     h3("Why workflow first is more secure")
     p("A fixed path limits the blast radius: a manipulated AI step — for example one hit by a prompt "
       "injection — cannot reach tools that are not wired to it.")
-    table(["Principle","Workflow First","AI First (AI Agent)"],[
+    table(["Principle","Workflow First","Agent First"],[
      ["Data control","Each node sees only the fields wired into it","The agent can reach any data its tools expose"],
      ["Permission control","Each credential is scoped to one node and one action","The agent holds every tool's rights at once"],
      ["Human in the loop","The approval gate sits at a fixed, designed step","Depends on the agent choosing to ask"],

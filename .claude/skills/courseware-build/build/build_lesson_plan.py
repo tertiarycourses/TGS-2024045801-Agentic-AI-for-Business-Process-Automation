@@ -58,7 +58,7 @@ SCHEDULE = {
      "Skills Framework alignment and mandatory digital attendance (AM). "+S("admin")),
     ("10:00","11:00",60,"topic",
      "Topic 1 — Overview of n8n and AI Agents: why agentic AI, and why workflow first — a brief "
-     "history of AI 2023–2026, agentic AI vs AI agents, workflow first vs AI first, building workflows "
+     "history of AI 2023–2026, agentic AI vs AI agents, workflow first vs agent first, building workflows "
      "with Claude Code and Codex, the five principles of AI security, business value, use cases and "
      "platform tiers. "+S("topic1_intro")),
     ("11:00","11:15",15,"break","Tea break"),
@@ -150,7 +150,7 @@ prodoc.add_version_control(doc,[
   "of an AI agent, instruction design, model parameters, MCP, webhooks (GET/POST, Test vs Production "
   "URL) and human-in-the-loop with guardrails.",C.TRAINER),
  (C.VERSION.lstrip("v"),C.VERSION_DATE,
-  "Topic 1 now opens with the modern view of agentic automation, replacing the separate Foundation section: a brief history of AI 2023–2026 (prompt, context and harness engineering to AI agents), agentic AI vs AI agents, workflow first vs AI first, the trend of using Claude Code and Codex to build workflows, the five principles of AI security and why workflow first is more secure, and the business value of workflow-first agentic automation. Slide references updated to match.",C.TRAINER),
+  "Topic 1 now opens with the modern view of agentic automation, replacing the separate Foundation section: a brief history of AI 2023–2026 (prompt, context and harness engineering to AI agents), agentic AI vs AI agents, workflow first vs agent first, the trend of using Claude Code and Codex to build workflows, the five principles of AI security and why workflow first is more secure, and the business value of workflow-first agentic automation. Slide references updated to match.",C.TRAINER),
 ])
 prodoc.add_toc(doc)
 

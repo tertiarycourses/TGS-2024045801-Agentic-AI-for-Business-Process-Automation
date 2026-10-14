@@ -647,27 +647,27 @@ def topic1_intro(acc):
     footer(s)
     # 2 — agentic AI vs AI agents
     two_panel("Agentic AI vs AI Agents",
-     "Agentic AI — the system",[
-      "The umbrella term: any system in which AI pursues a goal over many steps",
-      "Plans, acts through tools, checks the result and adapts",
-      "Built as a workflow with AI steps, or around one or more agents",
-      "Includes the orchestration, data, guardrails and human approvals",
-      "Example: an n8n workflow that triages enquiries, drafts replies and waits for approval"],
-     "AI Agent — the building block",[
-      "One LLM given a goal, tools, memory and instructions",
-      "Decides its own next step in a loop: observe → think → act",
-      "Chooses which tool to call and when — the path is not fixed",
-      "In n8n: the AI Agent node with a Chat Model, Memory and Tools",
-      "Example: a chatbot that looks up a customer and books a call"],
+     "Agentic AI — the broad category",[
+      "Any AI system that pursues a goal over many steps: plans, acts through tools, checks the result",
+      "Usually started by a person or a trigger, and stops when the task is done",
+      "Built as a workflow with AI steps, or around an LLM loop",
+      "Includes the orchestration, guardrails and human approvals",
+      "Examples: a Claude Code or Codex session; an n8n workflow with AI steps"],
+     "AI Agents — always-on agentic AI",[
+      "A special type of agentic AI system that exists 24/7",
+      "Usually installed in the cloud, so it serves all the time — no laptop needs to be open",
+      "Waits for events — messages, emails, webhooks, schedules — and acts on them around the clock",
+      "Keeps its memory across conversations and days",
+      "Examples: OpenClaw, Hermes Agent, an n8n agent on a cloud instance behind a webhook"],
      kicker=k("AGENTIC AI VS AI AGENTS"),lcolor=acc,rcolor=VIOLET,
-     intro="The two terms are used loosely. In this course they mean different things.",
-     take="An AI agent is one component; agentic AI is the whole system — and the best systems use agents only where judgement is needed.")
-    # 3 — workflow first vs AI first
-    s=concept_slide(k("WORKFLOW FIRST VS AI FIRST"),"Workflow First vs AI First",
-     "Two ways to build agentic automation. Workflow first is rule-based (RPA-style) automation with AI added only at the judgement steps.",
+     intro="AI agents are a special type of agentic AI system — the kind that never switches off.",
+     take="Every AI agent is agentic AI, but not every agentic AI is an AI agent — an AI agent is always on, serving 24/7 from the cloud.")
+    # 3 — workflow first vs agent first
+    s=concept_slide(k("WORKFLOW FIRST VS AGENT FIRST"),"Workflow First vs Agent First",
+     "Workflow first evolves rule-based (RPA) automation: the workflow owns the path, and its steps can be AI or AI agents, as in n8n.",
      kcolor=acc)
-    data_table(s,[2.5,4.55,4.58],["","Workflow First","AI First (AI Agent)"],[
-     ["Who decides the path","You design the steps; AI handles individual nodes","The agent decides the steps and tools at run time"],
+    data_table(s,[2.5,4.55,4.58],["","Workflow First","Agent First"],[
+     ["Who decides the path","The workflow — steps may be AI nodes or AI Agent nodes","The agent decides the steps and tools at run time"],
      ["Behaviour","Deterministic — same input, same path, every time","Probabilistic — the path can change between runs"],
      ["Efficiency","More effort to design every branch up front","Efficient — one instruction replaces many hand-built branches"],
      ["Reliability & testing","Easy to test, debug and certify step by step","Harder to test; edge cases surface in production"],
@@ -675,7 +675,7 @@ def topic1_intro(acc):
      ["Best for","Repeatable, regulated, high-volume processes","Open-ended tasks with unpredictable inputs"]],
      y=Inches(2.05),rh=Inches(0.5),hcolor=acc)
     source_note(s,"Source: n8n, In The Loop 2026 — opening keynote and product direction (youtube.com/watch?v=KQRe5UurLQ0)")
-    takeaway(s,"Workflow first is more deterministic; AI first is more efficient. Companies make as much deterministic as they can.")
+    takeaway(s,"Workflow first is more deterministic; agent first is more efficient. Companies make as much deterministic as they can.")
     footer(s)
     # 4 — the trend: AI builds the workflow
     s=concept_slide(k("THE MODERN VIEW"),"The Trend: AI Agents Build the Workflow",
@@ -683,11 +683,11 @@ def topic1_intro(acc):
      kcolor=acc)
     chev_strip(s,[("Describe","the process in plain English"),("Claude Code / Codex","drafts the n8n workflow"),
                   ("You review","test and approve it"),("Workflow runs","deterministic and logged"),
-                  ("AI steps","only where judgement is needed")],y=Inches(2.05),h=Inches(1.0),color=acc,
+                  ("AI and agent nodes","where judgement is needed")],y=Inches(2.05),h=Inches(1.0),color=acc,
                tsz=11.5,ssz=8.5)
     ncards(s,[(BLUE,"Companies want determinism","Reliability, compliance and audit push businesses to make as much of a process deterministic as possible."),
      (VIOLET,"AI coding made it cheap","Claude Code and Codex are AI agents themselves — and they make designing, building and changing workflows fast and cheap."),
-     (TEAL,"The best of both","An AI agent BUILDS the workflow; a deterministic workflow RUNS the process, with AI nodes only where judgement is needed.")],
+     (TEAL,"The best of both","An AI agent BUILDS the workflow; a deterministic workflow RUNS the process, with AI and AI Agent nodes where judgement is needed.")],
      y=Inches(3.35),h=Inches(2.7),cols=3)
     takeaway(s,"The trend: use Claude Code and Codex to create the workflows — the workflow, not the agent, runs the business process.")
     footer(s)
@@ -711,7 +711,7 @@ def topic1_intro(acc):
     s=concept_slide(k("AI SECURITY"),"Why Workflow First Is More Secure",
      "A fixed path limits the blast radius: a manipulated AI step cannot reach tools that are not wired to it.",
      kcolor=RED)
-    data_table(s,[2.5,4.55,4.58],["Principle","Workflow First","AI First (AI Agent)"],[
+    data_table(s,[2.5,4.55,4.58],["Principle","Workflow First","Agent First"],[
      ["Data control","Each node sees only the fields wired into it","The agent can reach any data its tools expose"],
      ["Permission control","Each credential is scoped to one node and one action","The agent holds every tool's rights at once"],
      ["Human in the loop","The approval gate sits at a fixed, designed step","Depends on the agent choosing to ask"],

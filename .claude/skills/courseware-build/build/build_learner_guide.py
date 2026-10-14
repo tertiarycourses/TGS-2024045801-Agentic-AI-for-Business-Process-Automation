@@ -67,12 +67,14 @@ VC_ROWS = [
  ("1.2", "1 August 2026",
   "Added a screenshot of each lab's application — the four lab websites with their chat widgets open, "
   "plus the Lab 1 n8n canvas and sample flyer — to the slide deck and the Learner Guide.", C.TRAINER),
- (C.VERSION.lstrip("v"), C.VERSION_DATE,
+ ("2.0", "8 August 2026",
   "Slide deck restyled to the house reference format. Lab step-by-step removed from the deck and now "
   "carried only by this guide, with a rendered n8n canvas screenshot per lab. New concept sections: "
   "trigger nodes, data-processing nodes, the four components of an AI agent, instruction design with "
   "worked examples, model parameters and temperature, MCP, webhooks (GET/POST, Test vs Production "
   "URL) and human-in-the-loop with guardrails.", C.TRAINER),
+ (C.VERSION.lstrip("v"), C.VERSION_DATE,
+  "Topic 1 now opens with the modern view of agentic automation, replacing the separate Foundation section: a brief history of AI 2023–2026 (prompt, context and harness engineering to AI agents), agentic AI vs AI agents, workflow first vs AI first, the trend of using Claude Code and Codex to build workflows, the five principles of AI security and why workflow first is more secure, and the business value of workflow-first agentic automation.", C.TRAINER),
 ]
 
 # ================================================================ content
@@ -144,53 +146,106 @@ bullets([
  "Each lab ends with a 'Test it' check — do not move on until it passes.",
 ])
 
-# ---------------- foundation concepts ----------------
-h1("Foundation — Agentic AI in Business Process Automation")
-h3("The evolution of AI")
-p("Artificial Intelligence began in the 1950s with Turing's test and rule-based symbolic systems. "
-  "Machine Learning in the 1990s shifted the field from hand-written rules to learning patterns from "
-  "data. Deep Learning in the 2000s added neural networks trained on large datasets. The 2017 "
-  "Transformer architecture and its attention mechanism produced the Generative AI of the 2020s. "
-  "Agentic AI, from around 2024, is the current step: models given goals, tools and memory, which "
-  "plan and act rather than answer once.")
-h3("What is agentic AI")
-p("Agentic AI uses the reasoning power of a large language model to run a complex task by breaking "
-  "it into simpler ones. Given a goal, the model observes the situation, chooses an action, acts on "
-  "the world through a tool, observes the result, and repeats until the goal is met.")
-image("ai-agent-llm-loop.png",
-      "The agent loop — goal, observation, action, observation, action. Each step is an LLM call "
-      "that decides what to do next based on what came back.")
-h3("Agentic AI vs generative AI")
-table(["","Generative AI","Agentic AI"],[
- ["Purpose","Creates content — text, images, code","Takes actions towards a goal"],
- ["Interaction","Responds to a prompt, once","Plans, acts, observes and adapts"],
- ["Context","Relies on you for context and goals","Uses tools to reach real systems and data"],
- ["Completion","Stops when the answer is produced","Continues until the goal is met"],
- ["Example","\"Draft me an email\"","\"Read the enquiry, check the CRM, reply and log it\""],
-])
-h3("From RPA to Agentic Process Automation")
-p("Robotic Process Automation (RPA) follows a rigid path that a person constructs by hand — every "
-  "branch is wired in advance, and anything unforeseen breaks it. Agentic Process Automation (APA) "
-  "lets an agent orchestrate the workflow, so it can handle both rigid and flexible tasks.")
-image("rpa-to-apa.png",
-      "RPA constructs the workflow manually and can only handle rigid tasks; APA orchestrates it "
-      "automatically and handles flexible ones too.")
-h3("Business value")
-bullets([
- "Free people from repetitive administrative work — scheduling, form processing, data entry, report generation and email routing.",
- "Shift human effort to judgement, relationships and strategy.",
- "React to events in real time — a form submission, a payment, a customer message.",
- "Operate around the clock, with the same care at 2am as at 2pm.",
- "Reduce human error by applying the same rules to every case and logging every decision.",
- "Scale volume without proportional headcount.",
-])
-h3("Where agent platforms sit")
-table(["Tier","Characteristics","Examples"],[
- ["No-code","Fully visual; fastest to a working agent; least control","AgentX and similar chatbot builders"],
- ["Low-code","Visual canvas plus code nodes; 400+ integrations; self-host or cloud","n8n — this course's platform"],
- ["Full-code","SDKs and frameworks; maximum control; needs engineering effort","LangChain and agent SDKs"],
-])
-rule()
+# ---------------- Topic 1 opener: why agentic AI, and why workflow first ----------------
+# Mirrors topic1_intro() in build_slides.py. Emitted at the top of Topic 1 (there is
+# no separate Foundation chapter).
+def topic1_intro_lg():
+    h2("Why Agentic AI, and Why Workflow First")
+    p(f"Deck reference: {slideref('topic1_intro')}.")
+    h3("A brief history of AI, 2023–2026")
+    table(["Year","Era","What changed"],[
+     ["2023","Prompt Engineering","ChatGPT goes mainstream. Results depend on how well you word the prompt."],
+     ["2024","Context Engineering","Models call tools and MCP launches. Results depend on the documents, data and tools you supply."],
+     ["2025","Harness Engineering","Claude Code and Codex: systems built around the model that plan, act and check their own work in a loop."],
+     ["2026","AI Agents","Always-on agents work 24/7 — OpenClaw, Hermes Agent and agent teams take on whole jobs."],
+    ])
+    p("Each year moved the skill that matters: from wording one prompt, to curating the context, to "
+      "engineering the harness around the model, to AI agents that work around the clock.")
+    h3("What is agentic AI")
+    p("Agentic AI uses the reasoning power of a large language model to run a complex task by breaking "
+      "it into simpler ones. Given a goal, the model observes the situation, chooses an action, acts on "
+      "the world through a tool, observes the result, and repeats until the goal is met.")
+    image("ai-agent-llm-loop.png",
+          "The agent loop — goal, observation, action, observation, action. Each step is an LLM call "
+          "that decides what to do next based on what came back.")
+    h3("Agentic AI vs generative AI")
+    table(["","Generative AI","Agentic AI"],[
+     ["Purpose","Creates content — text, images, code","Takes actions towards a goal"],
+     ["Interaction","Responds to a prompt, once","Plans, acts, observes and adapts"],
+     ["Context","Relies on you for context and goals","Uses tools to reach real systems and data"],
+     ["Completion","Stops when the answer is produced","Continues until the goal is met"],
+     ["Example","\"Draft me an email\"","\"Read the enquiry, check the CRM, reply and log it\""],
+    ])
+    h3("Agentic AI vs AI agents")
+    p("The two terms are often used loosely; in this course they mean different things. AGENTIC AI is "
+      "the umbrella term for the whole system — any system in which AI pursues a goal over many steps, "
+      "planning, acting through tools, checking the result and adapting. It includes the orchestration, "
+      "the data, the guardrails and the human approvals, and it can be built as a workflow with AI "
+      "steps or around one or more agents. An AI AGENT is one building block inside it: a single LLM "
+      "given a goal, tools, memory and instructions, which decides its own next step in a loop and "
+      "chooses which tool to call and when. In n8n that is the AI Agent node with its Chat Model, "
+      "Memory and Tools. The best agentic systems use agents only where judgement is needed.")
+    h3("Workflow first vs AI first")
+    p("There are two ways to build agentic automation. WORKFLOW FIRST is the modern form of rule-based "
+      "(RPA-style) automation: you design the path, and AI is added only at the steps that need "
+      "judgement. AI FIRST hands the path to an AI agent, which decides the steps and tools at run time.")
+    table(["","Workflow First","AI First (AI Agent)"],[
+     ["Who decides the path","You design the steps; AI handles individual nodes","The agent decides the steps and tools at run time"],
+     ["Behaviour","Deterministic — same input, same path, every time","Probabilistic — the path can change between runs"],
+     ["Efficiency","More effort to design every branch up front","Efficient — one instruction replaces many hand-built branches"],
+     ["Reliability & testing","Easy to test, debug and certify step by step","Harder to test; edge cases surface in production"],
+     ["Cost & speed","An LLM call only where needed — cheap and fast","An LLM call at every step — more tokens, more latency"],
+     ["Best for","Repeatable, regulated, high-volume processes","Open-ended tasks with unpredictable inputs"],
+    ])
+    p("Workflow first is more deterministic; AI first is more efficient. Because reliability matters "
+      "most in business, companies try to make as much of a process deterministic as possible. "
+      "(Source: n8n, In The Loop 2026 opening keynote and product direction.)")
+    h3("The trend: AI agents build the workflow")
+    p("AI-powered coding tools such as Claude Code and Codex are AI agents themselves, and they have "
+      "made designing, building and changing workflows fast and cheap. The trend is therefore to use "
+      "them to CREATE the workflow — describe the process in plain English, let Claude Code or Codex "
+      "draft the n8n workflow, review and test it — and then let the deterministic workflow RUN the "
+      "process, with AI nodes only where judgement is needed. The agent's efficiency goes into "
+      "building, the workflow's determinism into running.")
+    h3("The five principles of AI security")
+    table(["Principle","Controls","What it means"],[
+     ["1. Data Control","What AI can see","Classify your data — public, internal, confidential — and decide exactly which data the AI may access."],
+     ["2. Permission Control","What AI can do","Grant only the rights needed — read, write, edit, delete. Ask before anything destructive."],
+     ["3. Human in the Loop","Who approves","A person reviews and approves high-impact actions — payments, deletions, customer emails."],
+     ["4. Traceability","What happened","Log every prompt, tool call and change so actions can be audited, explained and rolled back."],
+     ["5. Right-Sized Models","Not the most powerful","The smallest model that does the job carries less autonomy and less risk."],
+    ])
+    p("In n8n these map to scoped credentials per node, approval gates (Gmail Send and Wait for "
+      "Response), the Executions log, and a small model for each AI step.")
+    h3("Why workflow first is more secure")
+    p("A fixed path limits the blast radius: a manipulated AI step — for example one hit by a prompt "
+      "injection — cannot reach tools that are not wired to it.")
+    table(["Principle","Workflow First","AI First (AI Agent)"],[
+     ["Data control","Each node sees only the fields wired into it","The agent can reach any data its tools expose"],
+     ["Permission control","Each credential is scoped to one node and one action","The agent holds every tool's rights at once"],
+     ["Human in the loop","The approval gate sits at a fixed, designed step","Depends on the agent choosing to ask"],
+     ["Traceability","Every run is logged node by node in Executions","Reasoning varies run to run and is harder to explain"],
+     ["Right-sized models","A small model for each narrow AI step","One capable model with broad autonomy"],
+    ])
+    h3("Business value of workflow-first agentic automation")
+    bullets([
+     "Reliable and predictable — the same input follows the same path every time, so the process can be tested and trusted like software.",
+     "Secure by design — each step holds only the data and credentials it needs, and risky actions wait at an approval gate.",
+     "Auditable end to end — every run is logged node by node, so any decision can be explained, replayed and corrected.",
+     "Lower running cost — deterministic steps cost nothing in tokens; the LLM is called only where judgement is needed.",
+     "Faster to build and change — Claude Code and Codex draft the workflow in minutes; your team reviews, tests and owns it.",
+     "Scale around the clock — triggers respond in real time, 24/7, and ten times the volume costs compute, not ten more hires.",
+    ])
+    h3("Where agentic automation is used")
+    p("The same pattern — trigger, agent, tools, oversight — recurs in customer service, finance and "
+      "accounting, risk and compliance, HR and people operations, sales and marketing, and operations.")
+    h3("Where agent platforms sit")
+    table(["Tier","Characteristics","Examples"],[
+     ["No-code","Fully visual; fastest to a working agent; least control","AgentX and similar chatbot builders"],
+     ["Low-code","Visual canvas plus code nodes; 400+ integrations; self-host or cloud","n8n — this course's platform"],
+     ["Full-code","SDKs and frameworks; maximum control; needs engineering effort","LangChain and agent SDKs"],
+    ])
+
 
 # ---------------- per-topic, per-lab ----------------
 TOPIC_EXTRA_CONCEPTS = {
@@ -467,6 +522,7 @@ TROUBLESHOOTING = {
 for t in C.TOPICS:
     h1(f"Topic {t['code']} — {t['title']}")
     p(t["subtitle"] + f"   (Deck reference: {slideref('topic' + str(t['num']) + '_all')}.)")
+    if t["num"]==1: topic1_intro_lg()
     h3("Key concepts")
     for title_,body in TOPIC_EXTRA_CONCEPTS[t["num"]]:
         B.append(("term", title_, body))

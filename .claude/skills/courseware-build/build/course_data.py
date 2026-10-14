@@ -12,8 +12,8 @@ Guiding principle: the course material must be 100% aligned to the WSQ TSC
 TITLE        = "Agentic AI for Business Process Automation"
 SHORT_TITLE  = "Agentic AI for Business Process Automation"   # used in output filenames
 COURSE_CODE  = "TGS-2024045801"
-VERSION      = "v2.0"
-VERSION_DATE = "8 August 2026"
+VERSION      = "v2.1"
+VERSION_DATE = "15 October 2026"
 ORG          = "Tertiary Infotech Academy Pte Ltd"
 UEN          = "UEN: 201200696W"
 TRAINER      = "Dr. Alfred Ang"
@@ -56,7 +56,7 @@ LEARNING_OUTCOMES = [
 TOPICS = [
     dict(num=1, code="01",
          title="Overview of n8n and AI Agents",
-         subtitle="Workflow automation · Triggers & actions · LLM agents · Webhooks",
+         subtitle="Why agentic AI · Workflow first · Triggers & actions · LLM agents · Webhooks",
          weighting="LO1 · LO2",
          concepts=[
             ("What is n8n", "A fair-code workflow automation platform: a visual canvas where nodes are wired together to move data between 400+ apps, with no code required."),

@@ -47,6 +47,7 @@ _adv()      # Ground Rules
 _adv()      # Download Course Material (image)
 _adv()      # Download Course Material (steps)
 _adv()      # Get the Course Workflows
+_adv()      # n8n Training Accounts
 _adv()      # Skills Framework (TSC)
 _adv()      # TSC Abilities and Knowledge
 _adv()      # Lesson Plan overview
@@ -58,22 +59,20 @@ _adv()      # Assessment
 _adv()      # Assessment Flow
 _mark("admin", a0, _n)
 
-# ---- FOUNDATION ----
-f0 = _n + 1
-_adv()      # section: Why Agentic AI
-_adv()      # Evolution of AI
-_adv()      # image: agent loop
-_adv()      # image: RPA -> APA
-_adv()      # Business value
-_adv()      # Use cases
-_adv()      # Platform tiers
-_mark("foundation", f0, _n)
+# Topic 1 opens with the "why agentic AI, and why workflow first" slides straight
+# after its divider (history of AI, agentic AI vs AI agents, workflow first vs AI
+# first, the trend, AI security x2, business value, use cases, platform tiers).
+# MUST match topic1_intro() in build_slides.py — the build asserts it.
+TOPIC1_INTRO = 9
 
 # ---- TOPICS ----
 for tp in C.TOPICS:
     tnum = tp["num"]
     t0 = _n + 1
     _adv()                                       # section divider
+    if tnum == 1:
+        _adv(TOPIC1_INTRO)                       # the Topic 1 opener
+        _mark("topic1_intro", t0, _n)
 
     keys = CN.TOPIC_CONCEPTS[tnum]
     c0 = _n + 1
@@ -94,7 +93,7 @@ for tp in C.TOPICS:
                 if k == key:
                     return n - 1
             return c_end
-        _mark("topic1_concepts", t0, _upto("credentials"))
+        _mark("topic1_concepts", c0, _upto("credentials"))
         _mark("topic1_agent", _upto("credentials") + 1, _upto("mcp_in_n8n"))
         _mark("topic1_webhook", _upto("mcp_in_n8n") + 1, c_end)
     elif tnum == 2:

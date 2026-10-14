@@ -1,17 +1,25 @@
 # Agentic AI for Business Process Automation
 
-**WSQ Course Code:** TGS-2024045801
-**TSC:** Artificial Intelligence Application · AER-TEM-3026-1.1
-**Duration:** 2 days · 16 instructional hours (9:30am–6:30pm, 8 hours/day)
-**Conducted by:** Tertiary Infotech Academy Pte Ltd (UEN 201200696W)
+A 2-day WSQ course in building reliable, workflow-first agentic automation with n8n — from triggers and AI agents to human-in-the-loop approval and RAG.
 
-**Register:** [tertiarycourses.com.sg](https://www.tertiarycourses.com.sg/wsq-agentic-ai-for-business-process-automation.html) ·
-[MySkillsFuture course directory](https://www.myskillsfuture.gov.sg/content/portal/en/training-exchange/course-directory/course-detail.html?courseReferenceNumber=TGS-2024045801)
+| Course detail | Information |
+|---|---|
+| Course code | `TGS-2024045801` |
+| Programme | WSQ |
+| TSC | Artificial Intelligence Application · AER-TEM-3026-1.1 |
+| Duration | 2 days · 16 instructional hours (9:30am–6:30pm, 8 hours/day) |
+| Registration | [View course details and register](https://www.tertiarycourses.com.sg/wsq-agentic-ai-for-business-process-automation.html) · [MySkillsFuture course directory](https://www.myskillsfuture.gov.sg/content/portal/en/training-exchange/course-directory/course-detail.html?courseReferenceNumber=TGS-2024045801) |
+| Funding | Up to 70% WSQ funding subsidy, with higher rates for eligible learners and companies. Eligibility and terms apply — see the course page. |
+| Provider | Tertiary Infotech Academy Pte Ltd (UEN 201200696W) |
+
+## About the course
 
 Learners build five working automations in [n8n](https://n8n.io): a form-triggered workflow, a
 webhook-triggered AI agent behind a real website, an agentic chatbot bound by compliance rules, a
 human-in-the-loop approval chain, and a Retrieval-Augmented Generation chatbot grounded in an
-organisation's own documents.
+organisation's own documents. The course takes the modern, workflow-first view: AI coding agents
+such as Claude Code and Codex help build the workflow, and a deterministic, auditable workflow runs
+the process — with AI only at the steps that need judgement.
 
 ## Learning outcomes
 
@@ -21,11 +29,11 @@ organisation's own documents.
 - **LO4** — Apply human-in-the-loop approval so that sensitive actions are authorised by a person.
 - **LO5** — Deploy Retrieval-Augmented Generation (RAG) to ground an agent in an organisation's own documents.
 
-## Course structure
+## Topics covered
 
 | Topic | Content | Labs |
 |---|---|---|
-| 1 — Overview of n8n and AI Agents | What n8n is, triggers and actions, what an AI agent is, webhooks | Lab 1, Lab 2 |
+| 1 — Overview of n8n and AI Agents | A brief history of AI 2023–2026, agentic AI vs AI agents, workflow first vs AI first, the 5 principles of AI security, business value; what n8n is, triggers and actions, AI agents, webhooks | Lab 1, Lab 2 |
 | 2 — Agentic Chatbot and Human in the Loop | Agentic workflows, safe chatbot design, approval gates, accountability | Lab 3, Lab 4 |
 | 3 — Retrieval-Augmented Generation (RAG) | Tokenization, embeddings, vector stores, chunking, grounding | Lab 5 |
 
@@ -39,14 +47,14 @@ organisation's own documents.
 | 4 | Human in the Loop | Meridian Asset Management — the agent drafts, a human approves | [`labs/lab4-human-in-the-loop/`](labs/lab4-human-in-the-loop/) |
 | 5 | RAG Customer Care Chatbot | Cook & Bake Academy — 20 brochures in a vector store | [`labs/lab5-rag/`](labs/lab5-rag/) |
 
-## Courseware
+## Courseware (public package)
 
-Current version **v2.0** — all artifacts live in [`courseware/`](courseware/); superseded versions are
+Current version **v2.1** — all artifacts live in [`courseware/`](courseware/); superseded versions are
 moved to `courseware/archive/`.
 
 | Artifact | File |
 |---|---|
-| Trainer slide deck | `courseware/Agentic AI for Business Process Automation-v2.0.pptx` (+ `.pdf`) |
+| Trainer slide deck | `courseware/Agentic AI for Business Process Automation-v2.1.pptx` (+ `.pdf`) |
 | Lesson Plan | `courseware/LP-Agentic AI for Business Process Automation.docx` (+ `.pdf`) |
 | Learner Guide | `courseware/LG-Agentic AI for Business Process Automation.docx` (+ `.pdf`) |
 | Learner Guide (Markdown mirror) | `courseware/LG-Agentic AI for Business Process Automation.md` |

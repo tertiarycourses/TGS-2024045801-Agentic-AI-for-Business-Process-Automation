@@ -515,6 +515,28 @@ tile_grid("Get the Course Workflows",[
  ("Re-select your credentials","After importing, re-select YOUR OWN credentials on every node showing a warning."),
  ("Nothing of yours is shared","Imported workflows reference credential NAMES, not secrets — no key travels in the file.")],
  kicker="GET THE FLOWS",cols=2,size=14)
+# n8n training accounts for this run (18 Oct class) — replace when the class changes
+N8N_ACCOUNTS=[f"n8n18oct{i}@tertiaryinfotech.com" for i in range(1,13)]
+# The password is NEVER written in source: the repo is public. It is read from the
+# gitignored .env (N8N_PASSWORD=...) for the class deck that goes to Drive/TMS.
+# PUBLIC_BUILD=1 (the GitHub copy) forces the placeholder.
+def _env(key):
+    if os.environ.get(key): return os.environ[key]
+    try:
+        for ln in open(os.path.join(REPO,".env")):
+            if ln.strip().startswith(key+"="): return ln.split("=",1)[1].strip()
+    except OSError: pass
+    return None
+N8N_PASSWORD=None if os.environ.get("PUBLIC_BUILD") else _env("N8N_PASSWORD")
+s=concept_slide("TRAINING ACCOUNTS","n8n Training Accounts",
+ "Each learner signs in to n8n with ONE assigned account. Use only the account your trainer gives you.")
+_h=len(N8N_ACCOUNTS)//2
+data_table(s,[0.8,5.0,0.8,5.03],["#","Account (email)","#","Account (email)"],
+ [[str(i+1),N8N_ACCOUNTS[i],str(i+1+_h),N8N_ACCOUNTS[i+_h]] for i in range(_h)],
+ y=Inches(2.05),rh=Inches(0.52),hcolor=BLUE,fsz=12)
+takeaway(s,(f"Password for every account:  {N8N_PASSWORD}   ·   Do not change the password or save real credentials in it."
+            if N8N_PASSWORD else "Password: provided by your trainer in class   ·   Do not change the password or save real credentials in it."))
+footer(s)
 tile_grid("Skills Framework (TSC)",[
  ("TSC Title",C.TSC_TITLE),
  ("TSC Code",C.TSC_CODE),
@@ -527,14 +549,14 @@ two_panel("TSC Abilities and Knowledge",
  kicker="SKILLS FRAMEWORK",lcolor=BLUE,rcolor=TEAL)
 two_panel(f"Lesson Plan — {C.DAYS} Days, {C.HOURS_PER_DAY} hours/day",
  f"DAY 1 — {C.DAY_THEMES[1]}",
- ["Topic 1: Overview of n8n and AI Agents",
+ ["Topic 1: Why agentic AI, and why workflow first",
+  "Topic 1: Overview of n8n and AI Agents",
   "Lab 1 — n8n trigger and action",
   "Lab 2 — Webhook and AI Agent",
-  "Topic 2 begins: agentic chatbots",
-  "Lab 3 — Chatbot webhook",
   f"Timing: {C.DAY_TIMES[1]}"],
  f"DAY 2 — {C.DAY_THEMES[2]}",
- ["Topic 2: Human in the loop",
+ ["Topic 2: Agentic chatbot and human in the loop",
+  "Lab 3 — Chatbot webhook",
   "Lab 4 — Human in the loop",
   "Topic 3: RAG",
   "Lab 5 — RAG customer care chatbot",
@@ -586,54 +608,151 @@ flow_h("Assessment Flow",[
  "Submit your answers on the LMS",
  "Sign the Assessment Summary Record"],kicker="ON ASSESSMENT DAY")
 
-# ---------------------------------------------------------------- FOUNDATION
-section("FOUNDATION","Why Agentic AI, and Why Now","",
-        "From rules to agents · what agentic automation is worth · where it is used",
-        color=BLUE)
-tile_grid("The Evolution of AI",[
- ("Artificial Intelligence · 1950s","Turing's test and symbolic, rule-based systems that encode human expertise by hand."),
- ("Machine Learning · 1990s","Data-driven systems that learn patterns from examples instead of being programmed with rules."),
- ("Deep Learning · 2000s","Neural networks — DNNs and CNNs — trained on large datasets with GPU compute."),
- ("Generative AI · 2020s","The 2017 Transformer and its attention mechanism made models that generate fluent text and images."),
- ("Agentic AI · 2024","LLMs given goals, tools and memory: they plan, act, observe and adapt rather than answering once."),
- ("Physical AI · 2025","Agents that perceive and act in the physical world — robotics and embodied systems.")],
- kicker="FROM RULES TO AGENTS",cols=2,size=14)
-image_slide("How an AI Agent Works","ai-agent-llm-loop.png",
- "The agent loop: given a goal, the LLM observes, chooses an action, acts on the world through a tool, "
- "observes the result, and repeats until the goal is met.",kicker="THE AGENT LOOP",accent=VIOLET)
-image_slide("From RPA to Agentic Process Automation","rpa-to-apa.png",
- "Robotic Process Automation follows a rigid path you construct by hand. Agentic Process Automation lets "
- "an agent orchestrate the workflow, so it handles both rigid and flexible tasks.",kicker="APA",accent=VIOLET)
-s=concept_slide("WHY ORGANISATIONS ADOPT IT","Business Value of Agentic Automation",
- "Six reasons organisations move from hand-built automation to agents.")
-ncards(s,[(BLUE,"Free people from repetitive admin","Scheduling, form processing, data entry, report generation and email routing run themselves."),
- (TEAL,"Shift effort to high-value work","When the admin burden lifts, people spend their time on judgement, relationships and strategy."),
- (VIOLET,"Respond in real time","Events — a form, a payment, a customer message — trigger a workflow the moment they happen."),
- (AMBER,"Work around the clock","An agent answers a 2am enquiry with the same care as a 2pm one, and never forgets to log it."),
- (GREEN,"Reduce human error","The same rules are applied to every case, and every decision is written to an audit trail."),
- (RED,"Scale without headcount","Handling ten times the volume costs compute, not another ten hires.")],
- y=Inches(1.98),h=Inches(4.15),cols=3)
-takeaway(s,"The gain is not speed alone — it is consistency, traceability and capacity you did not have before.")
-footer(s)
-s=concept_slide("USE CASES","Where Agentic Automation Is Used",
- "The same pattern — trigger, agent, tools, oversight — recurs across every function.")
-ncards(s,[(BLUE,"Customer service","Answer enquiries from your own documents, capture leads, and escalate what needs a person."),
- (TEAL,"Finance & accounting","Invoice processing, bank reconciliation, accounts-payable routing and exception handling."),
- (VIOLET,"Risk & compliance","Screen applications, flag anomalies, and route sensitive cases for human review."),
- (AMBER,"HR & people ops","Onboarding, leave applications, policy questions and approval chains."),
- (GREEN,"Sales & marketing","Lead qualification, follow-up sequencing, CRM enrichment and content drafting."),
- (RED,"Operations","Order processing, status notifications, document generation and reporting.")],
- y=Inches(1.98),h=Inches(4.15),cols=3)
-takeaway(s,"Every one of these is a front door, an agent, some tools and a decision about where the human belongs.")
-footer(s)
-s=concept_slide("COMPLEXITY VS CUSTOMISATION","Where AI Agent Platforms Sit",
- "Three tiers, and why this course teaches the middle one.")
-ncards(s,[(BLUE,"No-code","Fully visual builders. Fastest route to a working agent, least control over the internals."),
- (TEAL,"Low-code  ·  n8n","A visual canvas plus code nodes, 400+ integrations, self-host or cloud. This course's platform."),
- (VIOLET,"Full-code","SDKs and frameworks such as LangChain. Maximum control, and real engineering effort.")],
- y=Inches(2.1),h=Inches(3.9),cols=3)
-takeaway(s,"n8n sits where a business analyst can build it and an engineer can still extend it.")
-footer(s)
+# ---------------------------------------------------------------- TOPIC 1 OPENER
+# Why agentic AI, and why workflow first. These slides open Topic 1 straight after
+# its section divider (there is no separate Foundation section). slide_index.py
+# counts them as TOPIC1_INTRO — keep the two in step.
+def principle_cols(s,items,y=Inches(2.05),h=Inches(4.0)):
+    """Five numbered columns — items: (color, title, kicker, body)."""
+    n=len(items); X0=Inches(0.85); TOTW=Inches(11.63); gx=Inches(0.22)
+    cw=int((TOTW-gx*(n-1))/n); bd=Inches(0.5)
+    for i,(col,t,k,body) in enumerate(items):
+        x=int(X0+(cw+gx)*i)
+        box(s,x,y,cw,h,col)
+        oval(s,int(x+cw/2-bd/2),y+Inches(0.22),bd,bd,col)
+        txt(s,int(x+cw/2-bd/2),y+Inches(0.22),bd,bd,[[(str(i+1),16,WHITE,True)]],
+            align=PP_ALIGN.CENTER,anchor=MSO_ANCHOR.MIDDLE)
+        txt(s,x+Inches(0.12),y+Inches(0.85),cw-Inches(0.24),Inches(0.62),[[(t,13.5,col,True)]],
+            align=PP_ALIGN.CENTER,anchor=MSO_ANCHOR.MIDDLE)
+        txt(s,x+Inches(0.12),y+Inches(1.5),cw-Inches(0.24),Inches(0.3),[[(k,9,GREY,True)]],
+            align=PP_ALIGN.CENTER)
+        txt(s,x+Inches(0.18),y+Inches(1.9),cw-Inches(0.36),h-Inches(2.0),[[(body,11,INK,False)]],
+            align=PP_ALIGN.CENTER,space=3)
+def source_note(s,text,y=Inches(5.9)):
+    txt(s,Inches(0.85),y,Inches(11.63),Inches(0.3),[[(text,9,GREY,False)]],align=PP_ALIGN.RIGHT)
+
+def topic1_intro(acc):
+    k=lambda x: f"TOPIC 1 · {x}"
+    # 1 — a brief history of AI, 2023–2026
+    s=concept_slide(k("A BRIEF HISTORY OF AI"),"A Brief History of AI, 2023–2026",
+     "Each year moved the skill that matters — from the words you type to the system you build.",kcolor=acc)
+    chev_strip(s,[("Prompt Engineering","2023"),("Context Engineering","2024"),
+                  ("Harness Engineering","2025"),("AI Agents","2026")],y=Inches(2.05),h=Inches(1.0),color=acc)
+    ncards(s,[(BLUE,"Wording the prompt","ChatGPT goes mainstream. Results depend on how well you word the prompt."),
+     (TEAL,"Curating the context","Models call tools and MCP launches. Results depend on the documents, data and tools you supply."),
+     (VIOLET,"Building the harness","Claude Code and Codex: systems that plan, act and check their own work in a loop."),
+     (AMBER,"Agents at work","Always-on agents work 24/7 — OpenClaw, Hermes Agent and agent teams take on whole jobs.")],
+     y=Inches(3.35),h=Inches(2.7),cols=4,numbered=False,bsz=11)
+    takeaway(s,"From wording one prompt → curating context → engineering the harness → AI agents that work around the clock.")
+    footer(s)
+    # 2 — agentic AI vs AI agents
+    two_panel("Agentic AI vs AI Agents",
+     "Agentic AI — the system",[
+      "The umbrella term: any system in which AI pursues a goal over many steps",
+      "Plans, acts through tools, checks the result and adapts",
+      "Built as a workflow with AI steps, or around one or more agents",
+      "Includes the orchestration, data, guardrails and human approvals",
+      "Example: an n8n workflow that triages enquiries, drafts replies and waits for approval"],
+     "AI Agent — the building block",[
+      "One LLM given a goal, tools, memory and instructions",
+      "Decides its own next step in a loop: observe → think → act",
+      "Chooses which tool to call and when — the path is not fixed",
+      "In n8n: the AI Agent node with a Chat Model, Memory and Tools",
+      "Example: a chatbot that looks up a customer and books a call"],
+     kicker=k("AGENTIC AI VS AI AGENTS"),lcolor=acc,rcolor=VIOLET,
+     intro="The two terms are used loosely. In this course they mean different things.",
+     take="An AI agent is one component; agentic AI is the whole system — and the best systems use agents only where judgement is needed.")
+    # 3 — workflow first vs AI first
+    s=concept_slide(k("WORKFLOW FIRST VS AI FIRST"),"Workflow First vs AI First",
+     "Two ways to build agentic automation. Workflow first is rule-based (RPA-style) automation with AI added only at the judgement steps.",
+     kcolor=acc)
+    data_table(s,[2.5,4.55,4.58],["","Workflow First","AI First (AI Agent)"],[
+     ["Who decides the path","You design the steps; AI handles individual nodes","The agent decides the steps and tools at run time"],
+     ["Behaviour","Deterministic — same input, same path, every time","Probabilistic — the path can change between runs"],
+     ["Efficiency","More effort to design every branch up front","Efficient — one instruction replaces many hand-built branches"],
+     ["Reliability & testing","Easy to test, debug and certify step by step","Harder to test; edge cases surface in production"],
+     ["Cost & speed","An LLM call only where needed — cheap and fast","An LLM call at every step — more tokens, more latency"],
+     ["Best for","Repeatable, regulated, high-volume processes","Open-ended tasks with unpredictable inputs"]],
+     y=Inches(2.05),rh=Inches(0.5),hcolor=acc)
+    source_note(s,"Source: n8n, In The Loop 2026 — opening keynote and product direction (youtube.com/watch?v=KQRe5UurLQ0)")
+    takeaway(s,"Workflow first is more deterministic; AI first is more efficient. Companies make as much deterministic as they can.")
+    footer(s)
+    # 4 — the trend: AI builds the workflow
+    s=concept_slide(k("THE MODERN VIEW"),"The Trend: AI Agents Build the Workflow",
+     "AI-powered coding has flipped the trade-off — the agent's efficiency goes into BUILDING the workflow, not running it.",
+     kcolor=acc)
+    chev_strip(s,[("Describe","the process in plain English"),("Claude Code / Codex","drafts the n8n workflow"),
+                  ("You review","test and approve it"),("Workflow runs","deterministic and logged"),
+                  ("AI steps","only where judgement is needed")],y=Inches(2.05),h=Inches(1.0),color=acc,
+               tsz=11.5,ssz=8.5)
+    ncards(s,[(BLUE,"Companies want determinism","Reliability, compliance and audit push businesses to make as much of a process deterministic as possible."),
+     (VIOLET,"AI coding made it cheap","Claude Code and Codex are AI agents themselves — and they make designing, building and changing workflows fast and cheap."),
+     (TEAL,"The best of both","An AI agent BUILDS the workflow; a deterministic workflow RUNS the process, with AI nodes only where judgement is needed.")],
+     y=Inches(3.35),h=Inches(2.7),cols=3)
+    takeaway(s,"The trend: use Claude Code and Codex to create the workflows — the workflow, not the agent, runs the business process.")
+    footer(s)
+    # 5 — five principles of AI security
+    s=concept_slide(k("AI SECURITY"),"5 Principles of AI Security",
+     "Agents act on your behalf. These five controls keep what they can see and do safe, reviewable and accountable.",
+     kcolor=RED)
+    principle_cols(s,[(BLUE,"Data Control","WHAT AI CAN SEE",
+       "Classify your data — public, internal, confidential — and decide exactly which data the AI may access."),
+     (TEAL,"Permission Control","WHAT AI CAN DO",
+       "Grant only the rights needed — read, write, edit, delete. Ask before anything destructive."),
+     (VIOLET,"Human in the Loop","WHO APPROVES",
+       "A person reviews and approves high-impact actions — payments, deletions, customer emails."),
+     (AMBER,"Traceability","WHAT HAPPENED",
+       "Log every prompt, tool call and change so actions can be audited, explained and rolled back."),
+     (RED,"Right-Sized Models","NOT THE MOST POWERFUL",
+       "The smallest model that does the job carries less autonomy and less risk than the most powerful one.")])
+    takeaway(s,"In n8n: scoped credentials per node, approval gates (Send and Wait), the Executions log, and a small model per AI step.")
+    footer(s)
+    # 6 — why workflow first is more secure
+    s=concept_slide(k("AI SECURITY"),"Why Workflow First Is More Secure",
+     "A fixed path limits the blast radius: a manipulated AI step cannot reach tools that are not wired to it.",
+     kcolor=RED)
+    data_table(s,[2.5,4.55,4.58],["Principle","Workflow First","AI First (AI Agent)"],[
+     ["Data control","Each node sees only the fields wired into it","The agent can reach any data its tools expose"],
+     ["Permission control","Each credential is scoped to one node and one action","The agent holds every tool's rights at once"],
+     ["Human in the loop","The approval gate sits at a fixed, designed step","Depends on the agent choosing to ask"],
+     ["Traceability","Every run is logged node by node in Executions","Reasoning varies run to run and is harder to explain"],
+     ["Right-sized models","A small model for each narrow AI step","One capable model with broad autonomy"]],
+     y=Inches(2.05),rh=Inches(0.56),hcolor=RED)
+    takeaway(s,"The path is fixed, so every control is designed in rather than hoped for — that is why regulated processes stay workflow first.")
+    footer(s)
+    # 7 — business value, the modern view
+    s=concept_slide(k("WHY ORGANISATIONS ADOPT IT"),"Business Value of Workflow-First Agentic Automation",
+     "The modern view: what a business gains when AI builds the workflow and the workflow runs the process.",kcolor=acc)
+    ncards(s,[(BLUE,"Reliable and predictable","The same input follows the same path every time, so the process can be tested and trusted like software."),
+     (TEAL,"Secure by design","Each step holds only the data and credentials it needs; risky actions wait at an approval gate."),
+     (VIOLET,"Auditable end to end","Every run is logged node by node — you can explain, replay and correct any decision."),
+     (AMBER,"Lower running cost","Deterministic steps cost nothing in tokens; the LLM is called only where judgement is needed."),
+     (GREEN,"Faster to build and change","Claude Code and Codex draft the workflow in minutes; your team reviews, tests and owns it."),
+     (RED,"Scale around the clock","Triggers respond in real time, 24/7 — ten times the volume costs compute, not ten more hires.")],
+     y=Inches(1.98),h=Inches(4.15),cols=3)
+    takeaway(s,"AI where judgement is needed, workflow everywhere else — reliability you can audit, at a cost you can predict.")
+    footer(s)
+    # 8 — use cases
+    s=concept_slide(k("USE CASES"),"Where Agentic Automation Is Used",
+     "The same pattern — trigger, agent, tools, oversight — recurs across every function.",kcolor=acc)
+    ncards(s,[(BLUE,"Customer service","Answer enquiries from your own documents, capture leads, and escalate what needs a person."),
+     (TEAL,"Finance & accounting","Invoice processing, bank reconciliation, accounts-payable routing and exception handling."),
+     (VIOLET,"Risk & compliance","Screen applications, flag anomalies, and route sensitive cases for human review."),
+     (AMBER,"HR & people ops","Onboarding, leave applications, policy questions and approval chains."),
+     (GREEN,"Sales & marketing","Lead qualification, follow-up sequencing, CRM enrichment and content drafting."),
+     (RED,"Operations","Order processing, status notifications, document generation and reporting.")],
+     y=Inches(1.98),h=Inches(4.15),cols=3)
+    takeaway(s,"Every one of these is a front door, an agent, some tools and a decision about where the human belongs.")
+    footer(s)
+    # 9 — platform tiers
+    s=concept_slide(k("COMPLEXITY VS CUSTOMISATION"),"Where AI Agent Platforms Sit",
+     "Three tiers, and why this course teaches the middle one.",kcolor=acc)
+    ncards(s,[(BLUE,"No-code","Fully visual builders. Fastest route to a working agent, least control over the internals."),
+     (TEAL,"Low-code  ·  n8n","A visual canvas plus code nodes, 400+ integrations, self-host or cloud. This course's platform."),
+     (VIOLET,"Full-code","SDKs and frameworks such as LangChain. Maximum control, and real engineering effort.")],
+     y=Inches(2.1),h=Inches(3.9),cols=3)
+    takeaway(s,"n8n sits where a business analyst can build it and an engineer can still extend it.")
+    footer(s)
 
 # ---------------------------------------------------------------- TOPICS + LABS
 KICKERS={1:"TOPIC 1 · n8n AND AI AGENTS",2:"TOPIC 2 · AGENTIC CHATBOT & HITL",3:"TOPIC 3 · RAG"}
@@ -667,6 +786,10 @@ for t in C.TOPICS:
     labs=TOPIC_ACTS[tnum]
     section(f"TOPIC {t['code']}",t["title"],t["code"],t["subtitle"],
             "Applied in "+", ".join(f"Lab {a['num']}" for a in labs),color=acc)
+    if tnum==1:
+        _p0=PAGE["n"]; topic1_intro(acc)
+        import slide_index as _si
+        assert PAGE["n"]-_p0==_si.TOPIC1_INTRO, "slide_index.TOPIC1_INTRO is out of step with topic1_intro()"
     # --- concepts, each as a visual slide, with its n8n screenshot after it ---
     for key in CN.TOPIC_CONCEPTS[tnum]:
         render_concept(CN.BY_KEY[key],K,accent=acc)
@@ -774,7 +897,7 @@ assert slide_index.TOTAL==_actual, (
 for _k,(_a,_b) in slide_index.SLIDES.items():
     assert 1<=_a<=_b<=_actual, f"slide_index range {_k}={_a}-{_b} is outside 1..{_actual}"
 
-OUT=os.path.join(REPO,"courseware",f"{C.SHORT_TITLE}-{C.VERSION}.pptx")
+OUT=os.path.join(os.environ.get("DECK_OUT_DIR") or os.path.join(REPO,"courseware"),f"{C.SHORT_TITLE}-{C.VERSION}.pptx")
 prs.save(OUT)
 print(f"Saved {OUT}  ({_actual} slides)")
 print(f"slide_index verified: {slide_index.TOTAL} slides, {len(slide_index.SLIDES)} named blocks")

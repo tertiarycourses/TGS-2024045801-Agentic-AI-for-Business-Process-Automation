@@ -57,11 +57,13 @@ SCHEDULE = {
      "Welcome, trainer and learner introductions, ground rules, course outline, learning outcomes, "
      "Skills Framework alignment and mandatory digital attendance (AM). "+S("admin")),
     ("10:00","11:00",60,"topic",
-     "Foundation — Why agentic AI: the evolution of AI, agentic vs generative AI, from RPA to Agentic "
-     "Process Automation, business value and use cases. "+S("foundation")),
+     "Topic 1 — Overview of n8n and AI Agents: why agentic AI, and why workflow first — a brief "
+     "history of AI 2023–2026, agentic AI vs AI agents, workflow first vs AI first, building workflows "
+     "with Claude Code and Codex, the five principles of AI security, business value, use cases and "
+     "platform tiers. "+S("topic1_intro")),
     ("11:00","11:15",15,"break","Tea break"),
     ("11:15","12:30",75,"topic",
-     "Topic 1 — Overview of n8n and AI Agents: what n8n is, hosting options, credentials, node types, "
+     "Topic 1 (continued) — n8n fundamentals: what n8n is, hosting options, credentials, node types, "
      "trigger nodes, data-processing nodes, JSON and expressions, execution modes. "+S("topic1_concepts")),
     ("12:30","13:30",60,"lunch","Lunch break"),
     ("13:30","14:45",75,"topic",
@@ -140,13 +142,15 @@ prodoc.add_version_control(doc,[
   "Added a screenshot of each lab's application — the four lab websites with their chat widgets "
   "open, plus the Lab 1 n8n canvas and sample flyer — to the slide deck and the Learner Guide.",
   C.TRAINER),
- (C.VERSION.lstrip("v"),C.VERSION_DATE,
+ ("2.0","8 August 2026",
   "Slide deck restyled to the house reference format (visual concept cards, chevron flow strips, "
   "comparison panels and takeaway bands). Lab step slides removed from the deck; the click-by-click "
   "steps now live only in the Learner Guide, and each lab carries a rendered screenshot of its own "
   "n8n canvas. Concept coverage expanded: trigger nodes, data-processing nodes, the four components "
   "of an AI agent, instruction design, model parameters, MCP, webhooks (GET/POST, Test vs Production "
   "URL) and human-in-the-loop with guardrails.",C.TRAINER),
+ (C.VERSION.lstrip("v"),C.VERSION_DATE,
+  "Topic 1 now opens with the modern view of agentic automation, replacing the separate Foundation section: a brief history of AI 2023–2026 (prompt, context and harness engineering to AI agents), agentic AI vs AI agents, workflow first vs AI first, the trend of using Claude Code and Codex to build workflows, the five principles of AI security and why workflow first is more secure, and the business value of workflow-first agentic automation. Slide references updated to match.",C.TRAINER),
 ])
 prodoc.add_toc(doc)
 

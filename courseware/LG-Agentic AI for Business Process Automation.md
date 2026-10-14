@@ -132,7 +132,7 @@ Why agentic AI · Workflow first · Triggers & actions · LLM agents · Webhooks
 
 ### Why Agentic AI, and Why Workflow First
 
-Deck reference: Slides 20–34.
+Deck reference: Slides 20–36.
 
 **A brief history of AI, 2023–2026**
 
@@ -288,7 +288,7 @@ The same pattern — trigger, agent, tools, oversight — recurs in customer ser
 
 **Key concepts**
 
-- **What is n8n** — n8n is a fair-code workflow automation platform. You drag nodes onto a visual canvas and wire them together to move data between more than 400 applications, with little or no code. Every node shows its input and output as JSON, so you can see exactly what is flowing through. Workflows are plain JSON files you can export, version and share.
+- **What is n8n** — n8n is a fair-code, workflow-first agentic AI platform: the workflow owns the path, and AI and AI Agent nodes sit inside it. You drag nodes onto a visual canvas and wire them together to move data between more than 400 applications, with little or no code. Every node shows its input and output as JSON, so you can see exactly what is flowing through. Workflows are plain JSON files you can export, version and share.
 
 - **Nodes: the four building blocks** — TRIGGER nodes start a workflow (Form, Webhook, Schedule, Chat, Manual). ACTION nodes do something (send Gmail, append a Google Sheets row, call an HTTP API). LOGIC nodes control the flow (IF, Switch, Merge, Split Out, Code, Edit Fields). AI nodes reason and act (AI Agent, Chat Model, Memory, Embeddings, Vector Store, Tools).
 

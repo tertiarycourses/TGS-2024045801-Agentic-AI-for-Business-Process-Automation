@@ -687,6 +687,8 @@ def topic1_intro(acc):
      "Open Assistant in the left sidebar and answer \"What do you want to automate?\". It plans, builds and tests a normal n8n "
      "workflow you can inspect, edit and publish. Assistant chats use the plan's monthly Assistant credits.",
      kicker=k("AI-ASSISTED WORKFLOW CREATION"),accent=acc)
+    # 5b — what n8n is: a workflow-first agentic AI platform
+    for key in CN.TOPIC1_OPENER_CONCEPTS: render_concept(CN.BY_KEY[key],k("WHAT IS n8n"),accent=acc)
     # 6a — the n8n training accounts
     s=concept_slide(k("TRAINING ACCOUNTS"),"n8n Training Accounts",
      "Each learner signs in to n8n with ONE assigned account. Use only the account your trainer gives you.")

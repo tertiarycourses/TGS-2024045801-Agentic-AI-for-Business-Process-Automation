@@ -302,7 +302,7 @@ def topic1_intro_lg():
 TOPIC_EXTRA_CONCEPTS = {
  1: [
   ("What is n8n",
-   "n8n is a fair-code workflow automation platform. You drag nodes onto a visual canvas and wire "
+   "n8n is a fair-code, workflow-first agentic AI platform: the workflow owns the path, and AI and AI Agent nodes sit inside it. You drag nodes onto a visual canvas and wire "
    "them together to move data between more than 400 applications, with little or no code. Every "
    "node shows its input and output as JSON, so you can see exactly what is flowing through. "
    "Workflows are plain JSON files you can export, version and share."),

@@ -61,9 +61,9 @@ _mark("admin", a0, _n)
 # Topic 1 opens with the "why agentic AI, and why workflow first" slides straight
 # after its divider (history of AI, agentic AI vs AI agents, workflow first vs AI
 # first, AI-assisted workflow creation + n8n Assistant
-# screenshot + training accounts + sign in + free AI credits + social-campaign demo, AI security x2, business value, use cases, platform tiers).
+# screenshot + what is n8n x2 + training accounts + sign in + free AI credits + social-campaign demo, AI security x2, business value, use cases, platform tiers).
 # MUST match topic1_intro() in build_slides.py — the build asserts it.
-TOPIC1_INTRO = 14
+TOPIC1_INTRO = 16
 
 # ---- TOPICS ----
 for tp in C.TOPICS:

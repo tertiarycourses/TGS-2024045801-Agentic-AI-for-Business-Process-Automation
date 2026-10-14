@@ -17,7 +17,7 @@ Structure of a concept block:
 # ---------------------------------------------------------------- TOPIC 1: n8n
 WHAT_IS_N8N = dict(
     key="what_is_n8n", title="What Is n8n?",
-    intro="A workflow automation platform: connect apps, data and AI on one visual canvas — no-code to full-code.",
+    intro="A workflow-first agentic AI platform: the workflow owns the path, and AI and AI Agent nodes sit inside it.",
     kind="cards", cols=3,
     cards=[
         ("BLUE", "Build visually",
@@ -27,7 +27,7 @@ WHAT_IS_N8N = dict(
         ("VIOLET", "AI-native",
          "AI Agent and LangChain nodes are built in — attach any LLM (Gemini, OpenAI, Claude), memory, tools and vector stores."),
     ],
-    takeaway="One canvas to connect apps, data and AI — automation and agents without gluing code by hand.",
+    takeaway="n8n is workflow-first agentic AI — deterministic workflows with AI and agents built in, on one canvas.",
 )
 
 WORKFLOW_SHAPE = dict(
@@ -662,8 +662,12 @@ BY_KEY = {c["key"]: c for c in ALL}
 # Which concepts belong to which topic, in teaching order. build_slides.py and
 # build_learner_guide.py both read this, so a concept can never appear on a slide
 # without appearing in the Learner Guide.
+# what_is_n8n and workflow_shape open Topic 1 inside the opener (build_slides.topic1_intro),
+# just before the training-accounts slide, so they are not listed here.
+TOPIC1_OPENER_CONCEPTS = ["what_is_n8n", "workflow_shape"]
+
 TOPIC_CONCEPTS = {
-    1: ["what_is_n8n", "workflow_shape", "trigger_nodes", "triggers_in_course",
+    1: ["trigger_nodes", "triggers_in_course",
         "data_nodes", "storage_nodes", "json_expressions", "test_vs_prod_exec",
         "credentials", "gen_vs_agentic", "agent_components", "model_providers",
         "model_params", "memory_concept", "tools_concept", "instructions_four",

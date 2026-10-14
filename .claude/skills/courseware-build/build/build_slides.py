@@ -687,6 +687,35 @@ def topic1_intro(acc):
      "Open Assistant in the left sidebar and answer \"What do you want to automate?\". It plans, builds and tests a normal n8n "
      "workflow you can inspect, edit and publish. Assistant chats use the plan's monthly Assistant credits.",
      kicker=k("AI-ASSISTED WORKFLOW CREATION"),accent=acc)
+    # 8 — five principles of AI security
+    s=concept_slide(k("AI SECURITY"),"5 Principles of AI Security",
+     "Agents act on your behalf. These five controls keep what they can see and do safe, reviewable and accountable.",
+     kcolor=RED)
+    principle_cols(s,[(BLUE,"Data Control","WHAT AI CAN SEE",
+       "Classify your data — public, internal, confidential — and decide exactly which data the AI may access."),
+     (TEAL,"Permission Control","WHAT AI CAN DO",
+       "Grant only the rights needed — read, write, edit, delete. Ask before anything destructive."),
+     (VIOLET,"Human in the Loop","WHO APPROVES",
+       "A person reviews and approves high-impact actions — payments, deletions, customer emails."),
+     (AMBER,"Traceability","WHAT HAPPENED",
+       "Log every prompt, tool call and change so actions can be audited, explained and rolled back."),
+     (RED,"Right-Sized Models","NOT THE MOST POWERFUL",
+       "The smallest model that does the job carries less autonomy and less risk than the most powerful one.")])
+    takeaway(s,"In n8n: scoped credentials per node, approval gates (Send and Wait), the Executions log, and a small model per AI step.")
+    footer(s)
+    # 9 — why workflow first is more secure
+    s=concept_slide(k("AI SECURITY"),"Workflow First vs Agent First — AI Security",
+     "A fixed path limits the blast radius: a manipulated AI step cannot reach tools that are not wired to it.",
+     kcolor=RED)
+    data_table(s,[2.5,4.55,4.58],["Principle","Workflow First","Agent First"],[
+     ["Data control","Each node sees only the fields wired into it","The agent can reach any data its tools expose"],
+     ["Permission control","Each credential is scoped to one node and one action","The agent holds every tool's rights at once"],
+     ["Human in the loop","The approval gate sits at a fixed, designed step","Depends on the agent choosing to ask"],
+     ["Traceability","Every run is logged node by node in Executions","Reasoning varies run to run and is harder to explain"],
+     ["Right-sized models","A small model for each narrow AI step","One capable model with broad autonomy"]],
+     y=Inches(2.05),rh=Inches(0.56),hcolor=RED)
+    takeaway(s,"The path is fixed, so every control is designed in rather than hoped for — that is why regulated processes stay workflow first.")
+    footer(s)
     # 5b — what n8n is: a workflow-first agentic AI platform
     for key in CN.TOPIC1_OPENER_CONCEPTS: render_concept(CN.BY_KEY[key],k("WHAT IS n8n"),accent=acc)
     # 6a — the n8n training accounts
@@ -732,35 +761,6 @@ def topic1_intro(acc):
      "Review the plan before it builds","Connect Gmail and the social account when it asks",
      "Test with a real topic and approve the draft","Publish only when the run looks right"],size=11.5,mcolor=TEAL,gap=6)
     takeaway(s,"The AI built it; the workflow runs it — and nothing is posted until a person approves the draft.")
-    footer(s)
-    # 8 — five principles of AI security
-    s=concept_slide(k("AI SECURITY"),"5 Principles of AI Security",
-     "Agents act on your behalf. These five controls keep what they can see and do safe, reviewable and accountable.",
-     kcolor=RED)
-    principle_cols(s,[(BLUE,"Data Control","WHAT AI CAN SEE",
-       "Classify your data — public, internal, confidential — and decide exactly which data the AI may access."),
-     (TEAL,"Permission Control","WHAT AI CAN DO",
-       "Grant only the rights needed — read, write, edit, delete. Ask before anything destructive."),
-     (VIOLET,"Human in the Loop","WHO APPROVES",
-       "A person reviews and approves high-impact actions — payments, deletions, customer emails."),
-     (AMBER,"Traceability","WHAT HAPPENED",
-       "Log every prompt, tool call and change so actions can be audited, explained and rolled back."),
-     (RED,"Right-Sized Models","NOT THE MOST POWERFUL",
-       "The smallest model that does the job carries less autonomy and less risk than the most powerful one.")])
-    takeaway(s,"In n8n: scoped credentials per node, approval gates (Send and Wait), the Executions log, and a small model per AI step.")
-    footer(s)
-    # 9 — why workflow first is more secure
-    s=concept_slide(k("AI SECURITY"),"Why Workflow First Is More Secure",
-     "A fixed path limits the blast radius: a manipulated AI step cannot reach tools that are not wired to it.",
-     kcolor=RED)
-    data_table(s,[2.5,4.55,4.58],["Principle","Workflow First","Agent First"],[
-     ["Data control","Each node sees only the fields wired into it","The agent can reach any data its tools expose"],
-     ["Permission control","Each credential is scoped to one node and one action","The agent holds every tool's rights at once"],
-     ["Human in the loop","The approval gate sits at a fixed, designed step","Depends on the agent choosing to ask"],
-     ["Traceability","Every run is logged node by node in Executions","Reasoning varies run to run and is harder to explain"],
-     ["Right-sized models","A small model for each narrow AI step","One capable model with broad autonomy"]],
-     y=Inches(2.05),rh=Inches(0.56),hcolor=RED)
-    takeaway(s,"The path is fixed, so every control is designed in rather than hoped for — that is why regulated processes stay workflow first.")
     footer(s)
     # 10 — business value, the modern view
     s=concept_slide(k("WHY ORGANISATIONS ADOPT IT"),"Business Value of Workflow-First Agentic Automation",

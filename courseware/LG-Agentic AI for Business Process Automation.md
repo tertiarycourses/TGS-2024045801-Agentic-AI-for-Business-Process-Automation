@@ -253,7 +253,7 @@ n8n Assistant plans and builds a five-stage workflow: a Form Trigger where you e
 
 In n8n these map to scoped credentials per node, approval gates (Gmail Send and Wait for Response), the Executions log, and a small model for each AI step.
 
-**Why workflow first is more secure**
+**Workflow first vs agent first — AI security**
 
 A fixed path limits the blast radius: a manipulated AI step — for example one hit by a prompt injection — cannot reach tools that are not wired to it.
 

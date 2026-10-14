@@ -268,7 +268,7 @@ def topic1_intro_lg():
     ])
     p("In n8n these map to scoped credentials per node, approval gates (Gmail Send and Wait for "
       "Response), the Executions log, and a small model for each AI step.")
-    h3("Why workflow first is more secure")
+    h3("Workflow first vs agent first — AI security")
     p("A fixed path limits the blast radius: a manipulated AI step — for example one hit by a prompt "
       "injection — cannot reach tools that are not wired to it.")
     table(["Principle","Workflow First","Agent First"],[

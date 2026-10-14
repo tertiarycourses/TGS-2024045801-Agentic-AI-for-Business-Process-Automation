@@ -515,28 +515,6 @@ tile_grid("Get the Course Workflows",[
  ("Re-select your credentials","After importing, re-select YOUR OWN credentials on every node showing a warning."),
  ("Nothing of yours is shared","Imported workflows reference credential NAMES, not secrets — no key travels in the file.")],
  kicker="GET THE FLOWS",cols=2,size=14)
-# n8n training accounts for this run (18 Oct class) — replace when the class changes
-N8N_ACCOUNTS=[f"n8n18oct{i}@tertiaryinfotech.com" for i in range(1,13)]
-# The password is NEVER written in source: the repo is public. It is read from the
-# gitignored .env (N8N_PASSWORD=...) for the class deck that goes to Drive/TMS.
-# PUBLIC_BUILD=1 (the GitHub copy) forces the placeholder.
-def _env(key):
-    if os.environ.get(key): return os.environ[key]
-    try:
-        for ln in open(os.path.join(REPO,".env")):
-            if ln.strip().startswith(key+"="): return ln.split("=",1)[1].strip()
-    except OSError: pass
-    return None
-N8N_PASSWORD=None if os.environ.get("PUBLIC_BUILD") else _env("N8N_PASSWORD")
-s=concept_slide("TRAINING ACCOUNTS","n8n Training Accounts",
- "Each learner signs in to n8n with ONE assigned account. Use only the account your trainer gives you.")
-_h=len(N8N_ACCOUNTS)//2
-data_table(s,[0.8,5.0,0.8,5.03],["#","Account (email)","#","Account (email)"],
- [[str(i+1),N8N_ACCOUNTS[i],str(i+1+_h),N8N_ACCOUNTS[i+_h]] for i in range(_h)],
- y=Inches(2.05),rh=Inches(0.52),hcolor=BLUE,fsz=12)
-takeaway(s,(f"Password for every account:  {N8N_PASSWORD}   ·   Do not change the password or save real credentials in it."
-            if N8N_PASSWORD else "Password: provided by your trainer in class   ·   Do not change the password or save real credentials in it."))
-footer(s)
 tile_grid("Skills Framework (TSC)",[
  ("TSC Title",C.TSC_TITLE),
  ("TSC Code",C.TSC_CODE),
@@ -631,6 +609,19 @@ def principle_cols(s,items,y=Inches(2.05),h=Inches(4.0)):
 def source_note(s,text,y=Inches(5.9)):
     txt(s,Inches(0.85),y,Inches(11.63),Inches(0.3),[[(text,9,GREY,False)]],align=PP_ALIGN.RIGHT)
 
+# n8n training accounts for this run (18 Oct class) — replace when the class changes
+N8N_ACCOUNTS=[f"n8n18oct{i}@tertiaryinfotech.com" for i in range(1,13)]
+# The password is NEVER written in source: the repo is public. It is read from the
+# gitignored .env (N8N_PASSWORD=...) for the class deck that goes to Drive/TMS.
+# PUBLIC_BUILD=1 (the GitHub copy) forces the placeholder.
+def _env(key):
+    if os.environ.get(key): return os.environ[key]
+    try:
+        for ln in open(os.path.join(REPO,".env")):
+            if ln.strip().startswith(key+"="): return ln.split("=",1)[1].strip()
+    except OSError: pass
+    return None
+N8N_PASSWORD=None if os.environ.get("PUBLIC_BUILD") else _env("N8N_PASSWORD")
 def topic1_intro(acc):
     k=lambda x: f"TOPIC 1 · {x}"
     # 1 — a brief history of AI, 2023–2026
@@ -696,6 +687,25 @@ def topic1_intro(acc):
      "Open Assistant in the left sidebar and answer \"What do you want to automate?\". It plans, builds and tests a normal n8n "
      "workflow you can inspect, edit and publish. Assistant chats use the plan's monthly Assistant credits.",
      kicker=k("AI-ASSISTED WORKFLOW CREATION"),accent=acc)
+    # 6a — the n8n training accounts
+    s=concept_slide(k("TRAINING ACCOUNTS"),"n8n Training Accounts",
+     "Each learner signs in to n8n with ONE assigned account. Use only the account your trainer gives you.")
+    _h=len(N8N_ACCOUNTS)//2
+    data_table(s,[0.8,5.0,0.8,5.03],["#","Account (email)","#","Account (email)"],
+     [[str(i+1),N8N_ACCOUNTS[i],str(i+1+_h),N8N_ACCOUNTS[i+_h]] for i in range(_h)],
+     y=Inches(2.05),rh=Inches(0.52),hcolor=BLUE,fsz=12)
+    takeaway(s,(f"Password for every account:  {N8N_PASSWORD}   ·   Do not change the password or save real credentials in it."
+                if N8N_PASSWORD else "Password: provided by your trainer in class   ·   Do not change the password or save real credentials in it."))
+    footer(s)
+    # 6b — sign in to n8n
+    s=flow_h("Sign In to n8n",[
+     "Go to app.n8n.cloud/login — or open your own instance URL directly",
+     "Enter your assigned account email, e.g. n8n18oct5@tertiaryinfotech.com",
+     ("Enter the password: "+N8N_PASSWORD) if N8N_PASSWORD else "Enter the password your trainer gives you",
+     "Open your instance from the dashboard — a free 14-day trial, active through the training",
+     "You land in n8n — open Assistant or Overview to start building"],
+     kicker=k("SIGN IN"),color=acc)
+    takeaway(s,"Your account is already set up — the name is your email prefix and onboarding is done. Do not change the password.")
     # 6 — claim the free AI credits
     s=flow_h("Claim Your Free AI Credits",[
      "Sign in to n8n Cloud with your training account — the free trial includes Gateway credits",

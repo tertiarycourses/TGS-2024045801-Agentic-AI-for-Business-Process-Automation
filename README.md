@@ -33,7 +33,7 @@ the process — with AI only at the steps that need judgement.
 
 | Topic | Content | Labs |
 |---|---|---|
-| 1 — Overview of n8n and AI Agents | A brief history of AI 2023–2026, agentic AI vs AI agents, workflow first vs agent first, the 5 principles of AI security, business value; what n8n is, triggers and actions, AI agents, webhooks | Lab 1, Lab 2 |
+| 1 — Overview of n8n and AI Agents | A brief history of AI 2023–2026, agentic AI vs AI agents, workflow first vs agent first, AI-assisted workflow creation with n8n Assistant (with a social media campaign demo), signing in and claiming the free AI credits, the 5 principles of AI security, business value; what n8n is, triggers and actions, AI agents, webhooks | Lab 1, Lab 2 |
 | 2 — Agentic Chatbot and Human in the Loop | Agentic workflows, safe chatbot design, approval gates, accountability | Lab 3, Lab 4 |
 | 3 — Retrieval-Augmented Generation (RAG) | Tokenization, embeddings, vector stores, chunking, grounding | Lab 5 |
 

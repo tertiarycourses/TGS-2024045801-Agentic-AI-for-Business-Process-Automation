@@ -127,12 +127,12 @@ Use the Test URL while building — it shows the incoming data live on the canva
 
 ## Topic 01 — Overview of n8n and AI Agents
 
-Why agentic AI · Workflow first · Triggers & actions · LLM agents · Webhooks   (Deck reference: Slides 21–71.)
+Why agentic AI · Workflow first · Triggers & actions · LLM agents · Webhooks   (Deck reference: Slides 20–72.)
 
 
 ### Why Agentic AI, and Why Workflow First
 
-Deck reference: Slides 21–33.
+Deck reference: Slides 20–34.
 
 **A brief history of AI, 2023–2026**
 
@@ -193,6 +193,18 @@ Open Assistant in the left sidebar of n8n. At the prompt "What do you want to au
 ![n8n Assistant — "What do you want to automate?" Type a prompt, or start from a suggestion such as Score my leads or Schedule social posts.](assets/n8n-assistant.png)
 
 *n8n Assistant — "What do you want to automate?" Type a prompt, or start from a suggestion such as Score my leads or Schedule social posts.*
+
+**Sign in to n8n**
+
+Each learner has one pre-created n8n Cloud account (n8n18oct1 to n8n18oct12@tertiaryinfotech.com); the trainer gives you yours and its password in class. The account name is the email prefix, onboarding is already complete, and each instance is a free 14-day trial that stays active through the training.
+
+1. Go to https://app.n8n.cloud/login — or open your instance URL directly.
+2. Enter your assigned account email, for example n8n18oct5@tertiaryinfotech.com.
+3. Enter the password your trainer gives you.
+   > *Why this step:* Do not change it — the account is reused for later classes.
+
+4. Open your instance from the dashboard.
+5. You land in n8n. Open Assistant or Overview to start building.
 
 **Claim your free AI credits**
 
@@ -323,7 +335,7 @@ The same pattern — trigger, agent, tools, oversight — recurs in customer ser
 
 Learning outcome: this lab develops your ability to build an automated workflow in n8n using a trigger and an action (A2, K7, K8).
 
-Deck reference: Slides 64–67.
+Deck reference: Slides 65–68.
 
 **Goal**
 
@@ -411,7 +423,7 @@ Scan the QR code on your flyer with your phone, submit the form, and confirm the
 
 Learning outcome: this lab develops your ability to deploy an AI agent that is triggered by a webhook from an external website (A1, A2, K7, K8).
 
-Deck reference: Slides 68–70.
+Deck reference: Slides 69–71.
 
 **Goal**
 
@@ -499,7 +511,7 @@ Run TC1 (a new applicant) and confirm a green APPROVED card, a new row in the Cu
 
 ## Topic 02 — Agentic Chatbot and Human in the Loop
 
-Agentic workflows · Chatbots on webhooks · Approval gates · Accountability   (Deck reference: Slides 72–83.)
+Agentic workflows · Chatbots on webhooks · Approval gates · Accountability   (Deck reference: Slides 73–84.)
 
 **Key concepts**
 
@@ -528,7 +540,7 @@ Agentic workflows · Chatbots on webhooks · Approval gates · Accountability   
 
 Learning outcome: this lab develops your ability to deploy an agentic chatbot on a website that operates within regulatory limits (A1, A2, K7, K8).
 
-Deck reference: Slides 77–79.
+Deck reference: Slides 78–80.
 
 **Goal**
 
@@ -619,7 +631,7 @@ Ask 'Can you guarantee returns?' and 'Which stock should I buy?'. The agent must
 
 Learning outcome: this lab develops your ability to apply a human approval gate so no AI-drafted communication is sent unsupervised (A1, A2, A3, K7, K8).
 
-Deck reference: Slides 80–82.
+Deck reference: Slides 81–83.
 
 **Goal**
 
@@ -718,7 +730,7 @@ Run all eight rows of sample-queries.csv. When you are done Drafts has 8 rows, A
 
 ## Topic 03 — Retrieval-Augmented Generation (RAG)
 
-Tokenization · Embeddings · Vector stores · Grounded answers   (Deck reference: Slides 84–96.)
+Tokenization · Embeddings · Vector stores · Grounded answers   (Deck reference: Slides 85–97.)
 
 **Key concepts**
 
@@ -753,7 +765,7 @@ Tokenization · Embeddings · Vector stores · Grounded answers   (Deck referenc
 
 Learning outcome: this lab develops your ability to deploy a RAG application that grounds an agent in the organisation's own documents (A1, A2, A3, K5, K7, K8).
 
-Deck reference: Slides 93–96.
+Deck reference: Slides 94–97.
 
 **Goal**
 

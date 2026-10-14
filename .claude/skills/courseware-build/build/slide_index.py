@@ -47,7 +47,6 @@ _adv()      # Ground Rules
 _adv()      # Download Course Material (image)
 _adv()      # Download Course Material (steps)
 _adv()      # Get the Course Workflows
-_adv()      # n8n Training Accounts
 _adv()      # Skills Framework (TSC)
 _adv()      # TSC Abilities and Knowledge
 _adv()      # Lesson Plan overview
@@ -62,9 +61,9 @@ _mark("admin", a0, _n)
 # Topic 1 opens with the "why agentic AI, and why workflow first" slides straight
 # after its divider (history of AI, agentic AI vs AI agents, workflow first vs AI
 # first, AI-assisted workflow creation + n8n Assistant
-# screenshot + free AI credits + social-campaign demo, AI security x2, business value, use cases, platform tiers).
+# screenshot + training accounts + sign in + free AI credits + social-campaign demo, AI security x2, business value, use cases, platform tiers).
 # MUST match topic1_intro() in build_slides.py — the build asserts it.
-TOPIC1_INTRO = 12
+TOPIC1_INTRO = 14
 
 # ---- TOPICS ----
 for tp in C.TOPICS:

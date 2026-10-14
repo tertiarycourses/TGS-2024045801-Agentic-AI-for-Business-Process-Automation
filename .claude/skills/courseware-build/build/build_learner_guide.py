@@ -223,6 +223,18 @@ def topic1_intro_lg():
     image("n8n-assistant.png",
           "n8n Assistant — \"What do you want to automate?\" Type a prompt, or start from a suggestion "
           "such as Score my leads or Schedule social posts.")
+    h3("Sign in to n8n")
+    p("Each learner has one pre-created n8n Cloud account (n8n18oct1 to n8n18oct12@tertiaryinfotech.com); "
+      "the trainer gives you yours and its password in class. The account name is the email prefix, "
+      "onboarding is already complete, and each instance is a free 14-day trial that stays active "
+      "through the training.")
+    steps([
+     ("Go to https://app.n8n.cloud/login — or open your instance URL directly.", "", ""),
+     ("Enter your assigned account email, for example n8n18oct5@tertiaryinfotech.com.", "", ""),
+     ("Enter the password your trainer gives you.", "", "Do not change it — the account is reused for later classes."),
+     ("Open your instance from the dashboard.", "", ""),
+     ("You land in n8n. Open Assistant or Overview to start building.", "", ""),
+    ])
     h3("Claim your free AI credits")
     p("The n8n Cloud free trial includes free Gateway credits, which let a node call a supported AI "
       "model without a provider account or API key.")

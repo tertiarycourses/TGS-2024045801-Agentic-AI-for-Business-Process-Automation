@@ -118,3 +118,15 @@ ASSESSMENT = dict(
     practical="Practical Performance (PP) — hands-on n8n build tasks, 1 hour, open book.",
     note="A minimum of 75% attendance is required to be eligible for assessment and funding.",
 )
+
+# ------------------------------------------------------------------ Topic 1 demo
+# Demo prompt for AI-assisted workflow creation — used by the deck AND the Learner Guide.
+DEMO_PROMPT=[
+ "Create a workflow for a social media marketing campaign:",
+ "1. Start from a form where I enter a campaign topic.",
+ "2. Research the topic on the web and summarise 3 key points.",
+ "3. Draft a LinkedIn post under 150 words from the research.",
+ "4. Email me the draft and wait for my approval before posting.",
+ "5. If approved, schedule the post for 9am the next weekday;",
+ "    if rejected, log my feedback in a Google Sheet.",
+ "Use Gateway credits for the AI model. Ask me before publishing."]

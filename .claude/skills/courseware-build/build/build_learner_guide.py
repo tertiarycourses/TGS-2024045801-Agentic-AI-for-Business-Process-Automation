@@ -74,7 +74,7 @@ VC_ROWS = [
   "worked examples, model parameters and temperature, MCP, webhooks (GET/POST, Test vs Production "
   "URL) and human-in-the-loop with guardrails.", C.TRAINER),
  (C.VERSION.lstrip("v"), C.VERSION_DATE,
-  "Topic 1 now opens with the modern view of agentic automation, replacing the separate Foundation section: a brief history of AI 2023–2026 (prompt, context and harness engineering to AI agents), agentic AI vs AI agents, workflow first vs agent first, the trend of using Claude Code and Codex to build workflows, the five principles of AI security and why workflow first is more secure, and the business value of workflow-first agentic automation.", C.TRAINER),
+  "Topic 1 now opens with the modern view of agentic automation, replacing the separate Foundation section: a brief history of AI 2023–2026 (prompt, context and harness engineering to AI agents), agentic AI vs AI agents, workflow first vs agent first, AI-assisted workflow creation with n8n Assistant (plus claiming the free AI credits and a social media campaign demo), an n8n training-accounts slide, the five principles of AI security and why workflow first is more secure, and the business value of workflow-first agentic automation.", C.TRAINER),
 ]
 
 # ================================================================ content
@@ -108,6 +108,7 @@ bullets([
  "An n8n instance — either a free n8n Cloud trial (sign up at n8n.io) or a self-hosted instance via Docker or npm. The class instance is provided by the trainer.",
  "A Google account for Gmail, Google Sheets and Google Drive credentials (OAuth2).",
  "A Google Gemini API key (or an OpenAI API key) for the AI Agent, chat model and embeddings nodes.",
+ "Your n8n training account — the trainer assigns one per learner (see the n8n Training Accounts slide). Sign in with it, and do not change its password.",
  "A modern web browser — several labs open a local HTML page that talks to your n8n webhook.",
  "Python 3 (already installed on macOS and Linux) to serve the lab websites with a one-line HTTP server.",
 ])
@@ -204,13 +205,47 @@ def topic1_intro_lg():
     p("Workflow first is more deterministic; agent first is more efficient. Because reliability matters "
       "most in business, companies try to make as much of a process deterministic as possible. "
       "(Source: n8n, In The Loop 2026 opening keynote and product direction.)")
-    h3("The trend: AI agents build the workflow")
-    p("AI-powered coding tools such as Claude Code and Codex are AI agents themselves, and they have "
-      "made designing, building and changing workflows fast and cheap. The trend is therefore to use "
-      "them to CREATE the workflow — describe the process in plain English, let Claude Code or Codex "
-      "draft the n8n workflow, review and test it — and then let the deterministic workflow RUN the "
-      "process, with AI nodes only where judgement is needed. The agent's efficiency goes into "
-      "building, the workflow's determinism into running.")
+    h3("The trend: AI-assisted workflow creation")
+    p("AI-powered coding tools — n8n Assistant inside n8n, and Claude Code and Codex outside it — are "
+      "AI agents themselves, and they have made designing, building and changing workflows fast and "
+      "cheap. The trend is AI-ASSISTED WORKFLOW CREATION: describe the process in plain English, let "
+      "the assistant draft the workflow, review and test it, and then let the deterministic workflow "
+      "RUN the process, with AI and AI Agent nodes only where judgement is needed. The agent's "
+      "efficiency goes into building; the workflow's determinism goes into running.")
+    h3("n8n Assistant — describe it, n8n builds it")
+    p("Open Assistant in the left sidebar of n8n. At the prompt \"What do you want to automate?\" "
+      "describe the workflow: what triggers it, which apps it uses, what data it reads and writes, "
+      "what happens on success and on failure, and whether it should ask before publishing. n8n "
+      "Assistant plans the workflow, builds it in your project, tests it and helps fix errors. The "
+      "result is a normal n8n workflow that you open, inspect, edit, test and publish yourself. On "
+      "n8n Cloud, Assistant chats use the plan's monthly Assistant credits; they are separate from "
+      "the Gateway credits your workflow's AI nodes use when they run.")
+    image("n8n-assistant.png",
+          "n8n Assistant — \"What do you want to automate?\" Type a prompt, or start from a suggestion "
+          "such as Score my leads or Schedule social posts.")
+    h3("Claim your free AI credits")
+    p("The n8n Cloud free trial includes free Gateway credits, which let a node call a supported AI "
+      "model without a provider account or API key.")
+    steps([
+     ("Sign in to n8n Cloud with your training account.", "", "The trial's credit balance belongs to that instance."),
+     ("Open a workflow and add an AI node — for example an AI Agent with a Google Gemini or OpenAI Chat Model.", "", ""),
+     ("In the node's Credential field, select Use Gateway credits. The option shows your remaining balance.", "", "No API key is pasted anywhere, so none can leak."),
+     ("Pick a supported model, configure the rest of the node as usual, and run it.", "", ""),
+     ("Track the balance on the node, or in the Admin Panel under Gateway credits.", "", "When the balance reaches zero, nodes on Gateway credits stop until credit is added or you switch to your own credential."),
+    ])
+    note("If a red toast reads \"Free AI credits — Enable to claim credits\", that is n8n's legacy one-time "
+         "OpenAI offer, which is not issued to instances that have Gateway credits. Ignore it and use "
+         "Use Gateway credits on the node instead.")
+    h3("Demo: build a social media campaign workflow with n8n Assistant")
+    p("Paste this prompt into n8n Assistant:")
+    code("\n".join(C.DEMO_PROMPT))
+    p("n8n Assistant plans and builds a five-stage workflow: a Form Trigger where you enter the topic; "
+      "an AI Agent with a web-search tool that researches it; an AI step that drafts the post; a "
+      "human-in-the-loop approval (Gmail Send and Wait for Response) so nothing is posted unchecked; "
+      "and a Wait plus the social node that schedules and publishes the approved post, with "
+      "rejections logged to a Google Sheet. Then review the plan before it builds, connect Gmail and "
+      "the social account when it asks, test with a real topic and approve the draft, and publish "
+      "only when the run looks right. The AI built the workflow; the workflow runs it.")
     h3("The five principles of AI security")
     table(["Principle","Controls","What it means"],[
      ["1. Data Control","What AI can see","Classify your data — public, internal, confidential — and decide exactly which data the AI may access."],

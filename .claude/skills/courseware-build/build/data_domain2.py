@@ -22,7 +22,7 @@ DOMAIN2 = [
         canvas=[("canvas-lab3.png",
                  "The Lab 3 workflow on the n8n canvas. A small graph: webhook in, normalise, the agent with "
                  "its chat model and session memory, then the reply back out.")],
-        chev=[[("Chat Webhook — POST","the widget sends a message"),("Normalize","Code node shapes the input"),("AI Agent","Gemini 0.2 + window memory"),("Respond to Chat","reply returns to the widget")]],
+        chev=[[("Chat Webhook — POST","the widget sends a message"),("Normalize","Code node shapes the input"),("AI Agent","Gemini 2.5 Flash, temp 0.2 + memory"),("Respond to Chat","reply returns to the widget")]],
         steps=[
             ("Choose Workflows → Import from File and select lab3-chatbot-webhooks.json.", "",
              "A small canvas. The intelligence is in the system message, not in the number of nodes."),

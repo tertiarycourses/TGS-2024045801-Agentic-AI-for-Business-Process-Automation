@@ -677,21 +677,51 @@ def topic1_intro(acc):
     source_note(s,"Source: n8n, In The Loop 2026 — opening keynote and product direction (youtube.com/watch?v=KQRe5UurLQ0)")
     takeaway(s,"Workflow first is more deterministic; agent first is more efficient. Companies make as much deterministic as they can.")
     footer(s)
-    # 4 — the trend: AI builds the workflow
-    s=concept_slide(k("THE MODERN VIEW"),"The Trend: AI Agents Build the Workflow",
+    # 4 — the trend: AI-assisted workflow creation
+    s=concept_slide(k("THE MODERN VIEW"),"The Trend: AI-Assisted Workflow Creation",
      "AI-powered coding has flipped the trade-off — the agent's efficiency goes into BUILDING the workflow, not running it.",
      kcolor=acc)
-    chev_strip(s,[("Describe","the process in plain English"),("Claude Code / Codex","drafts the n8n workflow"),
+    chev_strip(s,[("Describe","the process in plain English"),("n8n Assistant","or Claude Code / Codex drafts it"),
                   ("You review","test and approve it"),("Workflow runs","deterministic and logged"),
                   ("AI and agent nodes","where judgement is needed")],y=Inches(2.05),h=Inches(1.0),color=acc,
                tsz=11.5,ssz=8.5)
     ncards(s,[(BLUE,"Companies want determinism","Reliability, compliance and audit push businesses to make as much of a process deterministic as possible."),
-     (VIOLET,"AI coding made it cheap","Claude Code and Codex are AI agents themselves — and they make designing, building and changing workflows fast and cheap."),
+     (VIOLET,"AI coding made it cheap","n8n Assistant, Claude Code and Codex are AI agents themselves — they make designing, building and changing workflows fast and cheap."),
      (TEAL,"The best of both","An AI agent BUILDS the workflow; a deterministic workflow RUNS the process, with AI and AI Agent nodes where judgement is needed.")],
      y=Inches(3.35),h=Inches(2.7),cols=3)
-    takeaway(s,"The trend: use Claude Code and Codex to create the workflows — the workflow, not the agent, runs the business process.")
+    takeaway(s,"The trend: AI-assisted workflow creation — the AI builds the workflow, and the workflow runs the business process.")
     footer(s)
-    # 5 — five principles of AI security
+    # 5 — n8n Assistant screenshot
+    image_slide("n8n Assistant — Describe It, n8n Builds It","n8n-assistant.png",
+     "Open Assistant in the left sidebar and answer \"What do you want to automate?\". It plans, builds and tests a normal n8n "
+     "workflow you can inspect, edit and publish. Assistant chats use the plan's monthly Assistant credits.",
+     kicker=k("AI-ASSISTED WORKFLOW CREATION"),accent=acc)
+    # 6 — claim the free AI credits
+    s=flow_h("Claim Your Free AI Credits",[
+     "Sign in to n8n Cloud with your training account — the free trial includes Gateway credits",
+     "Open a workflow and add an AI node, e.g. AI Agent → Gemini or OpenAI Chat Model",
+     "In the node's Credential field, choose Use Gateway credits — your balance shows beside it",
+     "Pick a supported model and run the node — no provider account or API key needed",
+     "Track the balance on the node, or in Admin Panel → Gateway credits"],
+     kicker=k("FREE AI CREDITS"),color=TEAL)
+    takeaway(s,"A red \"Free AI credits — Enable to claim credits\" toast is the legacy OpenAI offer: Gateway instances don't get it. Use Gateway credits.")
+    # 7 — demo: AI-assisted workflow creation
+    s=concept_slide(k("DEMO"),"Demo: Build a Social Media Campaign Workflow with n8n Assistant",
+     "Give n8n Assistant one clear prompt — it plans and builds the workflow below, with a human approval gate.",kcolor=acc)
+    chev_strip(s,[("Form Trigger","you enter a topic"),("Research","AI Agent + web search"),
+                  ("Draft post","AI writes the copy"),("Human in the loop","email approve / reject"),
+                  ("Schedule post","wait, then publish")],y=Inches(2.0),h=Inches(0.95),color=acc,tsz=11.5,ssz=8.5)
+    box(s,Inches(0.85),Inches(3.15),Inches(7.2),Inches(2.95),VIOLET)
+    txt(s,Inches(1.1),Inches(3.27),Inches(6.8),Inches(0.3),[[("THE PROMPT",11,VIOLET,True)]])
+    txt(s,Inches(1.1),Inches(3.6),Inches(6.8),Inches(2.45),[[(ln,10.5,INK,False)] for ln in C.DEMO_PROMPT],space=2)
+    box(s,Inches(8.3),Inches(3.15),Inches(4.18),Inches(2.95),TEAL)
+    txt(s,Inches(8.55),Inches(3.27),Inches(3.8),Inches(0.3),[[("THEN YOU",11,TEAL,True)]])
+    bullets(s,Inches(8.55),Inches(3.62),Inches(3.75),Inches(2.4),[
+     "Review the plan before it builds","Connect Gmail and the social account when it asks",
+     "Test with a real topic and approve the draft","Publish only when the run looks right"],size=11.5,mcolor=TEAL,gap=6)
+    takeaway(s,"The AI built it; the workflow runs it — and nothing is posted until a person approves the draft.")
+    footer(s)
+    # 8 — five principles of AI security
     s=concept_slide(k("AI SECURITY"),"5 Principles of AI Security",
      "Agents act on your behalf. These five controls keep what they can see and do safe, reviewable and accountable.",
      kcolor=RED)
@@ -707,7 +737,7 @@ def topic1_intro(acc):
        "The smallest model that does the job carries less autonomy and less risk than the most powerful one.")])
     takeaway(s,"In n8n: scoped credentials per node, approval gates (Send and Wait), the Executions log, and a small model per AI step.")
     footer(s)
-    # 6 — why workflow first is more secure
+    # 9 — why workflow first is more secure
     s=concept_slide(k("AI SECURITY"),"Why Workflow First Is More Secure",
      "A fixed path limits the blast radius: a manipulated AI step cannot reach tools that are not wired to it.",
      kcolor=RED)
@@ -720,7 +750,7 @@ def topic1_intro(acc):
      y=Inches(2.05),rh=Inches(0.56),hcolor=RED)
     takeaway(s,"The path is fixed, so every control is designed in rather than hoped for — that is why regulated processes stay workflow first.")
     footer(s)
-    # 7 — business value, the modern view
+    # 10 — business value, the modern view
     s=concept_slide(k("WHY ORGANISATIONS ADOPT IT"),"Business Value of Workflow-First Agentic Automation",
      "The modern view: what a business gains when AI builds the workflow and the workflow runs the process.",kcolor=acc)
     ncards(s,[(BLUE,"Reliable and predictable","The same input follows the same path every time, so the process can be tested and trusted like software."),
@@ -732,7 +762,7 @@ def topic1_intro(acc):
      y=Inches(1.98),h=Inches(4.15),cols=3)
     takeaway(s,"AI where judgement is needed, workflow everywhere else — reliability you can audit, at a cost you can predict.")
     footer(s)
-    # 8 — use cases
+    # 11 — use cases
     s=concept_slide(k("USE CASES"),"Where Agentic Automation Is Used",
      "The same pattern — trigger, agent, tools, oversight — recurs across every function.",kcolor=acc)
     ncards(s,[(BLUE,"Customer service","Answer enquiries from your own documents, capture leads, and escalate what needs a person."),
@@ -744,7 +774,7 @@ def topic1_intro(acc):
      y=Inches(1.98),h=Inches(4.15),cols=3)
     takeaway(s,"Every one of these is a front door, an agent, some tools and a decision about where the human belongs.")
     footer(s)
-    # 9 — platform tiers
+    # 12 — platform tiers
     s=concept_slide(k("COMPLEXITY VS CUSTOMISATION"),"Where AI Agent Platforms Sit",
      "Three tiers, and why this course teaches the middle one.",kcolor=acc)
     ncards(s,[(BLUE,"No-code","Fully visual builders. Fastest route to a working agent, least control over the internals."),

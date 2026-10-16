@@ -1,6 +1,6 @@
 /* ============================================================================
    Investment Advisor — website chatbot
-   LU2 Activity 2
+   Lab 3 - Investment Advisor Chatbot
 
    There is no enquiry form. The chat widget is the only way in, and it posts to
    one n8n webhook: the Investment Advisor AI agent.

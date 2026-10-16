@@ -1,6 +1,6 @@
 # Agentic AI for Business Process Automation — Learner Guide
 
-**WSQ Course Code:** TGS-2024045801  |  **TSC:** Artificial Intelligence Application (AER-TEM-3026-1.1)  |  **Conducted by:** Tertiary Infotech Academy Pte Ltd (UEN 201200696W)  |  **Version v2.1 · 15 October 2026**
+**WSQ Course Code:** TGS-2024045801  |  **TSC:** Artificial Intelligence Application (AER-TEM-3026-1.1)  |  **Conducted by:** Tertiary Infotech Academy Pte Ltd (UEN 201200696W)  |  **Version v2.3 · 16 October 2026**
 
 ## Document Version Control Record
 
@@ -11,6 +11,8 @@
 | 1.2 | 1 August 2026 | Added a screenshot of each lab's application — the four lab websites with their chat widgets open, plus the Lab 1 n8n canvas and sample flyer — to the slide deck and the Learner Guide. | Dr. Alfred Ang |
 | 2.0 | 8 August 2026 | Slide deck restyled to the house reference format. Lab step-by-step removed from the deck and now carried only by this guide, with a rendered n8n canvas screenshot per lab. New concept sections: trigger nodes, data-processing nodes, the four components of an AI agent, instruction design with worked examples, model parameters and temperature, MCP, webhooks (GET/POST, Test vs Production URL) and human-in-the-loop with guardrails. | Dr. Alfred Ang |
 | 2.1 | 15 October 2026 | Topic 1 now opens with the modern view of agentic automation, replacing the separate Foundation section: a brief history of AI 2023–2026 (prompt, context and harness engineering to AI agents), agentic AI vs AI agents, workflow first vs agent first, AI-assisted workflow creation with n8n Assistant (plus claiming the free AI credits and a social media campaign demo), an n8n training-accounts slide, the five principles of AI security and why workflow first is more secure, and the business value of workflow-first agentic automation. | Dr. Alfred Ang |
+| 2.2 | 15 October 2026 | Topic 1 re-sequenced so each lab follows the concepts it needs: n8n fundamentals, then Lab 1, then the AI agent building blocks (AI agent, model, tools and MCP, instructions, memory) and webhooks, then Lab 2. Lab 1 now covers publishing the workflow, copying the form’s Production URL and creating a QR-code flyer, with step screenshots and flyers from previous learners. Lab 2 opens with how the building blocks fit together. Platform tiers updated for AI-assisted low-code and AI-generated full-code. New LMS login screenshot; Publish replaces the retired Active toggle. Schedule and slide references updated. | Dr. Alfred Ang |
+| 2.3 | 16 October 2026 | Every lab now follows the knowledge it needs. Topic 2 is taught in two blocks: rule-based vs agentic workflows, designing a safe agentic chatbot and a Telegram HR chatbot demo (BotFather /newbot, built with n8n Assistant from one prompt, then a live chat), then Lab 3; then human in, on and out of the loop, how an approval suspends a workflow, when to put a human in the loop and guardrails, then Lab 4. The agent loop is now explained as Context → Plan → Action → Verify and repeat. Lab workflow files and their n8n names are now 'Lab N - <description>', replacing the old LU/Activity names. Real n8n canvas screenshots added for Lab 2, Lab 3 and the Telegram demo, plus a live Telegram chat. Each lab's key concepts in the Learner Guide now sit directly before that lab. Day 2 schedule and slide references updated. | Dr. Alfred Ang |
 
 ## Contents
 
@@ -20,12 +22,17 @@
 - [Before You Start — Environment Setup](#before-you-start--environment-setup)
 - [Topic 01 — Overview of n8n and AI Agents](#topic-01--overview-of-n8n-and-ai-agents)
   - [Why Agentic AI, and Why Workflow First](#why-agentic-ai-and-why-workflow-first)
+  - [Key Concepts for Lab 1 — n8n Trigger and Action](#key-concepts-for-lab-1--n8n-trigger-and-action)
   - [Lab 1 — n8n Trigger and Action (Event Flyer with QR Code)](#lab-1--n8n-trigger-and-action-event-flyer-with-qr-code)
+  - [Key Concepts for Lab 2 — Webhook and AI Agent](#key-concepts-for-lab-2--webhook-and-ai-agent)
   - [Lab 2 — Webhook and AI Agent (Marina Trust Bank Onboarding)](#lab-2--webhook-and-ai-agent-marina-trust-bank-onboarding)
 - [Topic 02 — Agentic Chatbot and Human in the Loop](#topic-02--agentic-chatbot-and-human-in-the-loop)
+  - [Key Concepts for Lab 3 — Chatbot Webhook](#key-concepts-for-lab-3--chatbot-webhook)
   - [Lab 3 — Chatbot Webhook (Investment Advisor)](#lab-3--chatbot-webhook-investment-advisor)
+  - [Key Concepts for Lab 4 — Human in the Loop](#key-concepts-for-lab-4--human-in-the-loop)
   - [Lab 4 — Human in the Loop (Client Rapport Assistant)](#lab-4--human-in-the-loop-client-rapport-assistant)
 - [Topic 03 — Retrieval-Augmented Generation (RAG)](#topic-03--retrieval-augmented-generation-rag)
+  - [Key Concepts for Lab 5 — RAG Customer Care Chatbot](#key-concepts-for-lab-5--rag-customer-care-chatbot)
   - [Lab 5 — RAG Customer Care Chatbot (Cook & Bake Academy)](#lab-5--rag-customer-care-chatbot-cook--bake-academy)
 - [Taking This Back to Work](#taking-this-back-to-work)
 - [Assessment](#assessment)
@@ -112,7 +119,7 @@ Every Webhook and Form node has two URLs, and confusing them is the single most 
 | URL | When it works | How many requests |
 |---|---|---|
 | Test URL (/webhook-test/…) | Only while you have clicked 'Listen for test event' | Exactly one, then it stops |
-| Production URL (/webhook/…) | Only while the workflow is Active | Unlimited |
+| Production URL (/webhook/…) | Only once the workflow is published | Unlimited |
 
 Use the Test URL while building — it shows the incoming data live on the canvas. Switch to the Production URL the moment you want the page to work for anyone but you.
 
@@ -127,7 +134,7 @@ Use the Test URL while building — it shows the incoming data live on the canva
 
 ## Topic 01 — Overview of n8n and AI Agents
 
-Why agentic AI · Workflow first · Triggers & actions · LLM agents · Webhooks   (Deck reference: Slides 20–72.)
+Why agentic AI · Workflow first · Triggers & actions · LLM agents · Webhooks   (Deck reference: Slides 20–81.)
 
 
 ### Why Agentic AI, and Why Workflow First
@@ -147,11 +154,16 @@ Each year moved the skill that matters: from wording one prompt, to curating the
 
 **What is agentic AI**
 
-Agentic AI uses the reasoning power of a large language model to run a complex task by breaking it into simpler ones. Given a goal, the model observes the situation, chooses an action, acts on the world through a tool, observes the result, and repeats until the goal is met.
+Agentic AI uses the reasoning power of a large language model to run a complex task by breaking it into simpler ones. Given a goal, the agent works in a loop — Context, Plan, Action, Verify — and repeats until the goal is met.
 
-![The agent loop — goal, observation, action, observation, action. Each step is an LLM call that decides what to do next based on what came back.](assets/ai-agent-llm-loop.png)
+| Step | What happens |
+|---|---|
+| 1 · Context | Everything the agent can see: the goal, its instructions, memory of the conversation, and what earlier tool calls returned. |
+| 2 · Plan | The LLM reasons over the context and chooses the next step — which tool to call, with what input, or whether it is finished. |
+| 3 · Action | The agent calls a tool: look up a record, write a row, send an email. This is where it acts on the world. |
+| 4 · Verify and repeat | The tool's result goes back into the context and is checked against the goal. Not done? Plan again. Done? Reply. |
 
-*The agent loop — goal, observation, action, observation, action. Each step is an LLM call that decides what to do next based on what came back.*
+> **Note:** Every turn of the loop is an LLM call — so cap it with Max Iterations on the AI Agent node, and log every step.
 
 **Agentic AI vs generative AI**
 
@@ -280,13 +292,16 @@ The same pattern — trigger, agent, tools, oversight — recurs in customer ser
 
 **Where agent platforms sit**
 
-| Tier | Characteristics | Examples |
-|---|---|---|
-| No-code | Fully visual; fastest to a working agent; least control | AgentX and similar chatbot builders |
-| Low-code | Visual canvas plus code nodes; 400+ integrations; self-host or cloud | n8n — this course's platform |
-| Full-code | SDKs and frameworks; maximum control; needs engineering effort | LangChain and agent SDKs |
+| Tier | How you build | Customisation | Examples |
+|---|---|---|---|
+| No-code | Drag and drop in a fully visual builder | Lowest — fastest to a working agent, least control | AgentX and similar chatbot builders |
+| Low-code | AI-assisted: n8n Assistant, Claude Code or Codex drafts the workflow on a visual canvas; add JavaScript or Python in Code nodes where needed | High — 400+ integrations, self-host or cloud | n8n — this course's platform |
+| Full-code | AI generates the code: Claude Code or Codex write it instead of coding by hand | Highest — the most customisable tier | LangChain and agent SDKs |
 
-**Key concepts**
+AI now assists every tier. In low-code it drafts the workflow, and low-code platforms let you drop into JavaScript or Python when a built-in node is not enough. In full-code the AI writes the code itself rather than a developer coding it manually — full code remains the most customisable option, at the cost of the most engineering effort to test and run.
+
+
+### Key Concepts for Lab 1 — n8n Trigger and Action
 
 - **What is n8n** — n8n is a fair-code, workflow-first agentic AI platform: the workflow owns the path, and AI and AI Agent nodes sit inside it. You drag nodes onto a visual canvas and wire them together to move data between more than 400 applications, with little or no code. Every node shows its input and output as JSON, so you can see exactly what is flowing through. Workflows are plain JSON files you can export, version and share.
 
@@ -294,70 +309,76 @@ The same pattern — trigger, agent, tools, oversight — recurs in customer ser
 
 - **Triggers and actions** — A trigger decides WHEN a workflow runs; an action decides WHAT it does. This is the whole idea behind Lab 1 — one trigger, one action, and a working automation.
 
-- **Data, JSON and expressions** — Data flows between nodes as a list of items, each a JSON object of key/value pairs. Read a value from an earlier node with an expression such as {{ $json.Name }}. Expressions work in any field — subject lines, URLs, conditions and message bodies. You can also drag a field from the input panel to map it automatically.
-
-- **What is an AI agent** — An AI agent is an LLM given a goal, a set of tools and memory. The model supplies the judgement — which tool to call and when — while you supply the goal, the guardrails and the tools it is allowed to use. In n8n an agent has four parts: a Chat Model, a System Instruction, Memory and Tools.
-
-- **Writing a good system instruction** — State the role plainly. Give the scope and the limits — what it must answer and what it must refuse. Say which tool to use for which kind of question. Ask for a specific output format when something downstream depends on it. Tell it to say 'I don't know' rather than invent an answer. Then test it with real questions and refine.
-
-- **Webhooks** — A webhook is a URL that any external system can POST data to; it starts your workflow when called. It is the opposite of an HTTP Request node: there YOU call the outside world, here the outside world calls YOU. Set Allowed Origins (CORS) so a browser page may read the reply, and consider Authentication before anything goes to production — an open webhook costs you money every time a stranger calls it.
-
 - **Trigger nodes — what may start a workflow** — The trigger you choose is a statement about who or what is allowed to start the process. Manual Trigger runs on a click, for building and for one-off jobs such as the Lab 5 ingestion. Schedule Trigger runs on a clock. Form Trigger hosts a web form for you, and is Lab 1's front door. Webhook lets an external system call a URL you expose, and is the front door for Labs 2 to 5. Chat Trigger uses n8n's built-in chat window. App and email triggers fire on a new Gmail message, a new Sheets row or a new Drive file.
 
 - **Data-processing nodes — the workhorses** — Between the trigger and the output these nodes shape, route and transform the data. Edit Fields (Set) adds, renames or reshapes fields and is the node you reach for first when data is the wrong shape. IF and Switch branch the workflow — Lab 4 uses an IF to split the approved path from the reassignment path. Filter drops non-matching items; Merge combines branches; Split Out and Aggregate convert between one item holding a list and many items. Code runs JavaScript or Python for the small fraction a built-in node cannot do. HTTP Request calls any API on the internet.
 
 - **Where the data goes** — Google Sheets is the audit log in Labs 2 and 4 — Append Row is the workhorse operation. Gmail sends a message, and in Lab 4 its Send and Wait for Response operation turns email into an approval gate. A Vector Store holds embeddings for RAG. Respond to Webhook returns data to whoever called the webhook, which is what lets a web page render the agent's answer.
 
-- **The four components of an AI agent** — Every agent in this course is exactly four parts around one hub. The MODEL is the LLM that interprets language, reasons and chooses the next step. MEMORY keeps the conversation so a follow-up question still makes sense, keyed on a session ID. TOOLS are the abilities it may use — look up a Sheets row, search a vector store, send an email, call an API. INSTRUCTIONS are the system message: identity, scope, rules and refusals, always in force on every turn. Change any one of the four and you have a different agent.
-
-- **Model parameters — temperature and friends** — Settings on the chat-model node shape HOW the model answers, and the most important is temperature. A temperature of 0 to 0.3 is deterministic and repeatable — use it for classification, compliance decisions and data extraction, that is, any automation that must give the same answer twice. Around 0.7 is balanced and natural-sounding, the usual default for a customer-facing assistant. Above 1.0 is creative and surprising, suitable for marketing copy and never for a decision you must defend. Top-p is an alternative sampling control — tune temperature or top-p, never both. Max tokens caps the reply length and so caps your cost. Lab 3 uses temperature 0.2 so a compliance-bound chatbot refuses the same way every time.
-
-- **Popular LLM providers** — Any chat model plugs into the same AI Agent node, so you can swap the brain and keep the agent. This course uses Google Gemini, which also supplies the embeddings in Lab 5. OpenAI (gpt-4.1 and the cheaper mini tier), Anthropic Claude, Meta Llama and Mistral are all commonly used. Pick by task: small fast models for classification and guardrails, larger models for reasoning.
-
-- **Tools — and why the description matters** — Tools attach to the agent's Tool input, and the model decides when to call one based on the DESCRIPTION you write. Write that description for the model, not for a developer. Lab 2 attaches three tools — check for a duplicate customer, create the customer record, send the confirmation — and you can watch the agent choose between them on the canvas.
-
-- **Instructions — the four parts that constrain** — Every good agent instruction states four things. IDENTITY: who the agent is and for whom. SOURCE RULES: where answers may come from, for example 'answer only from the brochures returned by the tool'. REFUSALS: what is out of bounds, stated explicitly. ESCALATION: what to do at the boundary, for example 'if unsure, say so and offer a consultation'. Vague instructions produce confident wrong answers — every rule you skip, the model improvises.
-
-- **Good and bad instructions compared** — A bad instruction reads 'You are a helpful assistant. Answer the user's questions politely.' It has no identity, no source rules, no refusals and no escalation, so it will invent a course fee and guarantee an investment return — politely. A good instruction names the firm, limits the topics, points at a specific tool for factual questions, lists the prohibitions, and says what to do when unsure. The test is simple: you can try to break each line of a good instruction, and you cannot even test a vague one.
-
-- **MCP — the Model Context Protocol** — MCP is an open standard that gives agents a common plug for tools and data. Without it, every agent needs a custom integration for every tool: N agents and M tools means N times M connectors to build and maintain. With MCP you build one MCP server per system and any MCP-capable agent can use it — N plus M pieces, and the tools become reusable. It is often described as USB-C for AI tools. n8n sits on both sides: the MCP Server Trigger exposes your n8n workflows AS tools that Claude or an IDE can call, and the MCP Client Tool attaches external MCP servers to your own n8n agent.
-
-- **Webhooks — GET vs POST** — The HTTP method is part of the contract with the caller. With GET the data rides in the URL query string, for example ?email=alice@corp.com, so a browser can call it just by visiting the URL; you read it in n8n as {{ $json.query.email }}. GET suits a dashboard pulling data to display. With POST the data rides in the request body as JSON, which is what a web form or a chat widget sends; you read it as {{ $json.body.message }}. Every lab website in this course POSTs. Set the method on the Webhook node, and the caller must match it exactly.
-
-- **Webhook Test URL vs Production URL** — Every Webhook node gives you two URLs, and confusing them is the single most common webhook bug. The Test URL (/webhook-test/…) works only while you have clicked 'Listen for test event', handles exactly one call and then stops, shows the run live on the canvas, and dies when you leave the editor. The Production URL (/webhook/…) requires the workflow to be Active, is always on, accepts unlimited calls, and logs its runs under Executions rather than drawing them on the canvas. Your website must call the Production URL of an Active workflow.
-
-- **Configuring the Webhook node** — Four settings decide whether a browser's call succeeds. METHOD AND PATH give you the URL. ALLOWED ORIGINS (CORS) must permit the calling page, or the workflow will run perfectly and the browser will still refuse to read the reply — the classic 'Failed to fetch'. Set it to * in class and never in production. RESPONSE MODE should be 'Using Respond to Webhook Node' in every lab here, so the agent's answer travels back instead of an immediate 200 OK. AUTHENTICATION can be None for a demo, but Basic, Header or JWT for anything real — a public URL is a public door, and every call costs you model tokens.
-
-- **Structured output** — By default an agent returns a paragraph of prose, and prose cannot be branched on, sorted or coloured. A Structured Output Parser forces named fields such as decision, reason and riskFlags. An IF node can then route on decision, a Sheets node can log it, and a web page can colour the result card. Enumerate the allowed values so the field stays reliable.
+- **Data, JSON and expressions** — Data flows between nodes as a list of items, each a JSON object of key/value pairs. Read a value from an earlier node with an expression such as {{ $json.Name }}. Expressions work in any field — subject lines, URLs, conditions and message bodies. You can also drag a field from the input panel to map it automatically.
 
 
 ### Lab 1 — n8n Trigger and Action (Event Flyer with QR Code)
 
 Learning outcome: this lab develops your ability to build an automated workflow in n8n using a trigger and an action (A2, K7, K8).
 
-Deck reference: Slides 65–68.
+Deck reference: Slides 47–55.
 
 **Goal**
 
-Build your first n8n workflow end to end. An n8n Form Trigger collects a visitor's details, and a Gmail action emails them to the event administrator. You then turn the form's public URL into a QR code and place it on an event flyer, so anyone can sign up by scanning it with a phone.
+Build your first n8n workflow end to end. An n8n Form Trigger collects a visitor's details, and a Gmail action emails them to the event administrator. You then PUBLISH the workflow, copy the form's Production URL, turn it into a QR code and place it on an event flyer, so anyone can sign up by scanning it with a phone.
 
 **What you'll build**
 
-Form Trigger  →  Gmail (Send a message)   (Tools: n8n Form Trigger, Gmail (OAuth2), Smart QR Code Generator.)
+Form Trigger  →  Gmail (Send a message)  →  Publish  →  QR-code flyer   (Tools: n8n Form Trigger, Gmail (OAuth2), Smart QR Code Generator.)
 
 ![The finished Lab 1 workflow on the n8n canvas — the Form Trigger fires on each submission and the Gmail node sends the details to the administrator.](assets/site-lab1.png)
 
 *The finished Lab 1 workflow on the n8n canvas — the Form Trigger fires on each submission and the Gmail node sends the details to the administrator.*
-
-![A sample event flyer from a previous class. The QR code encodes the form's Production URL, so anyone can sign up by scanning it with a phone.](assets/site-lab1-flyer.png)
-
-*A sample event flyer from a previous class. The QR code encodes the form's Production URL, so anyone can sign up by scanning it with a phone.*
 
 **The workflow on the n8n canvas**
 
 ![The Lab 1 workflow on the n8n canvas. Two nodes: the Form Trigger decides WHEN the workflow runs, and the Gmail node decides WHAT it does.](assets/canvas-lab1.png)
 
 *The Lab 1 workflow on the n8n canvas. Two nodes: the Form Trigger decides WHEN the workflow runs, and the Gmail node decides WHAT it does.*
+
+**Key screens**
+
+![Step 1: Add the n8n Form Trigger](assets/lab1-add-trigger.png)
+
+*Step 1: Add the n8n Form Trigger*
+
+![Step 1: Add the n8n Form Trigger. Click Add first step (+), search 'form' and choose n8n Form → On new n8n Form event. Then add the Name, Email, Phone and Message fields.](assets/lab1-form-trigger.png)
+
+*Step 1: Add the n8n Form Trigger. Click Add first step (+), search 'form' and choose n8n Form → On new n8n Form event. Then add the Name, Email, Phone and Message fields.*
+
+![Step 2: Gmail — Send a Message with Expressions](assets/lab1-gmail-actions.png)
+
+*Step 2: Gmail — Send a Message with Expressions*
+
+![Step 2: Gmail — Send a Message with Expressions. Add Gmail → Send a message. Switch Message to Expression and drag in the form fields — the Result panel previews the email before you run it.](assets/lab1-gmail-expression.png)
+
+*Step 2: Gmail — Send a Message with Expressions. Add Gmail → Send a message. Switch Message to Expression and drag in the form fields — the Result panel previews the email before you run it.*
+
+![Flyers from Previous Learners](assets/lab1-flyer-learner1.png)
+
+*Flyers from Previous Learners*
+
+![Flyers from Previous Learners](assets/lab1-flyer-learner2.png)
+
+*Flyers from Previous Learners*
+
+![Flyers from Previous Learners](assets/lab1-flyer-learner3.png)
+
+*Flyers from Previous Learners*
+
+![Flyers from Previous Learners. Each QR code encodes the form's Production URL — scan it, register, and the event administrator receives the details by email.](assets/site-lab1-flyer.png)
+
+*Flyers from Previous Learners. Each QR code encodes the form's Production URL — scan it, register, and the event administrator receives the details by email.*
+
+![Compare with the Reference Solution. Create a NEW workflow, open the '...' menu → Import → From File and pick Lab 1 - Event Flyer with QR Code.json, so your own build is not overwritten.](assets/n8n-import-from-file.png)
+
+*Compare with the Reference Solution. Create a NEW workflow, open the '...' menu → Import → From File and pick Lab 1 - Event Flyer with QR Code.json, so your own build is not overwritten.*
 
 **Step-by-step**
 
@@ -385,25 +406,31 @@ Form Trigger  →  Gmail (Send a message)   (Tools: n8n Form Trigger, Gmail (OAu
 8. Click Execute workflow to open the test form, submit a sample entry, and confirm the email arrives.
    > *Why this step:* Test before activating. The canvas shows the data at every node, so you can see exactly what the Gmail node received.
 
-9. Save the workflow and toggle it Active, then copy the Form's Production URL.
-   > *Why this step:* The Test URL answers exactly one request. Only the Production URL, with the workflow Active, works for everyone.
+9. Click Publish at the top right of the editor to make the workflow live.
+   > *Why this step:* Until the workflow is published only the Test URL works, and it answers exactly one submission while you are watching.
 
-10. Open the Smart QR Code Generator at alfredang.github.io/qrcodegenerator, paste the Production URL, and download the QR code as PNG.
+10. Open the Form Trigger node, switch the form URL from Test URL to Production URL, and copy it.
+   > *Why this step:* The Production URL is the one that works for everyone, from any phone, at any time — it is what the QR code must open.
+
+11. Open the Smart QR Code Generator at alfredang.github.io/qrcodegenerator, paste the Production URL, and download the QR code as PNG.
    > *Why this step:* The generator runs entirely in your browser — nothing about your form is uploaded to a third party.
 
-11. Group activity: design an event flyer (for example a bowling night or a networking evening) with the QR code on it, then present it to the class.
+12. Design an event flyer (for example a recruitment fair, a charity day or a networking evening) in Canva, PowerPoint or an AI image tool, and place the QR code on it with a clear 'Scan to register' call-to-action.
+   > *Why this step:* A QR code without a call-to-action is just decoration — tell people what scanning it does.
+
+13. Group activity: present your flyer to the class. Classmates scan the QR code and register, and you confirm each sign-up arrives in the administrator's inbox.
    > *Why this step:* This is the whole point: a two-node workflow becomes a real sign-up channel anyone can use from a phone.
 
 
 **Test it**
 
-Scan the QR code on your flyer with your phone, submit the form, and confirm the administrator's inbox receives the email with the details you typed. A reference solution is provided as labs/lab1-trigger-actions/lab-trigger-actions.json — build yours by hand first, then import it to compare.
+Scan the QR code on your flyer with your phone, submit the form, and confirm the administrator's inbox receives the email with the details you typed. A reference solution is provided as labs/lab1-trigger-actions/Lab 1 - Event Flyer with QR Code.json — build yours by hand first, then import it to compare.
 
 **What you learned**
 
 - Triggers and actions — A trigger decides when a workflow runs; an action decides what it does.
 - Expressions — Expressions such as {{ $json.Name }} carry data from one node to the next.
-- Test vs Production URL — The Test URL works only while you are listening; the Production URL works once the workflow is Active.
+- Test vs Production URL — The Test URL works only while you are listening; the Production URL works once the workflow is published.
 
 **Troubleshooting**
 
@@ -419,15 +446,58 @@ Scan the QR code on your flyer with your phone, submit the form, and confirm the
 ---
 
 
+### Key Concepts for Lab 2 — Webhook and AI Agent
+
+- **What is an AI agent** — An AI agent is an LLM given a goal, a set of tools and memory. The model supplies the judgement — which tool to call and when — while you supply the goal, the guardrails and the tools it is allowed to use. In n8n an agent has four parts: a Chat Model, a System Instruction, Memory and Tools.
+
+- **The four components of an AI agent** — Every agent in this course is exactly four parts around one hub. The MODEL is the LLM that interprets language, reasons and chooses the next step. MEMORY keeps the conversation so a follow-up question still makes sense, keyed on a session ID. TOOLS are the abilities it may use — look up a Sheets row, search a vector store, send an email, call an API. INSTRUCTIONS are the system message: identity, scope, rules and refusals, always in force on every turn. Change any one of the four and you have a different agent.
+
+- **Popular LLM providers** — Any chat model plugs into the same AI Agent node, so you can swap the brain and keep the agent. This course uses Google Gemini (Flash), which also supplies the embeddings in Lab 5. n8n loads each provider's live model list into the chat-model node, so new models appear as soon as they ship. As of October 2026 the leading options are Google Gemini 4 Argon, Gemini 3.8 Flash and Gemini 3.1 Pro; OpenAI GPT-6 Astra, GPT-6.1 Sol and GPT-6 Luna (GPT-5.x remains in the API); Anthropic Claude Opus 5.5, Sonnet 5.5 and Haiku 5.5; Meta Llama 4 (open weights, self-hostable); and Mistral Large 4 and Medium 3.5. Pick by task: small fast models for classification and guardrails, larger models for reasoning.
+
+- **Model parameters — temperature and friends** — Settings on the chat-model node shape HOW the model answers, and the most important is temperature. A temperature of 0 to 0.3 is deterministic and repeatable — use it for classification, compliance decisions and data extraction, that is, any automation that must give the same answer twice. Around 0.7 is balanced and natural-sounding, the usual default for a customer-facing assistant. Above 1.0 is creative and surprising, suitable for marketing copy and never for a decision you must defend. Top-p is an alternative sampling control — tune temperature or top-p, never both. Max tokens caps the reply length and so caps your cost. Lab 3 uses temperature 0.2 so a compliance-bound chatbot refuses the same way every time.
+
+- **Tools — and why the description matters** — Tools attach to the agent's Tool input, and the model decides when to call one based on the DESCRIPTION you write. Write that description for the model, not for a developer. Lab 2 attaches three tools — check for a duplicate customer, create the customer record, send the confirmation — and you can watch the agent choose between them on the canvas.
+
+- **MCP — the Model Context Protocol** — MCP is an open standard that gives agents a common plug for tools and data. Without it, every agent needs a custom integration for every tool: N agents and M tools means N times M connectors to build and maintain. With MCP you build one MCP server per system and any MCP-capable agent can use it — N plus M pieces, and the tools become reusable. It is often described as USB-C for AI tools. n8n sits on both sides: the MCP Server Trigger exposes your n8n workflows AS tools that Claude or an IDE can call, and the MCP Client Tool attaches external MCP servers to your own n8n agent.
+
+- **Instructions — the four parts that constrain** — Every good agent instruction states four things. IDENTITY: who the agent is and for whom. SOURCE RULES: where answers may come from, for example 'answer only from the brochures returned by the tool'. REFUSALS: what is out of bounds, stated explicitly. ESCALATION: what to do at the boundary, for example 'if unsure, say so and offer a consultation'. Vague instructions produce confident wrong answers — every rule you skip, the model improvises.
+
+- **Writing a good system instruction** — State the role plainly. Give the scope and the limits — what it must answer and what it must refuse. Say which tool to use for which kind of question. Ask for a specific output format when something downstream depends on it. Tell it to say 'I don't know' rather than invent an answer. Then test it with real questions and refine.
+
+- **Good and bad instructions compared** — A bad instruction reads 'You are a helpful assistant. Answer the user's questions politely.' It has no identity, no source rules, no refusals and no escalation, so it will invent a course fee and guarantee an investment return — politely. A good instruction names the firm, limits the topics, points at a specific tool for factual questions, lists the prohibitions, and says what to do when unsure. The test is simple: you can try to break each line of a good instruction, and you cannot even test a vague one.
+
+- **Structured output** — By default an agent returns a paragraph of prose, and prose cannot be branched on, sorted or coloured. A Structured Output Parser forces named fields such as decision, reason and riskFlags. An IF node can then route on decision, a Sheets node can log it, and a web page can colour the result card. Enumerate the allowed values so the field stays reliable.
+
+- **Webhooks** — A webhook is a URL that any external system can POST data to; it starts your workflow when called. It is the opposite of an HTTP Request node: there YOU call the outside world, here the outside world calls YOU. Set Allowed Origins (CORS) so a browser page may read the reply, and consider Authentication before anything goes to production — an open webhook costs you money every time a stranger calls it.
+
+- **Webhooks — GET vs POST** — The HTTP method is part of the contract with the caller. With GET the data rides in the URL query string, for example ?email=alice@corp.com, so a browser can call it just by visiting the URL; you read it in n8n as {{ $json.query.email }}. GET suits a dashboard pulling data to display. With POST the data rides in the request body as JSON, which is what a web form or a chat widget sends; you read it as {{ $json.body.message }}. Every lab website in this course POSTs. Set the method on the Webhook node, and the caller must match it exactly.
+
+- **Webhook Test URL vs Production URL** — Every Webhook node gives you two URLs, and confusing them is the single most common webhook bug. The Test URL (/webhook-test/…) works only while you have clicked 'Listen for test event', handles exactly one call and then stops, shows the run live on the canvas, and dies when you leave the editor. The Production URL (/webhook/…) requires the workflow to be published (Publish, top right), is always on, accepts unlimited calls, and logs its runs under Executions rather than drawing them on the canvas. Your website must call the Production URL of a published workflow.
+
+- **Configuring the Webhook node** — Four settings decide whether a browser's call succeeds. METHOD AND PATH give you the URL. ALLOWED ORIGINS (CORS) must permit the calling page, or the workflow will run perfectly and the browser will still refuse to read the reply — the classic 'Failed to fetch'. Set it to * in class and never in production. RESPONSE MODE should be 'Using Respond to Webhook Node' in every lab here, so the agent's answer travels back instead of an immediate 200 OK. AUTHENTICATION can be None for a demo, but Basic, Header or JWT for anything real — a public URL is a public door, and every call costs you model tokens.
+
+
 ### Lab 2 — Webhook and AI Agent (Marina Trust Bank Onboarding)
 
 Learning outcome: this lab develops your ability to deploy an AI agent that is triggered by a webhook from an external website (A1, A2, K7, K8).
 
-Deck reference: Slides 69–71.
+Deck reference: Slides 77–81.
 
 **Goal**
 
 Replace the n8n form with a real bank website. A customer applies for an account on your own HTML page, which POSTs to an n8n Webhook. An AI Agent applies the bank's onboarding rules, calls Google Sheets tools to check for duplicates and create the customer record, emails a confirmation, and returns a structured decision that the page renders as a coloured card.
+
+**How the building blocks fit together**
+
+| Building block | In this lab | Why it matters |
+|---|---|---|
+| Webhook | Onboarding Webhook — POST /marina-trust-onboarding | The bank website's front door; Respond to Website returns the decision |
+| AI Agent | Onboarding AI Agent | Applies the bank's onboarding rules and decides |
+| Model | Google Gemini Chat Model (Gateway credits) | The LLM brain — keep the temperature low for repeatable decisions |
+| Tools & MCP | check_duplicate_customer · create_customer_record · send_confirmation_email | The agent chooses when to call each one |
+| Instructions | System message: eligibility rules, age check, four decisions | Where the bank's policy actually lives |
+| Memory | None — deliberately | One applicant must never influence the next decision |
+| Structured output | Decision Parser — decision, reason, riskFlags | Lets the page colour the result card |
 
 **What you'll build**
 
@@ -443,12 +513,25 @@ Webhook  →  Normalise  →  AI Agent (+3 tools)  →  Log Decision  →  Respo
 
 *The Lab 2 workflow on the n8n canvas. The main chain runs left to right; the chat model, output parser and three tools hang below the agent on its Tool input.*
 
+![The imported workflow on the n8n canvas. The main chain runs left to right; the agent's model, tools and parser hang beneath it.](assets/n8n-flow-lab2.png)
+
+*The imported workflow on the n8n canvas. The main chain runs left to right; the agent's model, tools and parser hang beneath it.*
+
+| Part of the flow | What it does |
+|---|---|
+| Front door | The bank site POSTs to Onboarding Webhook; Normalise Application tidies the fields the agent reads. |
+| The agent | Onboarding AI Agent applies the bank's rules with its chat model; Decision Parser returns decision, reason and riskFlags. |
+| Three tools | check_duplicate_customer, create_customer_record and send_confirmation_email — the agent chooses when to call each. |
+| Log and respond | Log Decision appends an audit row to Google Sheets; Respond to Website sends the decision back to the page. |
+
+> **Note:** The dashed lines are the agent's sub-nodes: it calls them when it decides to — the solid chain always runs in order.
+
 **Step-by-step**
 
 1. Create a Google Sheet named 'Retail Banking Onboarding' with a Customers tab and an Onboarding_Log tab, and seed a few existing customers.
    > *Why this step:* The seeded rows are what make the duplicate test (TC2) meaningful — without them every applicant looks new.
 
-2. In n8n choose Workflows → Import from File and select lab2-webhook-agent.json.
+2. In n8n choose Workflows → Import from File and select Lab 2 - Marina Trust Bank Onboarding Agent.json.
    > *Why this step:* Importing lets you study a finished agent. You will still re-point every credential and sheet to your own.
 
 3. Open the Onboarding Webhook node. Confirm HTTP Method = POST, Path = marina-trust-onboarding, and Respond = Using 'Respond to Webhook' Node.
@@ -478,7 +561,7 @@ Webhook  →  Normalise  →  AI Agent (+3 tools)  →  Log Decision  →  Respo
 11. Watch the request land on the n8n canvas and follow it through Normalise into the agent; confirm the agent calls check_duplicate_customer.
    > *Why this step:* This is the moment the agent stops being a black box — you can see it CHOOSE to call a tool.
 
-12. Save, toggle the workflow Active, copy the Production URL and paste it into the panel so the page works from any device.
+12. Save, click Publish, copy the webhook's Production URL and paste it into the panel so the page works from any device.
    > *Why this step:* Only now does the page work for anyone but you. The Test URL has already been spent.
 
 
@@ -497,7 +580,7 @@ Run TC1 (a new applicant) and confirm a green APPROVED card, a new row in the Cu
 
 | Symptom | Cause and fix |
 |---|---|
-| Failed to fetch in the browser | The workflow is not Active (production URL), or 'Listen for test event' is not armed (test URL). |
+| Failed to fetch in the browser | The workflow is not published (production URL), or 'Listen for test event' is not armed (test URL). |
 | Failed to fetch, but the n8n execution succeeded | CORS. Set Allowed Origins to * in the Webhook node's options. |
 | Works once, then 404 | You are using the Test URL. It listens for one request only. |
 | Cannot read properties of undefined (reading 'trim') | The Set node expects $json.body.fullName. Check the browser's Network tab: is the payload nested under body? |
@@ -511,9 +594,10 @@ Run TC1 (a new applicant) and confirm a green APPROVED card, a new row in the Cu
 
 ## Topic 02 — Agentic Chatbot and Human in the Loop
 
-Agentic workflows · Chatbots on webhooks · Approval gates · Accountability   (Deck reference: Slides 73–84.)
+Agentic workflows · Chatbots on webhooks · Approval gates · Accountability   (Deck reference: Slides 82–102.)
 
-**Key concepts**
+
+### Key Concepts for Lab 3 — Chatbot Webhook
 
 - **What is an agentic workflow** — An agentic workflow is one where the LLM makes the routing decisions. You still design the process, the guardrails and the tools; what you hand over is the judgement about which path a particular case should take.
 
@@ -523,24 +607,91 @@ Agentic workflows · Chatbots on webhooks · Approval gates · Accountability   
 
 - **Memory — and when not to use it** — A memory node lets a follow-up question be answered in context. Memory is keyed on a session ID so two visitors never see each other's conversation. But some workflows must have NO memory: an application decision should never be influenced by the previous applicant. Ask, for every agent: should this case know about the last one?
 
-- **Human in the loop** — Some actions are too consequential to automate. A human-in-the-loop step pauses the workflow until a named person approves or declines. The agent may do everything except the one thing that matters — sending. In n8n this is the Gmail 'Send and Wait for Response' node, and the execution genuinely pauses on the canvas until a button is clicked.
+**Demo: an HR policy chatbot on Telegram**
 
-- **When to put a human in the loop** — When money moves; when it is a regulated communication; when the action is irreversible; when a person is vulnerable; when the stakes exceed the error rate; and when someone must be accountable. The question is never 'is the model good?' but 'what does one bad output cost?'
+What is a chatbot? An agent behind a chat channel. Before Lab 3 puts a chatbot behind a website, you build one on Telegram: Telegram Trigger → HR Agent — Ava → Chat model → Reply on Telegram. The HR Agent, Ava, answers only from sample HR policies written into its system instruction, never invents a number, refers salary, medical or disciplinary questions to HR, and remembers the conversation. (Deck reference: Slides 82–90.)
 
-- **Human in, on, and out of the loop** — There are three levels of human oversight, and the design question is which one a given process deserves. Human IN the loop means the workflow pauses and a named person must approve before the action happens — nothing reaches the customer unauthorised, which is Lab 4. Human ON the loop means the agent acts immediately while a person monitors and can intervene or reverse it, which suits high volume with low individual risk. Human OUT of the loop is fully autonomous, and is acceptable only where an error is cheap, reversible and detectable — never where money or a regulator is involved.
+Step 1 — create a Telegram bot with BotFather:
 
-- **How an approval suspends a running workflow** — A Send-and-Wait node stops the execution mid-flight. Look at the canvas and the run is genuinely sitting on the approval node; n8n holds the state, and it will wait for days if it has to. The Approve and Decline buttons in the email are simply two URLs, so clicking one resumes the execution down that branch and the approver has no new application to learn. A decline is a reassignment rather than a deletion, because someone still owes the client an answer.
+1. Open the Telegram app and search for the verified account named BotFather (look for the blue checkmark).
+   > *Why this step:* BotFather is Telegram's own bot for creating bots. Impostors exist, so check for the blue checkmark.
 
-- **Guardrails — two gates around the agent** — Instructions shape what the agent intends; guardrails check what actually goes in and comes out. An INPUT guardrail screens the incoming message before the model ever sees it: block prompt injection such as 'ignore your instructions and…', strip personal data you must not process, and rate-limit and authenticate, because a public webhook is a public door. An OUTPUT guardrail checks the reply before it reaches a person: look for phrases you have banned such as guarantees and forecasts, validate the structured fields against the values you allow, and on any doubt route to a human rather than sending. Enforcing the same rule in the prompt AND in the workflow is deliberate redundancy — only one of the two runs on a machine you control.
+2. Start a chat and send the command /newbot.
+   > *Why this step:* Every Telegram bot, including the ones big companies run, starts with this one command.
 
-- **The accountability trail** — Log what the agent PROPOSED separately from what a human AUTHORISED. Keeping them apart is what lets an auditor ask whether anyone ever sent something a human never saw. Every approved action carries the name of the approver; every declined one is reassigned to a named person. No accountability column should ever be empty.
+3. Type a display name for your bot (e.g., My Free Helper Bot).
+   > *Why this step:* The display name is what people see in their chat list. It can contain spaces and can be changed later with /setname.
+
+4. Choose a unique username that ends in bot (e.g., my_free_helper_bot).
+   > *Why this step:* The username is the bot's permanent address — t.me/<username> — and must be unique across all of Telegram. If it is taken, try another.
+
+5. Copy the HTTP API token that BotFather replies with (it looks like 123456789:AAH…). You will paste it into n8n in Step 3.
+   > *Why this step:* The token is the bot's password. Anyone holding it controls the bot; if it leaks, send /revoke to BotFather.
+
+
+Step 2 — build the workflow with n8n Assistant. Create a new workflow, open n8n Assistant and paste this prompt:
+
+```bash
+Create a 3-node workflow:
+•  A user posts a message to a Telegram bot.
+•  Telegram sends the data to an HR agent.
+•  The HR agent responds to the user on the company HR policies. Create a system instruction for the HR agent with sample company policies in it. The HR agent has a memory.
+•  Respond to Telegram.
+```
+
+- Review the plan before it builds
+- Read the system instruction it wrote — edit the sample policies if you like
+- Check a memory node is attached to the HR agent
+- Stuck? Import the reference solution instead
+
+> **Note:** Reference solution: labs/lab3-chatbot-webhook/Lab 3 Demo - Telegram HR Policy Agent.json. It has no memory node; the workflow your prompt builds should.
+
+![Your canvas should look like this: trigger, agent, reply — with the chat model and memory hanging under the agent.](assets/n8n-flow-telegram-demo.png)
+
+*Your canvas should look like this: trigger, agent, reply — with the chat model and memory hanging under the agent.*
+
+| Node | What it does |
+|---|---|
+| Telegram Trigger | Updates: message — every message sent to the bot starts one execution. |
+| HR Agent | Ava's role, rules and sample HR policies live in the system instruction n8n Assistant wrote. |
+| Model and memory | Chat model on Gateway credits; memory keeps each employee's conversation, keyed on the Telegram chat ID. |
+| Reply out | Reply on Telegram sends back to the chat ID the trigger received, so the reply lands in the same chat. |
+
+Step 3 — connect the bot, publish and chat:
+
+1. Open the Telegram Trigger node, choose Credential → Create new credential, paste the BotFather token as the Access Token and save.
+   > *Why this step:* The trigger listens for messages with this credential.
+
+2. Open the Telegram node that sends the reply and select the same Telegram credential.
+   > *Why this step:* Both Telegram nodes share one credential — one listens, the other answers.
+
+3. Open the chat model under the HR agent and choose Use Gateway credits as its credential.
+   > *Why this step:* No OpenAI account or API key is needed on n8n Cloud — the same free credits used in Lab 2.
+
+4. Click Publish. n8n registers the workflow's Production webhook with Telegram, so every message to the bot now starts the workflow.
+   > *Why this step:* A Telegram bot has ONE webhook at a time. Testing in the editor swaps in the Test URL, so publish again when you are done.
+
+5. Open t.me/<your bot username>, tap Start and ask: How many days of annual leave do I get? Ask a follow-up, then ask about a colleague's salary.
+   > *Why this step:* The follow-up proves the memory works; the salary question must be referred to HR — the guardrail in the system instruction.
+
+
+![The live demo bot on Telegram — /start, then a question about annual leave.](assets/telegram-chat-demo.png)
+
+*The live demo bot on Telegram — /start, then a question about annual leave.*
+
+- /start opens the chat — Ava introduces herself exactly as her system message tells her to.
+- Ask how many days of leave you get: the answer quotes the policy — 14, 18 or 21 days by length of service.
+- Ask a follow-up — memory keeps the context. Then ask about a colleague's salary: Ava must refer you to HR.
+- Every message is one workflow run — open Executions in n8n to watch it happen.
+
+> **Note:** The bot is only as safe as its system message. Lab 3 adds a contact gate and a refusal rule, behind a website.
 
 
 ### Lab 3 — Chatbot Webhook (Investment Advisor)
 
 Learning outcome: this lab develops your ability to deploy an agentic chatbot on a website that operates within regulatory limits (A1, A2, K7, K8).
 
-Deck reference: Slides 78–80.
+Deck reference: Slides 91–94.
 
 **Goal**
 
@@ -560,9 +711,22 @@ Chat Webhook  →  Normalize  →  AI Agent (+ model + memory)  →  Respond to 
 
 *The Lab 3 workflow on the n8n canvas. A small graph: webhook in, normalise, the agent with its chat model and session memory, then the reply back out.*
 
+![The imported workflow on the n8n canvas: webhook in, normalise, agent, shape the reply, respond. The intelligence is in the system message.](assets/n8n-flow-lab3.png)
+
+*The imported workflow on the n8n canvas: webhook in, normalise, agent, shape the reply, respond. The intelligence is in the system message.*
+
+| Part of the flow | What it does |
+|---|---|
+| Message in | Chat Webhook receives each message from the widget; Normalize Chat Message shapes it for the agent. |
+| The agent | Investment Advisor AI holds the contact gate, the non-advisory rule and the nine-question FAQ. |
+| Model and memory | Google Gemini Chat Model (temperature 0.2) and Website Chat Memory keyed on the visitor's sessionId. |
+| Reply out | Chat Response Body builds the JSON reply; Respond to Chat returns it to the widget. |
+
+> **Note:** The warning on the Gemini node means no credential is selected yet — choosing your Gemini credential is the first fix after import.
+
 **Step-by-step**
 
-1. Choose Workflows → Import from File and select lab3-chatbot-webhooks.json.
+1. Choose Workflows → Import from File and select Lab 3 - Investment Advisor Chatbot.json.
    > *Why this step:* A small canvas. The intelligence is in the system message, not in the number of nodes.
 
 2. Open Google Gemini Chat Model, select your Gemini credential, and confirm the model is gemini-2.5-flash with temperature 0.2.
@@ -616,7 +780,7 @@ Ask 'Can you guarantee returns?' and 'Which stock should I buy?'. The agent must
 
 | Symptom | Cause and fix |
 |---|---|
-| Failed to fetch | Workflow not Active (production URL), or 'Listen for test event' not armed (test URL). |
+| Failed to fetch | Workflow not published (production URL), or 'Listen for test event' not armed (test URL). |
 | Failed to fetch, but the execution ran | CORS. Set Allowed Origins to * on the Webhook node. |
 | The agent answers before collecting contact details | The contact gate is missing from the system message, or was weakened. Restate it as a hard precondition. |
 | The agent gives investment advice | Read the reply aloud in the debrief. Tighten the prohibitions — this is the failure the lab is designed to expose. |
@@ -627,11 +791,26 @@ Ask 'Can you guarantee returns?' and 'Which stock should I buy?'. The agent must
 ---
 
 
+### Key Concepts for Lab 4 — Human in the Loop
+
+- **Human in, on, and out of the loop** — There are three levels of human oversight, and the design question is which one a given process deserves. Human IN the loop means the workflow pauses and a named person must approve before the action happens — nothing reaches the customer unauthorised, which is Lab 4. Human ON the loop means the agent acts immediately while a person monitors and can intervene or reverse it, which suits high volume with low individual risk. Human OUT of the loop is fully autonomous, and is acceptable only where an error is cheap, reversible and detectable — never where money or a regulator is involved.
+
+- **Human in the loop** — Some actions are too consequential to automate. A human-in-the-loop step pauses the workflow until a named person approves or declines. The agent may do everything except the one thing that matters — sending. In n8n this is the Gmail 'Send and Wait for Response' node, and the execution genuinely pauses on the canvas until a button is clicked.
+
+- **How an approval suspends a running workflow** — A Send-and-Wait node stops the execution mid-flight. Look at the canvas and the run is genuinely sitting on the approval node; n8n holds the state, and it will wait for days if it has to. The Approve and Decline buttons in the email are simply two URLs, so clicking one resumes the execution down that branch and the approver has no new application to learn. A decline is a reassignment rather than a deletion, because someone still owes the client an answer.
+
+- **When to put a human in the loop** — When money moves; when it is a regulated communication; when the action is irreversible; when a person is vulnerable; when the stakes exceed the error rate; and when someone must be accountable. The question is never 'is the model good?' but 'what does one bad output cost?'
+
+- **Guardrails — two gates around the agent** — Instructions shape what the agent intends; guardrails check what actually goes in and comes out. An INPUT guardrail screens the incoming message before the model ever sees it: block prompt injection such as 'ignore your instructions and…', strip personal data you must not process, and rate-limit and authenticate, because a public webhook is a public door. An OUTPUT guardrail checks the reply before it reaches a person: look for phrases you have banned such as guarantees and forecasts, validate the structured fields against the values you allow, and on any doubt route to a human rather than sending. Enforcing the same rule in the prompt AND in the workflow is deliberate redundancy — only one of the two runs on a machine you control.
+
+- **The accountability trail** — Log what the agent PROPOSED separately from what a human AUTHORISED. Keeping them apart is what lets an auditor ask whether anyone ever sent something a human never saw. Every approved action carries the name of the approver; every declined one is reassigned to a named person. No accountability column should ever be empty.
+
+
 ### Lab 4 — Human in the Loop (Client Rapport Assistant)
 
 Learning outcome: this lab develops your ability to apply a human approval gate so no AI-drafted communication is sent unsupervised (A1, A2, A3, K7, K8).
 
-Deck reference: Slides 81–83.
+Deck reference: Slides 99–101.
 
 **Goal**
 
@@ -659,7 +838,7 @@ Webhook → Agent → Acknowledge → Log Draft → RM Approval (Send & Wait) �
 2. Import each of drafts.csv, approved-replies.csv and handover-queue.csv into the matching tab with File → Import → Replace current sheet, turning OFF 'Convert text to numbers, dates and formulas'.
    > *Why this step:* Leave the conversion on and Sheets mangles reference numbers and dates into its own formats.
 
-3. Choose Workflows → Import from File and select lab4-human-in-the-loop.json.
+3. Choose Workflows → Import from File and select Lab 4 - Client Rapport Assistant (Human in the Loop).json.
    > *Why this step:* Thirteen nodes, one agent, one human gate. Trace the two paths out of the IF node before you run it.
 
 4. Repoint the three Google Sheets nodes — Log Draft, Log Approved Reply and Assign to Human Agent — at YOUR spreadsheet.
@@ -730,9 +909,10 @@ Run all eight rows of sample-queries.csv. When you are done Drafts has 8 rows, A
 
 ## Topic 03 — Retrieval-Augmented Generation (RAG)
 
-Tokenization · Embeddings · Vector stores · Grounded answers   (Deck reference: Slides 85–97.)
+Tokenization · Embeddings · Vector stores · Grounded answers   (Deck reference: Slides 103–115.)
 
-**Key concepts**
+
+### Key Concepts for Lab 5 — RAG Customer Care Chatbot
 
 - **What is RAG** — Retrieval-Augmented Generation retrieves the few documents that resemble a question and gives the model only those, instead of everything. The model reads what matters rather than the whole corpus.
 
@@ -740,9 +920,9 @@ Tokenization · Embeddings · Vector stores · Grounded answers   (Deck referenc
 
 - **Tokenization and embeddings** — Text is first split into tokens. An embedding model then turns a chunk of text into a vector — a list of numbers positioned so that text about similar things lands close together. 'How much is the sourdough course?' lands near the sourdough brochure and far from the sushi one, even though the two share no words.
 
-- **Vector stores** — A vector store holds those embeddings and finds the nearest neighbours to a question, fast. n8n's built-in Simple Vector Store needs no account, key or index — and is emptied whenever n8n restarts. That is not a defect; it is the honest cost of a store that requires no infrastructure. Production systems use Pinecone, Supabase (pgvector) or Qdrant.
-
 - **Chunking is the biggest lever** — The right chunk is the smallest piece of text that still answers a question on its own. Too small and a brochure is sliced so the course name is separated from its fee — retrieval finds one without the other. Too large and irrelevant text crowds the prompt. Most RAG projects fail quietly at chunking, not at the model.
+
+- **Vector stores** — A vector store holds those embeddings and finds the nearest neighbours to a question, fast. n8n's built-in Simple Vector Store needs no account, key or index — and is emptied whenever n8n restarts. That is not a defect; it is the honest cost of a store that requires no infrastructure. Production systems use Pinecone, Supabase (pgvector) or Qdrant.
 
 - **The rules that keep RAG working** — The ingestion and retrieval embedding models must be identical. The store's dimension must match the embedding model's output. The memory key or index name must match between ingestion and retrieval. Turn Clear Store on when re-ingesting. And topK controls how many chunks are retrieved — too few misses the answer, too many dilutes the prompt.
 
@@ -765,7 +945,7 @@ Tokenization · Embeddings · Vector stores · Grounded answers   (Deck referenc
 
 Learning outcome: this lab develops your ability to deploy a RAG application that grounds an agent in the organisation's own documents (A1, A2, A3, K5, K7, K8).
 
-Deck reference: Slides 94–97.
+Deck reference: Slides 112–115.
 
 **Goal**
 
@@ -797,7 +977,7 @@ Ingestion: Drive → Split → Embed → Vector Store   ·   Answering: Webhook 
 2. Open one brochure and read it — everything the chatbot will ever say comes from files like this one.
    > *Why this step:* If a fact is not in these files, a correctly-grounded chatbot cannot say it. That is the point of RAG.
 
-3. Import lab5-Ingest-Simple-Vector-Store.json — this is the ingestion workflow you run once.
+3. Import Lab 5 - Part 1 Ingest Brochures.json — this is the ingestion workflow you run once.
    > *Why this step:* Ingestion and answering are separate workflows: you ingest once, then answer thousands of questions.
 
 4. Open List Brochures in Folder, select YOUR brochures folder, and set your Google Drive credential.
@@ -818,7 +998,7 @@ Ingestion: Drive → Split → Embed → Vector Store   ·   Answering: Webhook 
 9. Click Execute workflow. Twenty files are listed, downloaded, embedded and stored in about thirty seconds.
    > *Why this step:* Confirm exactly twenty vectors were inserted. More than twenty means Clear Store was off and you have duplicates.
 
-10. Import LU5-rag-chatbot.json — the answering agent.
+10. Import Lab 5 - Part 2 Cook and Bake RAG Chatbot.json — the answering agent.
    > *Why this step:* This is the half that runs on every question. It never sees nineteen of the twenty brochures.
 
 11. Open Query Data Tool and set its Memory Key to the SAME cookbake_<your-name> you used during ingestion. A mismatch here is the most common failure in this lab.

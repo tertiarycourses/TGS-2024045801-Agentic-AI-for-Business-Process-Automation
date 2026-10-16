@@ -12,8 +12,8 @@ Guiding principle: the course material must be 100% aligned to the WSQ TSC
 TITLE        = "Agentic AI for Business Process Automation"
 SHORT_TITLE  = "Agentic AI for Business Process Automation"   # used in output filenames
 COURSE_CODE  = "TGS-2024045801"
-VERSION      = "v2.1"
-VERSION_DATE = "15 October 2026"
+VERSION      = "v2.3"
+VERSION_DATE = "16 October 2026"
 ORG          = "Tertiary Infotech Academy Pte Ltd"
 UEN          = "UEN: 201200696W"
 TRAINER      = "Dr. Alfred Ang"
@@ -130,3 +130,74 @@ DEMO_PROMPT=[
  "5. If approved, schedule the post for 9am the next weekday;",
  "    if rejected, log my feedback in a Google Sheet.",
  "Use Gateway credits for the AI model. Ask me before publishing."]
+
+# ------------------------------------------------------------------ Topic 2 demo (before Lab 3)
+# Telegram HR Policy Agent — labs/lab3-chatbot-webhook/Lab 3 Demo - Telegram HR Policy Agent.json.
+# Used by the deck AND the Learner Guide. Each step is
+# (short text for the deck's numbered strip, full instruction for the guide, why it matters).
+TELEGRAM_DEMO = dict(
+    file="Lab 3 Demo - Telegram HR Policy Agent.json",
+    flow=[("Telegram Trigger", "an employee messages the bot"),
+          ("HR Agent — Ava", "HR policies + memory"),
+          ("Chat model", "Gateway credits, no API key"),
+          ("Reply on Telegram", "back to the same chat")],
+    flow_shot=dict(img="n8n-flow-telegram-demo.png", title="Demo: The Workflow n8n Assistant Builds",
+        intro="Your canvas should look like this: trigger, agent, reply — with the chat model and memory hanging under the agent.",
+        cards=[("BLUE","Telegram Trigger","Updates: message — every message sent to the bot starts one execution."),
+               ("VIOLET","HR Agent","Ava's role, rules and sample HR policies live in the system instruction n8n Assistant wrote."),
+               ("TEAL","Model and memory","Chat model on Gateway credits; memory keeps each employee's conversation, keyed on the Telegram chat ID."),
+               ("AMBER","Reply out","Reply on Telegram sends back to the chat ID the trigger received, so the reply lands in the same chat.")],
+        takeaway="Shown: the reference solution, which has no memory. Yours has a memory node — the prompt asked for one."),
+    chat_shot=dict(img="telegram-chat-demo.png", title="Demo: Chatting with Ava on Telegram",
+        bullets=["/start opens the chat — Ava introduces herself exactly as her system message tells her to.",
+                 "Ask how many days of leave you get: the answer quotes the policy — 14, 18 or 21 days by length of service.",
+                 "Ask a follow-up — memory keeps the context. Then ask about a colleague's salary: Ava must refer you to HR.",
+                 "Every message is one workflow run — open Executions in n8n to watch it happen."],
+        takeaway="The bot is only as safe as its system message. Lab 3 adds a contact gate and a refusal rule, behind a website."),
+    botfather=[
+        ("Open Telegram and search for BotFather (blue checkmark)",
+         "Open the Telegram app and search for the verified account named BotFather (look for the blue checkmark).",
+         "BotFather is Telegram's own bot for creating bots. Impostors exist, so check for the blue checkmark."),
+        ("Start a chat and send /newbot",
+         "Start a chat and send the command /newbot.",
+         "Every Telegram bot, including the ones big companies run, starts with this one command."),
+        ("Type a display name, e.g. My Free Helper Bot",
+         "Type a display name for your bot (e.g., My Free Helper Bot).",
+         "The display name is what people see in their chat list. It can contain spaces and can be changed later with /setname."),
+        ("Choose a unique username ending in bot, e.g. my_free_helper_bot",
+         "Choose a unique username that ends in bot (e.g., my_free_helper_bot).",
+         "The username is the bot's permanent address — t.me/<username> — and must be unique across all of Telegram. If it is taken, try another."),
+        ("Copy the HTTP API token BotFather sends back",
+         "Copy the HTTP API token that BotFather replies with (it looks like 123456789:AAH…). You will paste it into n8n in Step 3.",
+         "The token is the bot's password. Anyone holding it controls the bot; if it leaks, send /revoke to BotFather."),
+    ],
+    # Step 2 — learners build the workflow themselves with n8n Assistant (AI Assistant).
+    prompt=[
+        "Create a 3-node workflow:",
+        "•  A user posts a message to a Telegram bot.",
+        "•  Telegram sends the data to an HR agent.",
+        "•  The HR agent responds to the user on the company HR policies. Create a system instruction for the HR agent with sample company policies in it. The HR agent has a memory.",
+        "•  Respond to Telegram.",
+    ],
+    review=["Review the plan before it builds",
+            "Read the system instruction it wrote — edit the sample policies if you like",
+            "Check a memory node is attached to the HR agent",
+            "Stuck? Import the reference solution instead"],
+    connect=[
+        ("Telegram Trigger → Credential → Create new → paste the token",
+         "Open the Telegram Trigger node, choose Credential → Create new credential, paste the BotFather token as the Access Token and save.",
+         "The trigger listens for messages with this credential."),
+        ("Telegram reply node → select the same credential",
+         "Open the Telegram node that sends the reply and select the same Telegram credential.",
+         "Both Telegram nodes share one credential — one listens, the other answers."),
+        ("Chat model → Use Gateway credits",
+         "Open the chat model under the HR agent and choose Use Gateway credits as its credential.",
+         "No OpenAI account or API key is needed on n8n Cloud — the same free credits used in Lab 2."),
+        ("Publish — n8n registers its webhook with Telegram",
+         "Click Publish. n8n registers the workflow's Production webhook with Telegram, so every message to the bot now starts the workflow.",
+         "A Telegram bot has ONE webhook at a time. Testing in the editor swaps in the Test URL, so publish again when you are done."),
+        ("Open t.me/<username>, tap Start, ask about annual leave",
+         "Open t.me/<your bot username>, tap Start and ask: How many days of annual leave do I get? Ask a follow-up, then ask about a colleague's salary.",
+         "The follow-up proves the memory works; the salary question must be referred to HR — the guardrail in the system instruction."),
+    ],
+)

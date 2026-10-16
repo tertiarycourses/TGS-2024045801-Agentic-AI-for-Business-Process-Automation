@@ -23,6 +23,26 @@ Generate a professional 3-day course deck with `python-pptx`. Template: `make_sl
 - **Breaks**: white slides reading "Lunch Break / 1 hour" and "Tea Break / 15 minutes".
 - **Footer on every content slide**: course title · TGS code (left), `© 2026 Tertiary Infotech Academy Pte Ltd` (center), slide number (right).
 
+## HARD RULE — Knowledge → Lab (every lab is preceded by its own concepts)
+
+The deck ALWAYS flows **knowledge → lab**: the concept slides a lab applies come immediately
+before that lab, and the lab follows them.
+
+- Within a topic, interleave: *concepts for Lab A → Lab A → concepts for Lab B → Lab B*.
+  **Never** put all of a topic's concept slides first and then run its labs back to back.
+- Place each concept before the **first** lab that applies it — never after. Example: the
+  human-in-the-loop and guardrail slides sit after Lab 3 and directly before the HITL lab
+  (Lab 4), not bunched at the top of Topic 2.
+- No lab starts cold. If a lab has no concept slides of its own, write them (from the lab's
+  content and the Learner Guide) and place them before that lab.
+- A tea/lunch break or day boundary may fall between a concept block and its lab; another
+  topic's content may not.
+- Keep all three artifacts in the same order: the Lesson Plan timetable runs concepts → lab for
+  each lab, and the Learner Guide prints "Key Concepts for Lab N" directly before each lab.
+- **Check before delivery:** list the deck's slide titles in order and confirm every lab block
+  is preceded by its own concept slides. A concept slide that comes after the lab it supports
+  is a defect.
+
 ## House format — Tertiary Infotech Academy Pte Ltd (WSQ)
 
 Every generated document/deck MUST include:

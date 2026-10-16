@@ -150,9 +150,9 @@ TEST_VS_PROD_EXEC = dict(
         "Click Execute workflow to run it once.",
         "The data is shown live on the canvas, node by node.",
         "Pin a node's output to freeze it while you build downstream.",
-        "Perfect while building — nothing needs to be Active.",
+        "Perfect while building — nothing needs to be published.",
     ]),
-    right=("PRODUCTION — Active toggle ON", "VIOLET", [
+    right=("PRODUCTION — after you click Publish", "VIOLET", [
         "Runs automatically whenever the trigger fires.",
         "Nothing appears on the canvas — runs are logged under Executions.",
         "Every run records status, timing and the full data at each node.",
@@ -176,6 +176,45 @@ CREDENTIALS = dict(
          "The brochure folder that Lab 5's ingestion workflow reads from."),
     ],
     takeaway="Imported workflows carry credential NAMES, not secrets — always re-select your own after importing.",
+)
+
+# ---------------------------------------------------------------- TOPIC 1: before Lab 2
+LAB2_ROADMAP = dict(
+    key="lab2_roadmap", title="Before Lab 2 — The Building Blocks of an AI Agent",
+    intro="Lab 1 was a trigger and an action. Lab 2 adds an AI Agent that decides — these six blocks are what it is made of.",
+    kind="chev+cards",
+    chevrons=[("AI Agent", "the hub that decides"), ("Model", "the LLM brain"),
+              ("Tools & MCP", "what it may do"), ("Instructions", "the rules it follows"),
+              ("Memory", "what it remembers"), ("Webhook", "how the world calls it")],
+    cards=[
+        ("BLUE", "What Lab 1 had",
+         "A Form Trigger and a Gmail action. Every submission follows the same fixed path — no judgement anywhere."),
+        ("VIOLET", "What Lab 2 adds",
+         "An AI Agent node with a model, three tools and the bank's rules, deciding APPROVED, REJECTED, REVIEW or DUPLICATE."),
+        ("TEAL", "What changes at the front door",
+         "The n8n form is replaced by a real bank website that POSTs to a Webhook and reads the decision back."),
+    ], cols=3,
+    takeaway="Learn the six blocks one at a time, then watch them work together in Lab 2.",
+)
+
+AGENT_LOOP = dict(
+    key="agent_loop", title="What Is an AI Agent? — The Agent Loop",
+    intro="Given a goal, an agent does not answer once. It works in a loop until the goal is met.",
+    kind="chev+cards",
+    chevrons=[("Context", "goal, rules, memory, data"), ("Plan", "decide the next step"),
+              ("Action", "call a tool"), ("Verify", "check against the goal"),
+              ("Repeat", "until done, then answer")],
+    cards=[
+        ("BLUE", "1 · Context",
+         "Everything the agent can see: the goal, its instructions, memory of the conversation, and what earlier tool calls returned."),
+        ("VIOLET", "2 · Plan",
+         "The LLM reasons over the context and chooses the next step — which tool to call, with what input, or whether it is finished."),
+        ("TEAL", "3 · Action",
+         "The agent calls a tool: look up a record, write a row, send an email. This is where it acts on the world."),
+        ("GREEN", "4 · Verify and repeat",
+         "The tool's result goes back into the context and is checked against the goal. Not done? Plan again. Done? Reply."),
+    ], cols=4, numbered=False,
+    takeaway="Every turn of the loop is an LLM call — so cap it (Max Iterations on the AI Agent node) and log every step.",
 )
 
 # ---------------------------------------------------------------- TOPIC 1/2: AGENTS
@@ -220,16 +259,16 @@ AGENT_COMPONENTS = dict(
 
 MODEL_PROVIDERS = dict(
     key="model_providers", title="The Model — Popular LLM Providers",
-    intro="Any chat model plugs into the same AI Agent node — swap the brain and keep the agent.",
+    intro="Any chat model plugs into the same AI Agent node. n8n lists each provider's live models — swap the brain, keep the agent.",
     kind="table",
     widths=[3.0, 4.4, 4.23],
     header=["Provider", "Models", "Notes"],
     rows=[
-        ["Google", "Gemini 2.5 Flash / Pro", "Course default — also supplies the embeddings in Lab 5"],
-        ["OpenAI", "gpt-4.1, gpt-4.1-mini, gpt-4o", "Widely used; mini tier is cheap and fast"],
-        ["Anthropic", "Claude (Opus, Sonnet, Haiku)", "Strong reasoning and long context"],
-        ["Meta", "Llama 3.x", "Open weights — can be self-hosted"],
-        ["Mistral", "Mistral / Mixtral", "Open weights — a European option"],
+        ["Google", "Gemini 4 Argon · Gemini 3.8 Flash · Gemini 3.1 Pro", "Course default (Gemini Flash) — also supplies the embeddings in Lab 5"],
+        ["OpenAI", "GPT-6 Astra · GPT-6.1 Sol · GPT-6 Luna", "Newest family; GPT-5.x models remain in the API"],
+        ["Anthropic", "Claude Opus 5.5 · Sonnet 5.5 · Haiku 5.5", "Strong reasoning and long context; Haiku is fast and cheap"],
+        ["Meta", "Llama 4 (Scout, Maverick)", "Open weights — can be self-hosted, e.g. with Ollama"],
+        ["Mistral", "Mistral Large 4 · Mistral Medium 3.5", "A European option, with open-weight models too"],
     ],
     takeaway="Pick by task: small fast models for classification and guardrails, larger models for reasoning.",
 )
@@ -451,12 +490,12 @@ TEST_VS_PROD_URL = dict(
         "Dies the moment you leave the editor.",
     ]),
     right=("PRODUCTION URL —  /webhook/…", "GREEN", [
-        "Requires the workflow to be toggled Active.",
+        "Requires the workflow to be published (Publish, top right).",
         "Always on — every call starts a run.",
         "Runs are logged under Executions, not drawn on the canvas.",
         "This is the URL you give to a website, an app or a QR code.",
     ]),
-    takeaway="Your website must call the PRODUCTION URL of an ACTIVE workflow — the Test URL is spent after one request.",
+    takeaway="Your website must call the PRODUCTION URL of a PUBLISHED workflow — the Test URL is spent after one request.",
 )
 
 WEBHOOK_CONFIG = dict(
@@ -476,7 +515,48 @@ WEBHOOK_CONFIG = dict(
     takeaway="'Failed to fetch' in the browser is almost always CORS or a dead Test URL — check those two first.",
 )
 
-# ---------------------------------------------------------------- TOPIC: HITL
+# ---------------------------------------------------------------- TOPIC: AGENTIC CHATBOT (before Lab 3)
+AGENTIC_WORKFLOW = dict(
+    key="agentic_workflow", title="Rule-Based vs Agentic Workflows",
+    intro="In an agentic workflow the LLM makes the routing decisions. You still design the process, the guardrails and the tools.",
+    kind="panels",
+    left=("RULE-BASED (RPA) — every branch wired by hand", "BLUE", [
+        "Predictable: the same input always takes the same path.",
+        "Easy to audit — every decision is a rule you can read.",
+        "Breaks on anything you did not foresee.",
+        "Best for fixed, high-volume rules.",
+    ]),
+    right=("AGENTIC — the LLM chooses the path", "VIOLET", [
+        "Understands free text and intent.",
+        "Handles cases you did not foresee.",
+        "Needs guardrails and logging to stay safe.",
+        "Best for varied, language-driven work — like a chatbot.",
+    ]),
+    takeaway="What you hand over is the judgement about which path a case takes — never the design of the process.",
+)
+
+SAFE_CHATBOT = dict(
+    key="safe_chatbot", title="Designing a Safe Agentic Chatbot",
+    intro="Six design rules that turn a helpful chatbot into one a regulated firm can put on its website. This is Lab 3.",
+    kind="cards", cols=2,
+    cards=[
+        ("BLUE", "Define the role narrowly",
+         "A chatbot built for one job refuses far more reliably than a general assistant."),
+        ("RED", "Write the prohibitions explicitly",
+         "Never recommend a product, predict a return or guarantee an outcome — spelled out, not implied."),
+        ("AMBER", "Add a fallback sentence",
+         "'When in doubt, say less and offer a consultation' does more compliance work than clever wording."),
+        ("TEAL", "Gate what must be collected first",
+         "No answer until the firm can contact the visitor — name, telephone and email."),
+        ("VIOLET", "Keep a small FAQ in the prompt",
+         "Nine short answers a compliance officer can review in one sitting. RAG is for larger knowledge."),
+        ("GREEN", "Key memory on the session",
+         "Follow-up questions keep their context, and two visitors never see each other's conversation."),
+    ],
+    takeaway="The system message is a compliance control. Test it with the questions you most fear, not the ones you hope for.",
+)
+
+# ---------------------------------------------------------------- TOPIC: HITL (before Lab 4)
 HITL_LEVELS = dict(
     key="hitl_levels", title="Human In, On, and Out of the Loop",
     intro="Three levels of human oversight. The design question is which one this particular process deserves.",
@@ -648,13 +728,13 @@ GROUNDING = dict(
 )
 
 # ---------------------------------------------------------------- registry
-ALL = [WHAT_IS_N8N, WORKFLOW_SHAPE, TRIGGER_NODES, TRIGGERS_IN_COURSE, DATA_NODES,
+ALL = [LAB2_ROADMAP, WHAT_IS_N8N, WORKFLOW_SHAPE, TRIGGER_NODES, TRIGGERS_IN_COURSE, DATA_NODES,
        STORAGE_NODES, JSON_EXPRESSIONS, TEST_VS_PROD_EXEC, CREDENTIALS,
-       GEN_VS_AGENTIC, AGENT_COMPONENTS, MODEL_PROVIDERS, MODEL_PARAMS,
+       GEN_VS_AGENTIC, AGENT_LOOP, AGENT_COMPONENTS, MODEL_PROVIDERS, MODEL_PARAMS,
        MEMORY_CONCEPT, TOOLS_CONCEPT, INSTRUCTIONS_FOUR, GOOD_BAD_INSTRUCTIONS,
        MCP_CONCEPT, MCP_IN_N8N, STRUCTURED_OUTPUT,
        WHAT_IS_WEBHOOK, WEBHOOK_VS_HTTP, GET_VS_POST, TEST_VS_PROD_URL, WEBHOOK_CONFIG,
-       HITL_LEVELS, HITL_PATTERN, HITL_WHEN, GUARDRAILS,
+       AGENTIC_WORKFLOW, SAFE_CHATBOT, HITL_LEVELS, HITL_PATTERN, HITL_WHEN, GUARDRAILS,
        WHY_RAG, RAG_PIPELINE, CHUNKING, VECTOR_STORES, GROUNDING]
 
 BY_KEY = {c["key"]: c for c in ALL}
@@ -666,14 +746,27 @@ BY_KEY = {c["key"]: c for c in ALL}
 # just before the training-accounts slide, so they are not listed here.
 TOPIC1_OPENER_CONCEPTS = ["what_is_n8n", "workflow_shape"]
 
+# Topic 1 is taught in three blocks with a lab after each of the first two:
+#   n8n fundamentals → Lab 1 → AI agent building blocks + webhooks → Lab 2.
+# build_slides.py and slide_index.py both read these lists. gen_vs_agentic opens
+# Topic 1 inside the opener (build_slides.topic1_intro), so it is not listed here.
+TOPIC1_FUNDAMENTALS = ["trigger_nodes", "triggers_in_course", "data_nodes", "storage_nodes",
+                       "json_expressions", "test_vs_prod_exec", "credentials"]
+TOPIC1_AGENT = ["lab2_roadmap", "agent_loop", "agent_components", "model_providers", "model_params",
+                "tools_concept", "mcp", "mcp_in_n8n", "instructions_four",
+                "good_bad_instructions", "memory_concept", "structured_output"]
+TOPIC1_WEBHOOK = ["what_is_webhook", "webhook_vs_http", "get_vs_post", "test_vs_prod_url",
+                  "webhook_config"]
+
+# HARD RULE — knowledge before the lab: every lab is preceded by the concept slides
+# it needs, and no concept slide sits after the lab that applies it. Topic 2 is
+# therefore taught in two blocks:
+#   agentic chatbot concepts → Lab 3 → human in the loop + guardrails → Lab 4.
+TOPIC2_CHATBOT = ["agentic_workflow", "safe_chatbot"]
+TOPIC2_HITL = ["hitl_levels", "hitl_pattern", "hitl_when", "guardrails"]
+
 TOPIC_CONCEPTS = {
-    1: ["trigger_nodes", "triggers_in_course",
-        "data_nodes", "storage_nodes", "json_expressions", "test_vs_prod_exec",
-        "credentials", "gen_vs_agentic", "agent_components", "model_providers",
-        "model_params", "memory_concept", "tools_concept", "instructions_four",
-        "good_bad_instructions", "mcp", "mcp_in_n8n",
-        "what_is_webhook", "webhook_vs_http", "get_vs_post", "test_vs_prod_url",
-        "webhook_config", "structured_output"],
-    2: ["hitl_levels", "hitl_pattern", "hitl_when", "guardrails"],
+    1: TOPIC1_FUNDAMENTALS + TOPIC1_AGENT + TOPIC1_WEBHOOK,
+    2: TOPIC2_CHATBOT + TOPIC2_HITL,
     3: ["why_rag", "rag_pipeline", "chunking", "vector_stores", "grounding"],
 }

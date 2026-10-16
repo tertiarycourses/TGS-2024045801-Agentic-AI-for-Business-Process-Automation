@@ -1,6 +1,6 @@
 /* ============================================================================
    Meridian Asset Management — client relationship chat widget
-   LU2 Activity 2
+   Lab 4 - Client Rapport Assistant (Human in the Loop)
 
    The widget POSTs the client's concern to an n8n Webhook. The workflow runs an
    AI Agent that classifies the concern, reads the emotional tone, raises

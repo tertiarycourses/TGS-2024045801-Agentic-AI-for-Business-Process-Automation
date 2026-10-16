@@ -1,5 +1,5 @@
 {
-  "name": "LU1 Activity 1b — Marina Trust Bank Onboarding (Website + Webhook)",
+  "name": "Lab 2 - Marina Trust Bank Onboarding Agent",
   "nodes": [
     {
       "parameters": {
@@ -799,6 +799,6 @@
     "instanceId": "d03c6bed3240b308b4de832c94327c52a87e08eced8e5ff6ba01d3ae6a3aa507"
   },
   "nodeGroups": [],
-  "id": "LU1Activity1bWeb",
+  "id": "Lab2OnboardingAgent",
   "tags": []
 }

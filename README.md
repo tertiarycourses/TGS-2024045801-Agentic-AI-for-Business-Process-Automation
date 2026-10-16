@@ -9,7 +9,7 @@ A 2-day WSQ course in building reliable, workflow-first agentic automation with 
 | TSC | Artificial Intelligence Application · AER-TEM-3026-1.1 |
 | Duration | 2 days · 16 instructional hours (9:30am–6:30pm, 8 hours/day) |
 | Registration | [View course details and register](https://www.tertiarycourses.com.sg/wsq-agentic-ai-for-business-process-automation.html) · [MySkillsFuture course directory](https://www.myskillsfuture.gov.sg/content/portal/en/training-exchange/course-directory/course-detail.html?courseReferenceNumber=TGS-2024045801) |
-| Funding | Up to 70% WSQ funding subsidy, with higher rates for eligible learners and companies. Eligibility and terms apply — see the course page. |
+| Funding | Up to 70% WSQ course fee funding — 50% baseline for Singapore Citizens/PRs aged 21+, up to 70% for Singapore Citizens aged 40+ (MCES) and SME-sponsored employees. Eligibility and terms apply — see the course page. |
 | Provider | Tertiary Infotech Academy Pte Ltd (UEN 201200696W) |
 
 ## About the course
@@ -33,8 +33,8 @@ the process — with AI only at the steps that need judgement.
 
 | Topic | Content | Labs |
 |---|---|---|
-| 1 — Overview of n8n and AI Agents | A brief history of AI 2023–2026, agentic AI vs AI agents, workflow first vs agent first, AI-assisted workflow creation with n8n Assistant (with a social media campaign demo), signing in and claiming the free AI credits, the 5 principles of AI security, business value; what n8n is, triggers and actions, AI agents, webhooks | Lab 1, Lab 2 |
-| 2 — Agentic Chatbot and Human in the Loop | Agentic workflows, safe chatbot design, approval gates, accountability | Lab 3, Lab 4 |
+| 1 — Overview of n8n and AI Agents | A brief history of AI 2023–2026, generative vs agentic AI, agentic AI vs AI agents, workflow first vs agent first, AI-assisted workflow creation and platform tiers, business value, the 5 principles of AI security, what n8n is, signing in, an n8n Assistant demo; n8n fundamentals → Lab 1; the AI agent building blocks (AI agent, model, tools and MCP, instructions, memory) and webhooks → Lab 2 | Lab 1, Lab 2 |
+| 2 — Agentic Chatbot and Human in the Loop | Agentic workflows, safe chatbot design and a Telegram HR chatbot demo → Lab 3; human in the loop, approval gates and guardrails → Lab 4 | Lab 3, Lab 4 |
 | 3 — Retrieval-Augmented Generation (RAG) | Tokenization, embeddings, vector stores, chunking, grounding | Lab 5 |
 
 ## Labs
@@ -49,12 +49,12 @@ the process — with AI only at the steps that need judgement.
 
 ## Courseware (public package)
 
-Current version **v2.1** — all artifacts live in [`courseware/`](courseware/); superseded versions are
+Current version **v2.3** — all artifacts live in [`courseware/`](courseware/); superseded versions are
 moved to `courseware/archive/`.
 
 | Artifact | File |
 |---|---|
-| Trainer slide deck | `courseware/Agentic AI for Business Process Automation-v2.1.pptx` (+ `.pdf`) |
+| Trainer slide deck | `courseware/Agentic AI for Business Process Automation-v2.3.pptx` (+ `.pdf`) |
 | Lesson Plan | `courseware/LP-Agentic AI for Business Process Automation.docx` (+ `.pdf`) |
 | Learner Guide | `courseware/LG-Agentic AI for Business Process Automation.docx` (+ `.pdf`) |
 | Learner Guide (Markdown mirror) | `courseware/LG-Agentic AI for Business Process Automation.md` |
@@ -66,8 +66,8 @@ visual structure — a chevron flow strip, outlined concept cards, a two-panel c
 table — closed by a takeaway band.
 
 **The click-by-click lab steps are deliberately not on the slides.** Each lab gets a single visual
-slide (workflow chevron + a screenshot of the real n8n canvas + a LAB band); the full steps live only
-in the Learner Guide. Keep it that way when editing — a step-by-step slide belongs in the LG.
+slide (workflow chevron + a rendered n8n canvas + a LAB band) — Labs 2 and 3 also get a screenshot of
+the real n8n canvas with a card per part of the flow — and the full steps live only in the Learner Guide. Keep it that way when editing — a step-by-step slide belongs in the LG.
 
 The lab canvas screenshots are **rendered from each lab's own workflow JSON** by `render_flows.py`,
 so the picture on the slide is the canvas the learner imports and cannot drift out of date:

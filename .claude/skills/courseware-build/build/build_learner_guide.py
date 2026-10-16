@@ -73,8 +73,12 @@ VC_ROWS = [
   "trigger nodes, data-processing nodes, the four components of an AI agent, instruction design with "
   "worked examples, model parameters and temperature, MCP, webhooks (GET/POST, Test vs Production "
   "URL) and human-in-the-loop with guardrails.", C.TRAINER),
- (C.VERSION.lstrip("v"), C.VERSION_DATE,
+ ("2.1", "15 October 2026",
   "Topic 1 now opens with the modern view of agentic automation, replacing the separate Foundation section: a brief history of AI 2023–2026 (prompt, context and harness engineering to AI agents), agentic AI vs AI agents, workflow first vs agent first, AI-assisted workflow creation with n8n Assistant (plus claiming the free AI credits and a social media campaign demo), an n8n training-accounts slide, the five principles of AI security and why workflow first is more secure, and the business value of workflow-first agentic automation.", C.TRAINER),
+ ("2.2","15 October 2026",
+  "Topic 1 re-sequenced so each lab follows the concepts it needs: n8n fundamentals, then Lab 1, then the AI agent building blocks (AI agent, model, tools and MCP, instructions, memory) and webhooks, then Lab 2. Lab 1 now covers publishing the workflow, copying the form’s Production URL and creating a QR-code flyer, with step screenshots and flyers from previous learners. Lab 2 opens with how the building blocks fit together. Platform tiers updated for AI-assisted low-code and AI-generated full-code. New LMS login screenshot; Publish replaces the retired Active toggle. Schedule and slide references updated.",C.TRAINER),
+ (C.VERSION.lstrip("v"),C.VERSION_DATE,
+  "Every lab now follows the knowledge it needs. Topic 2 is taught in two blocks: rule-based vs agentic workflows, designing a safe agentic chatbot and a Telegram HR chatbot demo (BotFather /newbot, built with n8n Assistant from one prompt, then a live chat), then Lab 3; then human in, on and out of the loop, how an approval suspends a workflow, when to put a human in the loop and guardrails, then Lab 4. The agent loop is now explained as Context → Plan → Action → Verify and repeat. Lab workflow files and their n8n names are now 'Lab N - <description>', replacing the old LU/Activity names. Real n8n canvas screenshots added for Lab 2, Lab 3 and the Telegram demo, plus a live Telegram chat. Each lab's key concepts in the Learner Guide now sit directly before that lab. Day 2 schedule and slide references updated.",C.TRAINER),
 ]
 
 # ================================================================ content
@@ -134,7 +138,7 @@ p("Every Webhook and Form node has two URLs, and confusing them is the single mo
   "in these labs.")
 table(["URL","When it works","How many requests"],[
  ["Test URL (/webhook-test/…)","Only while you have clicked 'Listen for test event'","Exactly one, then it stops"],
- ["Production URL (/webhook/…)","Only while the workflow is Active","Unlimited"],
+ ["Production URL (/webhook/…)","Only once the workflow is published","Unlimited"],
 ])
 p("Use the Test URL while building — it shows the incoming data live on the canvas. Switch to the "
   "Production URL the moment you want the page to work for anyone but you.")
@@ -164,11 +168,15 @@ def topic1_intro_lg():
       "engineering the harness around the model, to AI agents that work around the clock.")
     h3("What is agentic AI")
     p("Agentic AI uses the reasoning power of a large language model to run a complex task by breaking "
-      "it into simpler ones. Given a goal, the model observes the situation, chooses an action, acts on "
-      "the world through a tool, observes the result, and repeats until the goal is met.")
-    image("ai-agent-llm-loop.png",
-          "The agent loop — goal, observation, action, observation, action. Each step is an LLM call "
-          "that decides what to do next based on what came back.")
+      "it into simpler ones. Given a goal, the agent works in a loop — Context, Plan, Action, Verify — "
+      "and repeats until the goal is met.")
+    table(["Step","What happens"],[
+     ["1 · Context","Everything the agent can see: the goal, its instructions, memory of the conversation, and what earlier tool calls returned."],
+     ["2 · Plan","The LLM reasons over the context and chooses the next step — which tool to call, with what input, or whether it is finished."],
+     ["3 · Action","The agent calls a tool: look up a record, write a row, send an email. This is where it acts on the world."],
+     ["4 · Verify and repeat","The tool's result goes back into the context and is checked against the goal. Not done? Plan again. Done? Reply."],
+    ])
+    note("Every turn of the loop is an LLM call — so cap it with Max Iterations on the AI Agent node, and log every step.")
     h3("Agentic AI vs generative AI")
     table(["","Generative AI","Agentic AI"],[
      ["Purpose","Creates content — text, images, code","Takes actions towards a goal"],
@@ -291,11 +299,15 @@ def topic1_intro_lg():
     p("The same pattern — trigger, agent, tools, oversight — recurs in customer service, finance and "
       "accounting, risk and compliance, HR and people operations, sales and marketing, and operations.")
     h3("Where agent platforms sit")
-    table(["Tier","Characteristics","Examples"],[
-     ["No-code","Fully visual; fastest to a working agent; least control","AgentX and similar chatbot builders"],
-     ["Low-code","Visual canvas plus code nodes; 400+ integrations; self-host or cloud","n8n — this course's platform"],
-     ["Full-code","SDKs and frameworks; maximum control; needs engineering effort","LangChain and agent SDKs"],
+    table(["Tier","How you build","Customisation","Examples"],[
+     ["No-code","Drag and drop in a fully visual builder","Lowest — fastest to a working agent, least control","AgentX and similar chatbot builders"],
+     ["Low-code","AI-assisted: n8n Assistant, Claude Code or Codex drafts the workflow on a visual canvas; add JavaScript or Python in Code nodes where needed","High — 400+ integrations, self-host or cloud","n8n — this course's platform"],
+     ["Full-code","AI generates the code: Claude Code or Codex write it instead of coding by hand","Highest — the most customisable tier","LangChain and agent SDKs"],
     ])
+    p("AI now assists every tier. In low-code it drafts the workflow, and low-code platforms let you "
+      "drop into JavaScript or Python when a built-in node is not enough. In full-code the AI writes "
+      "the code itself rather than a developer coding it manually — full code remains the most "
+      "customisable option, at the cost of the most engineering effort to test and run.")
 
 
 # ---------------- per-topic, per-lab ----------------
@@ -372,8 +384,12 @@ TOPIC_EXTRA_CONCEPTS = {
    "temperature 0.2 so a compliance-bound chatbot refuses the same way every time."),
   ("Popular LLM providers",
    "Any chat model plugs into the same AI Agent node, so you can swap the brain and keep the agent. "
-   "This course uses Google Gemini, which also supplies the embeddings in Lab 5. OpenAI (gpt-4.1 and "
-   "the cheaper mini tier), Anthropic Claude, Meta Llama and Mistral are all commonly used. Pick by "
+   "This course uses Google Gemini (Flash), which also supplies the embeddings in Lab 5. n8n loads each "
+   "provider's live model list into the chat-model node, so new models appear as soon as they ship. As "
+   "of October 2026 the leading options are Google Gemini 4 Argon, Gemini 3.8 Flash and Gemini 3.1 Pro; "
+   "OpenAI GPT-6 Astra, GPT-6.1 Sol and GPT-6 Luna (GPT-5.x remains in the API); Anthropic Claude Opus "
+   "5.5, Sonnet 5.5 and Haiku 5.5; Meta Llama 4 (open weights, self-hostable); and Mistral Large 4 and "
+   "Medium 3.5. Pick by "
    "task: small fast models for classification and guardrails, larger models for reasoning."),
   ("Tools — and why the description matters",
    "Tools attach to the agent's Tool input, and the model decides when to call one based on the "
@@ -412,9 +428,9 @@ TOPIC_EXTRA_CONCEPTS = {
    "Every Webhook node gives you two URLs, and confusing them is the single most common webhook bug. "
    "The Test URL (/webhook-test/…) works only while you have clicked 'Listen for test event', handles "
    "exactly one call and then stops, shows the run live on the canvas, and dies when you leave the "
-   "editor. The Production URL (/webhook/…) requires the workflow to be Active, is always on, accepts "
+   "editor. The Production URL (/webhook/…) requires the workflow to be published (Publish, top right), is always on, accepts "
    "unlimited calls, and logs its runs under Executions rather than drawing them on the canvas. Your "
-   "website must call the Production URL of an Active workflow."),
+   "website must call the Production URL of a published workflow."),
   ("Configuring the Webhook node",
    "Four settings decide whether a browser's call succeeds. METHOD AND PATH give you the URL. ALLOWED "
    "ORIGINS (CORS) must permit the calling page, or the workflow will run perfectly and the browser "
@@ -545,13 +561,13 @@ TROUBLESHOOTING = {
      ["No email arrives","Check the Gmail credential is connected and that the To address is correct. Look at the execution log for a red node."],
      ["The email body shows {{ $json.Name }} literally","The Message field is in Fixed mode. Switch it to Expression."],
      ["The QR code works once, then stops","You encoded the Test URL. Activate the workflow and encode the Production URL instead."]],
- 2: [["Failed to fetch in the browser","The workflow is not Active (production URL), or 'Listen for test event' is not armed (test URL)."],
+ 2: [["Failed to fetch in the browser","The workflow is not published (production URL), or 'Listen for test event' is not armed (test URL)."],
      ["Failed to fetch, but the n8n execution succeeded","CORS. Set Allowed Origins to * in the Webhook node's options."],
      ["Works once, then 404","You are using the Test URL. It listens for one request only."],
      ["Cannot read properties of undefined (reading 'trim')","The Set node expects $json.body.fullName. Check the browser's Network tab: is the payload nested under body?"],
      ["The result card is blank","The Decision Parser is disconnected, so $json.output is a string rather than an object."],
      ["Everyone is REJECTED as a minor","Check the age expression in the Set node, and that the browser sends dateOfBirth as yyyy-MM-dd."]],
- 3: [["Failed to fetch","Workflow not Active (production URL), or 'Listen for test event' not armed (test URL)."],
+ 3: [["Failed to fetch","Workflow not published (production URL), or 'Listen for test event' not armed (test URL)."],
      ["Failed to fetch, but the execution ran","CORS. Set Allowed Origins to * on the Webhook node."],
      ["The agent answers before collecting contact details","The contact gate is missing from the system message, or was weakened. Restate it as a hard precondition."],
      ["The agent gives investment advice","Read the reply aloud in the debrief. Tighten the prohibitions — this is the failure the lab is designed to expose."],
@@ -570,16 +586,74 @@ TROUBLESHOOTING = {
      ["Retrieval returns nothing sensible","The ingestion and retrieval Embeddings nodes use different models. They must be identical."]],
 }
 
+# HARD RULE — knowledge before the lab. Each lab is preceded by the key concepts it
+# applies, in the order the deck teaches them, so the guide follows the same
+# concept → lab → concept → lab sequence as the slides. Every concept above must
+# be assigned to exactly one lab (asserted below).
+LAB_CONCEPTS = {
+ 1: ["What is n8n", "Nodes: the four building blocks", "Triggers and actions",
+     "Trigger nodes — what may start a workflow", "Data-processing nodes — the workhorses",
+     "Where the data goes", "Data, JSON and expressions"],
+ 2: ["What is an AI agent", "The four components of an AI agent", "Popular LLM providers",
+     "Model parameters — temperature and friends", "Tools — and why the description matters",
+     "MCP — the Model Context Protocol", "Instructions — the four parts that constrain",
+     "Writing a good system instruction", "Good and bad instructions compared", "Structured output",
+     "Webhooks", "Webhooks — GET vs POST", "Webhook Test URL vs Production URL",
+     "Configuring the Webhook node"],
+ 3: ["What is an agentic workflow", "Rule-based versus agentic", "Designing a safe agentic chatbot",
+     "Memory — and when not to use it"],
+ 4: ["Human in, on, and out of the loop", "Human in the loop",
+     "How an approval suspends a running workflow", "When to put a human in the loop",
+     "Guardrails — two gates around the agent", "The accountability trail"],
+ 5: ["What is RAG", "Why not just paste everything into the prompt", "Tokenization and embeddings",
+     "Chunking is the biggest lever", "Vector stores", "The rules that keep RAG working",
+     "Grounding against hallucination"],
+}
+def telegram_demo_lg():
+    """Mirrors telegram_demo() in build_slides.py — the chatbot demo just before Lab 3."""
+    D=C.TELEGRAM_DEMO
+    h3("Demo: an HR policy chatbot on Telegram")
+    p("What is a chatbot? An agent behind a chat channel. Before Lab 3 puts a chatbot behind a website, "
+      "you build one on Telegram: "+" → ".join(f[0] for f in D["flow"])+". The HR Agent, Ava, answers "
+      "only from sample HR policies written into its system instruction, never invents a number, refers "
+      "salary, medical or disciplinary questions to HR, and remembers the conversation. "
+      f"(Deck reference: {slideref('topic2_chatbot')}.)")
+    p("Step 1 — create a Telegram bot with BotFather:")
+    steps([(x[1],"",x[2]) for x in D["botfather"]])
+    p("Step 2 — build the workflow with n8n Assistant. Create a new workflow, open n8n Assistant and paste this prompt:")
+    code("\n".join(D["prompt"]))
+    bullets(D["review"])
+    note(f"Reference solution: labs/lab3-chatbot-webhook/{D['file']}. It has no memory node; the workflow your prompt builds should.")
+    d=D["flow_shot"]
+    image(d["img"],d["intro"])
+    table(["Node","What it does"],[[t,b] for _c,t,b in d["cards"]])
+    p("Step 3 — connect the bot, publish and chat:")
+    steps([(x[1],"",x[2]) for x in D["connect"]])
+    d=D["chat_shot"]
+    image(d["img"],"The live demo bot on Telegram — /start, then a question about annual leave.")
+    bullets(d["bullets"])
+    note(d["takeaway"])
+
+for _t in C.TOPICS:
+    _labs=[x["num"] for x in ACT if x["topic"]==_t["num"]]
+    _have=sorted(ti for ti,_ in TOPIC_EXTRA_CONCEPTS[_t["num"]])
+    _assigned=sorted(ti for n in _labs for ti in LAB_CONCEPTS[n])
+    assert _have==_assigned, f"Topic {_t['num']}: LAB_CONCEPTS does not cover its key concepts exactly once"
+
 for t in C.TOPICS:
     h1(f"Topic {t['code']} — {t['title']}")
     p(t["subtitle"] + f"   (Deck reference: {slideref('topic' + str(t['num']) + '_all')}.)")
     if t["num"]==1: topic1_intro_lg()
-    h3("Key concepts")
-    for title_,body in TOPIC_EXTRA_CONCEPTS[t["num"]]:
-        B.append(("term", title_, body))
-    for fn,cap in TOPIC_IMAGES.get(t["num"],[]):
-        image(fn,cap)
-    for a in [x for x in ACT if x["topic"]==t["num"]]:
+    terms=dict(TOPIC_EXTRA_CONCEPTS[t["num"]])
+    for li,a in enumerate([x for x in ACT if x["topic"]==t["num"]]):
+        h2(f"Key Concepts for {a['short']}")
+        for title_ in LAB_CONCEPTS[a["num"]]:
+            B.append(("term", title_, terms[title_]))
+        if li==0:
+            for fn,cap in TOPIC_IMAGES.get(t["num"],[]):
+                image(fn,cap)
+        if a["num"]==3:
+            telegram_demo_lg()
         # a["title"] already starts with "Lab N — "; do not prefix it a second time.
         h2(a["title"])
         p(f"Learning outcome: this lab develops your ability to {a['objective']}.")
@@ -588,6 +662,9 @@ for t in C.TOPICS:
         # "desc" is kept short enough for the deck's one-line intro; where a lab
         # also carries "desc_long", the guide prints the fuller framing instead.
         p(a.get("desc_long") or a["desc"])
+        if a.get("primer"):
+            h3("How the building blocks fit together")
+            table(["Building block","In this lab","Why it matters"],[list(r) for r in a["primer"]])
         h3("What you'll build")
         p(a["build"]+f"   (Tools: {a['services']}.)")
         for fn,cap in a.get("site",[]):
@@ -595,6 +672,18 @@ for t in C.TOPICS:
         h3("The workflow on the n8n canvas")
         for fn,cap in a.get("canvas",[]):
             image(fn,cap)
+        if a.get("n8n_shot"):
+            d=a["n8n_shot"]
+            image(d["img"],d["intro"])
+            table(["Part of the flow","What it does"],[[t,b] for _c,t,b in d["cards"]])
+            note(d["takeaway"])
+        # screenshots from the lab's extras (the "flow" extras are deck summaries of the steps)
+        ex=[e for e in a.get("extras",[]) if e[0] in ("shots","gallery")]
+        if ex:
+            h3("Key screens")
+            for kind,ttl,imgs,cap in ex:
+                for i,fn in enumerate(imgs):
+                    image(fn, f"{ttl.split('—',1)[-1].strip()}. {cap}" if i==len(imgs)-1 else ttl.split('—',1)[-1].strip())
         h3("Step-by-step")
         # steps may be (instruction, command) or (instruction, command, why)
         steps([(st[0], st[1], st[2] if len(st)>2 else "") for st in a["steps"]])

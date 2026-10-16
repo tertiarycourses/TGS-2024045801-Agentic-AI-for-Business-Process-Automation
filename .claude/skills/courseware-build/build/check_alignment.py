@@ -68,8 +68,13 @@ for a in ACT:
         continue
     files = set(os.listdir(folder))
     blob = " ".join(s[0] for s in a["steps"]) + " " + a["test"]
-    for fn in sorted(set(re.findall(r"[\w\-.]+\.json", blob))):
+    # workflow files are named "Lab N - <description>.json" (spaces allowed); paths are reduced to the file name
+    cited = re.findall(r"Lab \d+(?: Demo)? - [^\n/]+?\.json|[\w\-.]+\.json", blob)
+    for fn in sorted({os.path.basename(c) for c in cited}):
         check(fn in files, f"Lab {a['num']}: cites {fn} and it is in the folder")
+    if a["num"] == 3 and hasattr(C, "TELEGRAM_DEMO"):
+        check(C.TELEGRAM_DEMO["file"] in files,
+              f"Lab 3 demo: {C.TELEGRAM_DEMO['file']} is in the folder")
 
 # ---------------------------------------------------------------- 3
 print("\n[3] cited n8n node names exist in that lab's workflow JSON")

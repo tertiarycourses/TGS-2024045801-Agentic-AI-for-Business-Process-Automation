@@ -59,56 +59,69 @@ _adv()      # Assessment Flow
 _mark("admin", a0, _n)
 
 # Topic 1 opens with the "why agentic AI, and why workflow first" slides straight
-# after its divider (history of AI, agentic AI vs AI agents, workflow first vs AI
-# first, AI-assisted workflow creation + n8n Assistant
-# screenshot + what is n8n x2 + training accounts + sign in + free AI credits + social-campaign demo, AI security x2, business value, use cases, platform tiers).
+# after its divider: history of AI, generative vs agentic AI, agentic AI vs AI agents,
+# workflow first vs agent first, AI-assisted creation, platform tiers, business value,
+# use cases, AI security x2, what is n8n x2, training accounts, sign in, n8n Assistant
+# screenshot and the social-campaign demo.
 # MUST match topic1_intro() in build_slides.py — the build asserts it.
 TOPIC1_INTRO = 16
+
+# Topic 2's Telegram HR chatbot demo (overview, BotFather steps, n8n Assistant prompt, n8n canvas, connect-and-publish steps, live chat).
+# MUST match telegram_demo() in build_slides.py — the build asserts it.
+TELEGRAM_DEMO_SLIDES = 6
+
+def _concepts(keys, extra_after=()):
+    """Slides for a run of concepts: each concept, its screenshot, and any extra slide."""
+    for k in keys:
+        _adv()
+        if k in CONCEPT_IMAGE_KEYS:
+            _adv()
+        if k in extra_after:
+            _adv()
+
+def _lab(a):
+    """MUST match lab_block() in build_slides.py."""
+    l0 = _n + 1
+    if a.get("primer"):
+        _adv()                                   # how the building blocks fit
+    _adv(max(1, len(a.get("canvas", []))))       # one lab slide per workflow canvas
+    if a.get("n8n_shot"):
+        _adv()                                   # the real n8n canvas screenshot
+    _adv(len(a.get("site", [])))                 # the application screenshot(s)
+    _adv(len(a.get("extras", [])))               # step screenshots, how-to strips, gallery
+    _adv()                                       # verify + debrief
+    _mark(f"lab{a['num']}", l0, _n)
 
 # ---- TOPICS ----
 for tp in C.TOPICS:
     tnum = tp["num"]
+    labs = [x for x in ACT if x["topic"] == tnum]
     t0 = _n + 1
     _adv()                                       # section divider
     if tnum == 1:
-        _adv(TOPIC1_INTRO)                       # the Topic 1 opener
+        _adv(TOPIC1_INTRO)
         _mark("topic1_intro", t0, _n)
-
-    keys = CN.TOPIC_CONCEPTS[tnum]
-    c0 = _n + 1
-    for k in keys:
-        _adv()                                   # the concept slide
-        if k in CONCEPT_IMAGE_KEYS:
-            _adv()                               # its n8n screenshot
-    c_end = _n
-
-    # sub-marks the lesson plan refers to
-    if tnum == 1:
-        # topic 1 concepts run: platform/nodes/data (through "credentials"),
-        # then the agent block, then the webhook block
-        def _upto(key):
-            n = c0
-            for k in keys:
-                n += 1 + (1 if k in CONCEPT_IMAGE_KEYS else 0)
-                if k == key:
-                    return n - 1
-            return c_end
-        _mark("topic1_concepts", c0, _upto("credentials"))
-        _mark("topic1_agent", _upto("credentials") + 1, _upto("mcp_in_n8n"))
-        _mark("topic1_webhook", _upto("mcp_in_n8n") + 1, c_end)
+        c0 = _n + 1; _concepts(CN.TOPIC1_FUNDAMENTALS); _mark("topic1_concepts", c0, _n)
+        _lab(labs[0])
+        _adv()                                   # lunch break divider
+        c0 = _n + 1; _concepts(CN.TOPIC1_AGENT, extra_after=("model_params",))   # + free AI credits
+        _mark("topic1_agent", c0, _n)
+        c0 = _n + 1; _concepts(CN.TOPIC1_WEBHOOK); _mark("topic1_webhook", c0, _n)
+        _lab(labs[1])
     elif tnum == 2:
-        _mark("topic2_hitl", t0, c_end)
-    elif tnum == 3:
-        _mark("topic3_concepts", t0, c_end)
-
-    for a in [x for x in ACT if x["topic"] == tnum]:
-        l0 = _n + 1
-        _adv(max(1, len(a.get("canvas", []))))   # one lab slide per workflow canvas
-        _adv(len(a.get("site", [])))             # the application screenshot(s)
-        _adv()                                   # verify + debrief
-        _mark(f"lab{a['num']}", l0, _n)
-    if tnum in (1, 2):
-        _adv()                                   # lunch / tea break divider
+        # knowledge before the lab: chatbot concepts → Lab 3 → HITL + guardrails → Lab 4
+        c0 = _n + 1; _concepts(CN.TOPIC2_CHATBOT)
+        _adv(TELEGRAM_DEMO_SLIDES)               # Telegram HR chatbot demo, before Lab 3
+        _mark("topic2_chatbot", t0, _n)
+        _lab(labs[0])
+        c0 = _n + 1; _concepts(CN.TOPIC2_HITL); _mark("topic2_hitl", c0, _n)
+        _lab(labs[1])
+        _adv()                                   # tea break divider
+    else:
+        _concepts(CN.TOPIC_CONCEPTS[tnum])
+        _mark("topic3_concepts", t0, _n)
+        for a in labs:
+            _lab(a)
     _mark(f"topic{tnum}_all", t0, _n)
 
 # ---- CLOSE ----

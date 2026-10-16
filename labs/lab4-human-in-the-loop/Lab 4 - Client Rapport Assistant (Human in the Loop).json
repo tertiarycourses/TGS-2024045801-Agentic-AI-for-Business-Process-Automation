@@ -1,5 +1,5 @@
 {
-  "name": "LU2 Activity 2b — Client Rapport Assistant with Human Handover",
+  "name": "Lab 4 - Client Rapport Assistant (Human in the Loop)",
   "nodes": [
     {
       "parameters": {
@@ -886,6 +886,6 @@
     "instanceId": "d03c6bed3240b308b4de832c94327c52a87e08eced8e5ff6ba01d3ae6a3aa507"
   },
   "nodeGroups": [],
-  "id": "LU2Activity2bRapport",
+  "id": "Lab4ClientRapport",
   "tags": []
 }

@@ -4,8 +4,8 @@
    The chatbot calls your n8n RAG webhook. You set the URL in the "Lab
    configuration" panel on the page, so you never have to edit this file.
 
-     Activity 3   ->  .../webhook/cookbake-course-enquiry       (Simple Vector Store)
-     Activity 3b  ->  .../webhook/cookbake-course-enquiry-rag   (Pinecone)
+     Lab 5        ->  .../webhook/cookbake-course-enquiry       (Simple Vector Store)
+     Optional     ->  .../webhook/cookbake-course-enquiry-rag   (Pinecone)
 
    THE OFFLINE FALLBACK — read this before you trust an answer.
    If the webhook is missing or unreachable, the widget answers from a local

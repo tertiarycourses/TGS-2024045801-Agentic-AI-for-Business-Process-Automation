@@ -1,6 +1,6 @@
 /* ============================================================================
    Marina Trust Bank — customer onboarding front-end
-   LU1 Activity 1b
+   Lab 2 - Marina Trust Bank Onboarding Agent
 
    The n8n webhook URL is entered in the "Lab configuration" panel on the page,
    so you never have to edit this file. It is saved to localStorage.

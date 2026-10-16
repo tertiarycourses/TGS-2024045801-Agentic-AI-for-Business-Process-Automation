@@ -1,5 +1,5 @@
 {
-  "name": "LU3 Activity 3 — Ingest Brochures (Simple Vector Store)",
+  "name": "Lab 5 - Part 1 Ingest Brochures",
   "nodes": [
     {
       "parameters": {},
@@ -150,7 +150,7 @@
     },
     {
       "parameters": {
-        "content": "## Activity 3 — Ingest into the built-in Simple Vector Store\n\nRun this ONCE, by clicking Execute workflow.\n\n1. Point **List Brochures in Folder** at your own Google Drive folder of 20 brochures.\n2. Change the **memoryKey** on Simple Vector Store to `cookbake_<your-name>` so you do not collide with the rest of the class on the shared n8n instance.\n3. Make the **same** change to the agent workflow's Query Data Tool.\n\n**Clear Store is ON**, so re-running replaces the contents rather than duplicating them.\n\n⚠️ The Simple Vector Store lives in n8n's memory. It is emptied when n8n restarts. That is not a bug — it is the reason Activity 3b exists.",
+        "content": "## Lab 5 - Part 1: Ingest into the built-in Simple Vector Store\n\nRun this ONCE, by clicking Execute workflow.\n\n1. Point **List Brochures in Folder** at your own Google Drive folder of 20 brochures.\n2. Change the **memoryKey** on Simple Vector Store to `cookbake_<your-name>` so you do not collide with the rest of the class on the shared n8n instance.\n3. Make the **same** change to the agent workflow's Query Data Tool.\n\n**Clear Store is ON**, so re-running replaces the contents rather than duplicating them.\n\n⚠️ The Simple Vector Store lives in n8n's memory. It is emptied when n8n restarts. That is not a bug — it is why production systems use a persistent vector store such as Pinecone.",
         "height": 380,
         "width": 460
       },
@@ -243,6 +243,6 @@
     "instanceId": "d03c6bed3240b308b4de832c94327c52a87e08eced8e5ff6ba01d3ae6a3aa507"
   },
   "nodeGroups": [],
-  "id": "LU3Act3IngestSimple",
+  "id": "Lab5Part1Ingest",
   "tags": []
 }

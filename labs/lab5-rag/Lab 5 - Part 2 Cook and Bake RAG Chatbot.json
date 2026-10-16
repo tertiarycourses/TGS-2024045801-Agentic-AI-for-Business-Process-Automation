@@ -1,5 +1,5 @@
 {
-  "name": "LU3 Activity 3 — Cook & Bake CX Agent (Simple Vector Store)",
+  "name": "Lab 5 - Part 2 Cook and Bake RAG Chatbot",
   "nodes": [
     {
       "parameters": {
@@ -184,6 +184,6 @@
     "instanceId": "d03c6bed3240b308b4de832c94327c52a87e08eced8e5ff6ba01d3ae6a3aa507"
   },
   "nodeGroups": [],
-  "id": "LU3Act3AgentSimple",
+  "id": "Lab5Part2RagChatbot",
   "tags": []
 }

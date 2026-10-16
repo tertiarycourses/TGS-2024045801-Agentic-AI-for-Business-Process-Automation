@@ -272,12 +272,12 @@ def render(json_path, out_name, title=None):
     return path
 
 JOBS = [
-    ("lab1-trigger-actions/lab-trigger-actions.json",          "canvas-lab1.png"),
-    ("lab2-webhook-agent/lab2-webhook-agent.json",             "canvas-lab2.png"),
-    ("lab3-chatbot-webhook/lab3-chatbot-webhooks.json",        "canvas-lab3.png"),
-    ("lab4-human-in-the-loop/lab4-human-in-the-loop.json",     "canvas-lab4.png"),
-    ("lab5-rag/lab5-Ingest-Simple-Vector-Store.json",          "canvas-lab5-ingest.png"),
-    ("lab5-rag/LU5-rag-chatbot.json",                          "canvas-lab5-agent.png"),
+    ("lab1-trigger-actions/Lab 1 - Event Flyer with QR Code.json",          "canvas-lab1.png"),
+    ("lab2-webhook-agent/Lab 2 - Marina Trust Bank Onboarding Agent.json",             "canvas-lab2.png"),
+    ("lab3-chatbot-webhook/Lab 3 - Investment Advisor Chatbot.json",        "canvas-lab3.png"),
+    ("lab4-human-in-the-loop/Lab 4 - Client Rapport Assistant (Human in the Loop).json",     "canvas-lab4.png"),
+    ("lab5-rag/Lab 5 - Part 1 Ingest Brochures.json",          "canvas-lab5-ingest.png"),
+    ("lab5-rag/Lab 5 - Part 2 Cook and Bake RAG Chatbot.json",                          "canvas-lab5-agent.png"),
 ]
 
 if __name__ == "__main__":

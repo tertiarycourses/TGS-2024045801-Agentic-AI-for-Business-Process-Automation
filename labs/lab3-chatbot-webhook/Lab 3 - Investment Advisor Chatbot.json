@@ -1,5 +1,5 @@
 {
-  "name": "LU2 Activity 2 — Investment Advisor Chatbot",
+  "name": "Lab 3 - Investment Advisor Chatbot",
   "nodes": [
     {
       "parameters": {
@@ -116,7 +116,7 @@
     },
     {
       "parameters": {
-        "content": "## LU2 Activity 2 — Investment Advisor Chatbot\n\nOne webhook, one agent, one reply. There is no enquiry form and no email node.\n\n**Before you run it:**\n1. Select your Gemini credential on the chat model.\n2. **Activate** the workflow, then copy the Webhook **Production URL**.\n3. Paste that URL into the website's *Lab configuration* panel.\n\n**Memory** is keyed on `sessionId`, which the browser generates once per visit. Two visitors never see each other's conversation.\n\nThe agent must collect name, phone and email **before** it answers anything.",
+        "content": "## Lab 3 - Investment Advisor Chatbot\n\nOne webhook, one agent, one reply. There is no enquiry form and no email node.\n\n**Before you run it:**\n1. Select your Gemini credential on the chat model.\n2. **Publish** the workflow, then copy the Webhook **Production URL**.\n3. Paste that URL into the website's *Lab configuration* panel.\n\n**Memory** is keyed on `sessionId`, which the browser generates once per visit. Two visitors never see each other's conversation.\n\nThe agent must collect name, phone and email **before** it answers anything.",
         "height": 380,
         "width": 420
       },
@@ -209,6 +209,6 @@
     "instanceId": "d03c6bed3240b308b4de832c94327c52a87e08eced8e5ff6ba01d3ae6a3aa507"
   },
   "nodeGroups": [],
-  "id": "LU2Activity2Advisor",
+  "id": "Lab3InvestmentAdvisor",
   "tags": []
 }

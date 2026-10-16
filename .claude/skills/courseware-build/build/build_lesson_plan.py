@@ -58,38 +58,52 @@ SCHEDULE = {
      "Skills Framework alignment and mandatory digital attendance (AM). "+S("admin")),
     ("10:00","11:00",60,"topic",
      "Topic 1 — Overview of n8n and AI Agents: why agentic AI, and why workflow first — a brief "
-     "history of AI 2023–2026, agentic AI vs AI agents, workflow first vs agent first, AI-assisted "
-     "workflow creation with n8n Assistant, claiming the free AI credits, a demo that builds a social "
-     "media campaign workflow from one prompt, the five principles of AI security, business value, "
-     "use cases and platform tiers. "+S("topic1_intro")),
+     "history of AI 2023–2026, generative AI vs agentic AI, agentic AI vs AI agents, workflow first vs "
+     "agent first, AI-assisted workflow creation, platform tiers (no-code, AI-assisted low-code, "
+     "AI-generated full-code), business value, use cases, the five principles of AI security, what "
+     "n8n is, signing in to n8n, and a demo that builds a social media campaign workflow with n8n "
+     "Assistant. "+S("topic1_intro")),
     ("11:00","11:15",15,"break","Tea break"),
-    ("11:15","12:30",75,"topic",
-     "Topic 1 (continued) — n8n fundamentals: what n8n is, hosting options, credentials, node types, "
-     "trigger nodes, data-processing nodes, JSON and expressions, execution modes. "+S("topic1_concepts")),
+    ("11:15","11:45",30,"topic",
+     "Topic 1 (continued) — n8n fundamentals: trigger nodes, data-processing nodes, storage and app "
+     "actions, JSON and expressions, test vs production executions, and credentials. "+S("topic1_concepts")),
+    ("11:45","12:30",45,"lab",
+     f"Hands-on {lab(1)['title']}: build the form-to-Gmail workflow, publish it, copy the form's "
+     "Production URL and create a QR-code event flyer; present and scan-test the flyers. "+S("lab1")),
     ("12:30","13:30",60,"lunch","Lunch break"),
-    ("13:30","14:45",75,"topic",
-     "Topic 1 (continued) — AI agents: the four components (model, memory, tools, instructions), "
-     "popular LLM providers, model parameters and temperature, instruction design with worked "
-     "examples, and MCP. "+S("topic1_agent")),
-    ("14:45","15:45",60,"topic",
-     "Topic 1 (continued) — Webhooks: the inbound URL, webhook vs HTTP Request, GET vs POST, "
-     "Test vs Production URL, webhook configuration and structured output. "+S("topic1_webhook")),
-    ("15:45","16:00",15,"break","Tea break"),
-    ("16:00","17:00",60,"lab",
-     f"Hands-on {lab(1)['title']}. "+S("lab1")),
-    ("17:00","18:15",75,"lab",
-     f"Hands-on {lab(2)['title']}. "+S("lab2")),
+    ("13:30","15:15",105,"topic",
+     "Topic 1 (continued) — The building blocks of an AI agent, before Lab 2: the AI agent and its "
+     "loop, the model (popular LLM providers, model parameters and temperature, claiming the free AI "
+     "credits), tools and MCP, instructions with worked examples, memory, and structured output. "
+     +S("topic1_agent")),
+    ("15:15","15:30",15,"break","Tea break"),
+    ("15:30","16:15",45,"topic",
+     "Topic 1 (continued) — Webhooks: the inbound URL, webhook vs HTTP Request, GET vs POST, Test vs "
+     "Production URL and webhook configuration. "+S("topic1_webhook")),
+    ("16:15","18:15",120,"lab",
+     f"Hands-on {lab(2)['title']}: how the webhook, agent, model, tools, instructions, memory and "
+     "structured output fit together, then build and test the onboarding agent. "+S("lab2")),
     ("18:15","18:30",15,"recap","Day 1 recap, Q&A and PM digital attendance"),
  ]),
  2: (C.DAY_THEMES[2], [
     ("9:30","9:45",15,"recap","Day 1 recap and mandatory digital attendance (AM)"),
-    ("9:45","11:00",75,"topic",
-     "Topic 2 — Agentic Chatbot and Human in the Loop: human in, on and out of the loop; how an "
-     "approval suspends a running workflow; when a human belongs in the workflow; and guardrails. "
-     +S("topic2_hitl")),
+    ("9:45","10:30",45,"topic",
+     "Topic 2 — Agentic Chatbot and Human in the Loop, before Lab 3: rule-based vs agentic "
+     "workflows, designing a safe agentic chatbot, and a chatbot demo on Telegram — learners create "
+     "a bot with BotFather /newbot, build an HR policy chatbot with n8n Assistant from one prompt, "
+     "then connect, publish and chat with it. "
+     +S("topic2_chatbot")),
+    ("10:30","11:00",30,"lab",
+     f"Hands-on {lab(3)['title']}: import the workflow, read the contact gate, the non-advisory rule "
+     "and the FAQ, and deploy the chatbot behind the website. "+S("lab3")),
     ("11:00","11:15",15,"break","Tea break"),
-    ("11:15","12:30",75,"lab",
-     f"Hands-on {lab(3)['title']}: the contact gate and the four compliance probes. "+S("lab3")),
+    ("11:15","11:45",30,"lab",
+     f"Hands-on {lab(3)['short']} (continued): test the contact gate and the four compliance probes, "
+     "and debrief."),
+    ("11:45","12:30",45,"topic",
+     "Topic 2 (continued) — Human in the loop and guardrails, before Lab 4: human in, on and out of "
+     "the loop; how an approval suspends a running workflow; when a human belongs in the workflow; "
+     "and guardrails. "+S("topic2_hitl")),
     ("12:30","13:30",60,"lunch","Lunch break"),
     ("13:30","15:00",90,"lab",
      f"Hands-on {lab(4)['title']}: the approve and decline paths. "+S("lab4")),
@@ -150,8 +164,12 @@ prodoc.add_version_control(doc,[
   "n8n canvas. Concept coverage expanded: trigger nodes, data-processing nodes, the four components "
   "of an AI agent, instruction design, model parameters, MCP, webhooks (GET/POST, Test vs Production "
   "URL) and human-in-the-loop with guardrails.",C.TRAINER),
- (C.VERSION.lstrip("v"),C.VERSION_DATE,
+ ("2.1","15 October 2026",
   "Topic 1 now opens with the modern view of agentic automation, replacing the separate Foundation section: a brief history of AI 2023–2026 (prompt, context and harness engineering to AI agents), agentic AI vs AI agents, workflow first vs agent first, AI-assisted workflow creation with n8n Assistant (plus claiming the free AI credits and a social media campaign demo), an n8n training-accounts slide, the five principles of AI security and why workflow first is more secure, and the business value of workflow-first agentic automation. Slide references updated to match.",C.TRAINER),
+ ("2.2","15 October 2026",
+  "Topic 1 re-sequenced so each lab follows the concepts it needs: n8n fundamentals, then Lab 1, then the AI agent building blocks (AI agent, model, tools and MCP, instructions, memory) and webhooks, then Lab 2. Lab 1 now covers publishing the workflow, copying the form’s Production URL and creating a QR-code flyer, with step screenshots and flyers from previous learners. Lab 2 opens with how the building blocks fit together. Platform tiers updated for AI-assisted low-code and AI-generated full-code. New LMS login screenshot; Publish replaces the retired Active toggle. Schedule and slide references updated.",C.TRAINER),
+ (C.VERSION.lstrip("v"),C.VERSION_DATE,
+  "Every lab now follows the knowledge it needs. Topic 2 is taught in two blocks: rule-based vs agentic workflows, designing a safe agentic chatbot and a Telegram HR chatbot demo (BotFather /newbot, built with n8n Assistant from one prompt, then a live chat), then Lab 3; then human in, on and out of the loop, how an approval suspends a workflow, when to put a human in the loop and guardrails, then Lab 4. The agent loop is now explained as Context → Plan → Action → Verify and repeat. Lab workflow files and their n8n names are now 'Lab N - <description>', replacing the old LU/Activity names. Real n8n canvas screenshots added for Lab 2, Lab 3 and the Telegram demo, plus a live Telegram chat. Each lab's key concepts in the Learner Guide now sit directly before that lab. Day 2 schedule and slide references updated.",C.TRAINER),
 ])
 prodoc.add_toc(doc)
 

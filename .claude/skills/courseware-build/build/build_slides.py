@@ -308,7 +308,7 @@ def tile_grid(title,items,kicker=None,cols=2,size=15,icons=None,accent=BLUE):
             txt(s,tx,int(y+Inches(0.1)),tw,int(ch-Inches(0.16)),[[(it,size,INK,False)]],
                 anchor=MSO_ANCHOR.MIDDLE)
     footer(s); return s
-def flow_h(title,steps,kicker=None,color=BLUE):
+def flow_h(title,steps,kicker=None,color=BLUE,size=14):
     s=slide(); head(s,title,kicker,kcolor=color)
     n=len(steps); X0=Inches(0.85); TOTW=Inches(11.63); gap=Inches(0.34)
     cw=int((TOTW-gap*(n-1))/n); y=Inches(2.55); ch=Inches(3.15); bd=Inches(0.82)
@@ -319,7 +319,7 @@ def flow_h(title,steps,kicker=None,color=BLUE):
         txt(s,int(x+cw/2-bd/2),int(y+Inches(0.42)),bd,bd,[[(str(i+1),30,WHITE,True)]],
             align=PP_ALIGN.CENTER,anchor=MSO_ANCHOR.MIDDLE)
         txt(s,x+Inches(0.16),int(y+Inches(1.55)),cw-Inches(0.32),int(ch-Inches(1.7)),
-            [[(st,14,INK,False)]],align=PP_ALIGN.CENTER)
+            [[(st,size,INK,False)]],align=PP_ALIGN.CENTER)
         if i<n-1:
             txt(s,int(x+cw-Inches(0.04)),int(y+ch/2-Inches(0.3)),int(gap+Inches(0.08)),Inches(0.6),
                 [[("▶",15,color,True)]],align=PP_ALIGN.CENTER,anchor=MSO_ANCHOR.MIDDLE)
@@ -461,6 +461,21 @@ def lab_slide(kicker,tag,title,intro,flows,img,meta,cap="",color=TEAL):
             [[(cap,9,GREY,False)]],align=PP_ALIGN.CENTER)
     lab_band(s,tag,title.split("—",1)[-1].strip() if "—" in title else title,meta,color=color)
     footer(s); return s
+def flow_shot(d,kicker,acc=TEAL):
+    """A real n8n canvas screenshot with a title, an intro line, one card per part of the flow and a takeaway."""
+    s=concept_slide(kicker,d["title"],d["intro"],kcolor=acc)
+    pic_fit(s,_asset(d["img"]),Inches(0.85),Inches(1.95),Inches(11.63),Inches(2.55))
+    ncards(s,[(COLORS[c],t,b) for c,t,b in d["cards"]],y=Inches(4.65),h=Inches(1.5),
+           cols=len(d["cards"]),numbered=True,bsz=10)
+    takeaway(s,d["takeaway"]); footer(s); return s
+
+def chat_shot(d,kicker,acc=TEAL):
+    """A portrait app screenshot on the right, explanation bullets on the left, and a takeaway."""
+    s=slide(); head(s,d["title"],kicker,kcolor=acc)
+    bullets(s,Inches(0.85),Inches(2.0),Inches(6.4),Inches(4.0),d["bullets"],size=14,gap=10,mcolor=acc)
+    pic_fit(s,_asset(d["img"]),Inches(7.6),Inches(1.85),Inches(4.88),Inches(4.3))
+    takeaway(s,d["takeaway"]); footer(s); return s
+
 def website_lab(kicker,title,img,items,color=BLUE):
     s=slide(); head(s,title,kicker,kcolor=color)
     bullets(s,Inches(0.85),Inches(2.0),Inches(5.4),Inches(4.0),items,size=14,gap=9,mcolor=color)
@@ -499,7 +514,7 @@ tile_grid("Ground Rules",[
  "Mutual respect: agree to disagree.","One conversation at a time.",
  "Be punctual; return from breaks on time.","75% attendance is required."],
  kicker="HOUSEKEEPING",cols=2,size=15)
-image_slide("Download Course Material","lms-portal.png",
+image_slide("Login to LMS and Download Course Material","lms-login.png",
  "Log in at lms-tms.tertiaryinfotech.com with your registered email and the OTP sent to your inbox, "
  "then open this course to download the slides and Learner Guide.",
  kicker="COURSE PORTAL")
@@ -528,8 +543,8 @@ two_panel("TSC Abilities and Knowledge",
 two_panel(f"Lesson Plan — {C.DAYS} Days, {C.HOURS_PER_DAY} hours/day",
  f"DAY 1 — {C.DAY_THEMES[1]}",
  ["Topic 1: Why agentic AI, and why workflow first",
-  "Topic 1: Overview of n8n and AI Agents",
-  "Lab 1 — n8n trigger and action",
+  "n8n fundamentals → Lab 1 — trigger, action and QR flyer",
+  "AI agent building blocks and webhooks",
   "Lab 2 — Webhook and AI Agent",
   f"Timing: {C.DAY_TIMES[1]}"],
  f"DAY 2 — {C.DAY_THEMES[2]}",
@@ -636,6 +651,8 @@ def topic1_intro(acc):
      y=Inches(3.35),h=Inches(2.7),cols=4,numbered=False,bsz=11)
     takeaway(s,"From wording one prompt → curating context → engineering the harness → AI agents that work around the clock.")
     footer(s)
+    # generative AI vs agentic AI — straight after the history, before AI agents
+    render_concept(CN.BY_KEY["gen_vs_agentic"],k("GENERATIVE VS AGENTIC AI"),accent=acc)
     # 2 — agentic AI vs AI agents
     two_panel("Agentic AI vs AI Agents",
      "Agentic AI — the broad category",[
@@ -682,11 +699,57 @@ def topic1_intro(acc):
      y=Inches(3.35),h=Inches(2.7),cols=3)
     takeaway(s,"The trend: AI-assisted workflow creation — the AI builds the workflow, and the workflow runs the business process.")
     footer(s)
-    # 5 — n8n Assistant screenshot
-    image_slide("n8n Assistant — Describe It, n8n Builds It","n8n-assistant.png",
-     "Open Assistant in the left sidebar and answer \"What do you want to automate?\". It plans, builds and tests a normal n8n "
-     "workflow you can inspect, edit and publish. Assistant chats use the plan's monthly Assistant credits.",
-     kicker=k("AI-ASSISTED WORKFLOW CREATION"),accent=acc)
+    # platform tiers — AI now assists every tier
+    s=concept_slide(k("COMPLEXITY VS CUSTOMISATION"),"Where AI Agent Platforms Sit",
+     "Three tiers — and AI now helps build at every one of them. This course teaches the middle one.",kcolor=acc)
+    TIERS=[(BLUE,"No-code",[("HOW YOU BUILD","Drag and drop in a fully visual builder."),
+                            ("CUSTOMISATION","Lowest. Fastest route to a working agent, least control over the internals.")]),
+           (TEAL,"Low-code  ·  n8n",[("HOW YOU BUILD","AI-assisted: n8n Assistant, Claude Code or Codex drafts the workflow on a visual canvas."),
+                            ("CODE WHEN NEEDED","Add JavaScript or Python in a Code node where a built-in node is not enough."),
+                            ("CUSTOMISATION","High. 400+ integrations, self-host or cloud. This course's platform.")]),
+           (VIOLET,"Full-code",[("HOW YOU BUILD","AI generates the code — Claude Code or Codex write it, instead of coding manually."),
+                            ("CUSTOMISATION","Highest — the most customisable tier. SDKs and frameworks such as LangChain, with real engineering effort to test and run.")])]
+    X0=Inches(0.85); gx=Inches(0.32); cw=int((Inches(11.63)-gx*2)/3); y0=Inches(2.05); ch=Inches(3.55)
+    for i,(col,t,rows) in enumerate(TIERS):
+        x=int(X0+(cw+gx)*i); box(s,x,y0,cw,ch,col)
+        bd=Inches(0.34); oval(s,x+Inches(0.2),y0+Inches(0.16),bd,bd,col)
+        txt(s,x+Inches(0.2),y0+Inches(0.16),bd,bd,[[(str(i+1),13,WHITE,True)]],align=PP_ALIGN.CENTER,anchor=MSO_ANCHOR.MIDDLE)
+        txt(s,x+Inches(0.68),y0+Inches(0.17),cw-Inches(0.9),Inches(0.34),[[(t,14,col,True)]])
+        paras=[]
+        for lab_,val in rows: paras+= [[(lab_,9,col,True)],[(val,11,INK,False)]]
+        txt(s,x+Inches(0.22),y0+Inches(0.66),cw-Inches(0.44),ch-Inches(0.8),paras,space=4)
+    # the axis: customisation (and effort) grows left to right
+    ar=s.shapes.add_shape(MSO_SHAPE.RIGHT_ARROW,X0,Inches(5.72),Inches(11.63),Inches(0.4))
+    ar.fill.solid(); ar.fill.fore_color.rgb=LIGHT; ar.line.color.rgb=LINE; ar.shadow.inherit=False
+    txt(s,X0+Inches(0.3),Inches(5.72),Inches(10.8),Inches(0.4),
+        [[("Less control, less effort   ·   more customisation, more engineering effort  →",10.5,GREY,True)]],
+        align=PP_ALIGN.CENTER,anchor=MSO_ANCHOR.MIDDLE)
+    takeaway(s,"AI drafts the workflow in low-code and writes the code in full-code. n8n: analysts build it, engineers extend it.")
+    footer(s)
+    # 10 — business value, the modern view
+    s=concept_slide(k("WHY ORGANISATIONS ADOPT IT"),"Business Value of Workflow-First Agentic Automation",
+     "The modern view: what a business gains when AI builds the workflow and the workflow runs the process.",kcolor=acc)
+    ncards(s,[(BLUE,"Reliable and predictable","The same input follows the same path every time, so the process can be tested and trusted like software."),
+     (TEAL,"Secure by design","Each step holds only the data and credentials it needs; risky actions wait at an approval gate."),
+     (VIOLET,"Auditable end to end","Every run is logged node by node — you can explain, replay and correct any decision."),
+     (AMBER,"Lower running cost","Deterministic steps cost nothing in tokens; the LLM is called only where judgement is needed."),
+     (GREEN,"Faster to build and change","Claude Code and Codex draft the workflow in minutes; your team reviews, tests and owns it."),
+     (RED,"Scale around the clock","Triggers respond in real time, 24/7 — ten times the volume costs compute, not ten more hires.")],
+     y=Inches(1.98),h=Inches(4.15),cols=3)
+    takeaway(s,"AI where judgement is needed, workflow everywhere else — reliability you can audit, at a cost you can predict.")
+    footer(s)
+    # 11 — use cases
+    s=concept_slide(k("USE CASES"),"Where Agentic Automation Is Used",
+     "The same pattern — trigger, agent, tools, oversight — recurs across every function.",kcolor=acc)
+    ncards(s,[(BLUE,"Customer service","Answer enquiries from your own documents, capture leads, and escalate what needs a person."),
+     (TEAL,"Finance & accounting","Invoice processing, bank reconciliation, accounts-payable routing and exception handling."),
+     (VIOLET,"Risk & compliance","Screen applications, flag anomalies, and route sensitive cases for human review."),
+     (AMBER,"HR & people ops","Onboarding, leave applications, policy questions and approval chains."),
+     (GREEN,"Sales & marketing","Lead qualification, follow-up sequencing, CRM enrichment and content drafting."),
+     (RED,"Operations","Order processing, status notifications, document generation and reporting.")],
+     y=Inches(1.98),h=Inches(4.15),cols=3)
+    takeaway(s,"Every one of these is a front door, an agent, some tools and a decision about where the human belongs.")
+    footer(s)
     # 8 — five principles of AI security
     s=concept_slide(k("AI SECURITY"),"5 Principles of AI Security",
      "Agents act on your behalf. These five controls keep what they can see and do safe, reviewable and accountable.",
@@ -737,15 +800,11 @@ def topic1_intro(acc):
      "You land in n8n — open Assistant or Overview to start building"],
      kicker=k("SIGN IN"),color=acc)
     takeaway(s,"Your account is already set up — the name is your email prefix and onboarding is done. Do not change the password.")
-    # 6 — claim the free AI credits
-    s=flow_h("Claim Your Free AI Credits",[
-     "Sign in to n8n Cloud with your training account — the free trial includes Gateway credits",
-     "Open a workflow and add an AI node, e.g. AI Agent → Gemini or OpenAI Chat Model",
-     "In the node's Credential field, choose Use Gateway credits — your balance shows beside it",
-     "Pick a supported model and run the node — no provider account or API key needed",
-     "Track the balance on the node, or in Admin Panel → Gateway credits"],
-     kicker=k("FREE AI CREDITS"),color=TEAL)
-    takeaway(s,"A red \"Free AI credits — Enable to claim credits\" toast is the legacy OpenAI offer: Gateway instances don't get it. Use Gateway credits.")
+    # 5 — n8n Assistant screenshot
+    image_slide("n8n Assistant — Describe It, n8n Builds It","n8n-assistant.png",
+     "Open Assistant in the left sidebar and answer \"What do you want to automate?\". It plans, builds and tests a normal n8n "
+     "workflow you can inspect, edit and publish. Assistant chats use the plan's monthly Assistant credits.",
+     kicker=k("AI-ASSISTED WORKFLOW CREATION"),accent=acc)
     # 7 — demo: AI-assisted workflow creation
     s=concept_slide(k("DEMO"),"Demo: Build a Social Media Campaign Workflow with n8n Assistant",
      "Give n8n Assistant one clear prompt — it plans and builds the workflow below, with a human approval gate.",kcolor=acc)
@@ -762,39 +821,53 @@ def topic1_intro(acc):
      "Test with a real topic and approve the draft","Publish only when the run looks right"],size=11.5,mcolor=TEAL,gap=6)
     takeaway(s,"The AI built it; the workflow runs it — and nothing is posted until a person approves the draft.")
     footer(s)
-    # 10 — business value, the modern view
-    s=concept_slide(k("WHY ORGANISATIONS ADOPT IT"),"Business Value of Workflow-First Agentic Automation",
-     "The modern view: what a business gains when AI builds the workflow and the workflow runs the process.",kcolor=acc)
-    ncards(s,[(BLUE,"Reliable and predictable","The same input follows the same path every time, so the process can be tested and trusted like software."),
-     (TEAL,"Secure by design","Each step holds only the data and credentials it needs; risky actions wait at an approval gate."),
-     (VIOLET,"Auditable end to end","Every run is logged node by node — you can explain, replay and correct any decision."),
-     (AMBER,"Lower running cost","Deterministic steps cost nothing in tokens; the LLM is called only where judgement is needed."),
-     (GREEN,"Faster to build and change","Claude Code and Codex draft the workflow in minutes; your team reviews, tests and owns it."),
-     (RED,"Scale around the clock","Triggers respond in real time, 24/7 — ten times the volume costs compute, not ten more hires.")],
-     y=Inches(1.98),h=Inches(4.15),cols=3)
-    takeaway(s,"AI where judgement is needed, workflow everywhere else — reliability you can audit, at a cost you can predict.")
+
+def free_ai_credits(acc):
+    # claim the free AI credits — taught with the Model, just before Lab 2 needs it
+    k=lambda x: f"TOPIC 1 · {x}"
+    s=flow_h("Claim Your Free AI Credits",[
+     "Sign in to n8n Cloud with your training account — the free trial includes Gateway credits",
+     "Open a workflow and add an AI node, e.g. AI Agent → Gemini or OpenAI Chat Model",
+     "In the node's Credential field, choose Use Gateway credits — your balance shows beside it",
+     "Pick a supported model and run the node — no provider account or API key needed",
+     "Track the balance on the node, or in Admin Panel → Gateway credits"],
+     kicker=k("FREE AI CREDITS"),color=TEAL)
+    takeaway(s,"A red \"Free AI credits — Enable to claim credits\" toast is the legacy OpenAI offer: Gateway instances don't get it. Use Gateway credits.")
+
+def telegram_demo(acc):
+    """Chatbot demo before Lab 3 (Lab 3 itself stays the website chatbot): learners create a Telegram
+    bot with BotFather, build the HR chatbot with n8n Assistant from one prompt, then connect and chat."""
+    D=C.TELEGRAM_DEMO; k=lambda x: f"TOPIC 2 · {x}"
+    s=concept_slide(k("DEMO"),"Demo: An HR Policy Chatbot on Telegram",
+     "What is a chatbot? An agent behind a chat channel. Build one on Telegram first — then Lab 3 puts one behind a website.",kcolor=acc)
+    chev_strip(s,D["flow"],y=Inches(2.0),h=Inches(0.95),color=acc,tsz=12.5,ssz=8.5)
+    ncards(s,[(BLUE,"What Ava knows","Sample HR policies written into the system instruction — leave, sick leave, claims, hours, probation."),
+              (RED,"Guardrails in the prompt","Answer only from the policies, never invent a number, and refer salary, medical or disciplinary questions to HR."),
+              (TEAL,"Same agent, new front door","Telegram Trigger is the front door here. Lab 3 puts the same kind of agent behind a website.")],
+           y=Inches(3.3),h=Inches(2.75),cols=3)
+    takeaway(s,"You will: create a bot with BotFather  →  build the workflow with n8n Assistant  →  connect, publish and chat.")
     footer(s)
-    # 11 — use cases
-    s=concept_slide(k("USE CASES"),"Where Agentic Automation Is Used",
-     "The same pattern — trigger, agent, tools, oversight — recurs across every function.",kcolor=acc)
-    ncards(s,[(BLUE,"Customer service","Answer enquiries from your own documents, capture leads, and escalate what needs a person."),
-     (TEAL,"Finance & accounting","Invoice processing, bank reconciliation, accounts-payable routing and exception handling."),
-     (VIOLET,"Risk & compliance","Screen applications, flag anomalies, and route sensitive cases for human review."),
-     (AMBER,"HR & people ops","Onboarding, leave applications, policy questions and approval chains."),
-     (GREEN,"Sales & marketing","Lead qualification, follow-up sequencing, CRM enrichment and content drafting."),
-     (RED,"Operations","Order processing, status notifications, document generation and reporting.")],
-     y=Inches(1.98),h=Inches(4.15),cols=3)
-    takeaway(s,"Every one of these is a front door, an agent, some tools and a decision about where the human belongs.")
+    # step 1 — the bot
+    s=flow_h("Demo Step 1: Create a Telegram Bot with BotFather",[x[0] for x in D["botfather"]],
+             kicker=k("DEMO · TELEGRAM BOT"),color=acc,size=12)
+    takeaway(s,"The token is the bot's password — never share or commit it. If it leaks, send /revoke to BotFather for a new one.")
+    # step 2 — n8n Assistant builds the workflow from one prompt
+    s=concept_slide(k("DEMO · n8n ASSISTANT"),"Demo Step 2: Build the Workflow with n8n Assistant",
+     "Create a new workflow, open n8n Assistant and paste this prompt — it plans and builds the chatbot for you.",kcolor=acc)
+    box(s,Inches(0.85),Inches(2.0),Inches(7.2),Inches(4.05),VIOLET)
+    txt(s,Inches(1.1),Inches(2.12),Inches(6.8),Inches(0.3),[[("THE PROMPT",11,VIOLET,True)]])
+    txt(s,Inches(1.1),Inches(2.5),Inches(6.8),Inches(3.45),[[(ln,12,INK,False)] for ln in D["prompt"]],space=4)
+    box(s,Inches(8.3),Inches(2.0),Inches(4.18),Inches(4.05),TEAL)
+    txt(s,Inches(8.55),Inches(2.12),Inches(3.8),Inches(0.3),[[("THEN YOU",11,TEAL,True)]])
+    bullets(s,Inches(8.55),Inches(2.5),Inches(3.75),Inches(3.45),D["review"],size=12.5,mcolor=TEAL,gap=8)
+    takeaway(s,f"Reference solution: labs/lab3-chatbot-webhook/{D['file']}")
     footer(s)
-    # 12 — platform tiers
-    s=concept_slide(k("COMPLEXITY VS CUSTOMISATION"),"Where AI Agent Platforms Sit",
-     "Three tiers, and why this course teaches the middle one.",kcolor=acc)
-    ncards(s,[(BLUE,"No-code","Fully visual builders. Fastest route to a working agent, least control over the internals."),
-     (TEAL,"Low-code  ·  n8n","A visual canvas plus code nodes, 400+ integrations, self-host or cloud. This course's platform."),
-     (VIOLET,"Full-code","SDKs and frameworks such as LangChain. Maximum control, and real engineering effort.")],
-     y=Inches(2.1),h=Inches(3.9),cols=3)
-    takeaway(s,"n8n sits where a business analyst can build it and an engineer can still extend it.")
-    footer(s)
+    flow_shot(D["flow_shot"],k("DEMO · THE WORKFLOW IN n8n"),acc=acc)
+    # step 3 — credentials, publish, chat
+    s=flow_h("Demo Step 3: Connect the Bot, Publish and Chat",[x[0] for x in D["connect"]],
+             kicker=k("DEMO · TELEGRAM BOT"),color=acc)
+    takeaway(s,"A Telegram bot has ONE webhook at a time — testing in the editor swaps in the Test URL, so publish again when you are done.")
+    chat_shot(D["chat_shot"],k("DEMO · TELEGRAM BOT"),acc=acc)
 
 # ---------------------------------------------------------------- TOPICS + LABS
 KICKERS={1:"TOPIC 1 · n8n AND AI AGENTS",2:"TOPIC 2 · AGENTIC CHATBOT & HITL",3:"TOPIC 3 · RAG"}
@@ -821,7 +894,91 @@ CONCEPT_IMAGES={
    "A vector store holds the embeddings and finds the nearest neighbours to a question, fast"),
 }
 
+import slide_index as _si
+assert set(CONCEPT_IMAGES)==_si.CONCEPT_IMAGE_KEYS, "slide_index.CONCEPT_IMAGE_KEYS is out of step with CONCEPT_IMAGES"
 TOPIC_ACTS={t["num"]:[a for a in ACTIVITIES if a["topic"]==t["num"]] for t in C.TOPICS}
+
+def shots_slide(kicker,title,imgs,caption,color=VIOLET):
+    """One or more screenshots side by side at a common height, with a caption.
+
+    Widths follow each image's aspect ratio, so a portrait flyer and a wide
+    canvas sit in one row without either being squashed."""
+    from PIL import Image
+    s=slide(); head(s,title,kicker,kcolor=color)
+    paths=[_asset(n) for n in imgs]; paths=[p for p in paths if p]
+    ars=[(lambda im:(im.size[0]/im.size[1]))(Image.open(p)) for p in paths]
+    gap=Inches(0.3); W=Inches(11.63); top=Inches(1.75); MAXH=Inches(4.45)
+    H=min(MAXH,int((W-gap*(len(paths)-1))/sum(ars)))
+    ws=[int(H*a) for a in ars]
+    x=int(Inches(0.85)+(W-sum(ws)-gap*(len(paths)-1))/2); y=int(top+(MAXH-H)/2)
+    for p,w in zip(paths,ws):
+        pic_fit(s,p,x,y,w,H); x+=w+gap
+    if caption:
+        assert len(caption)<=210, f"Screenshot caption too long for its band: {caption[:80]}..."
+        txt(s,Inches(0.85),Inches(6.35),Inches(11.63),Inches(0.6),[[(caption,12,GREY,False)]],align=PP_ALIGN.CENTER)
+    footer(s); return s
+
+def render_concepts(keys,kicker,acc,after=None):
+    """Concept slides, each followed by its n8n screenshot where it has one.
+    `after` maps a concept key to an extra slide renderer called right after it."""
+    for key in keys:
+        render_concept(CN.BY_KEY[key],kicker,accent=acc)
+        if key in CONCEPT_IMAGES:
+            img,ttl,cap=CONCEPT_IMAGES[key]
+            image_slide(ttl,img,cap,kicker=kicker,accent=acc)
+        if after and key in after: after[key]()
+
+def lab_block(a,K):
+    """Every slide for one lab. The click-by-click steps stay in the Learner Guide."""
+    short=a.get("short",a["title"])
+    # how the building blocks just taught map onto this lab (Lab 2)
+    if a.get("primer"):
+        s=concept_slide(f"LAB {a['num']} · PUTTING IT TOGETHER",short+" — How the Building Blocks Fit",
+         "Website → Webhook → AI Agent → Respond. Every block you have just learned has one job in this lab.",kcolor=TEAL)
+        data_table(s,[2.3,4.9,4.43],["Building block","In this lab","Why it matters"],
+                   [list(r) for r in a["primer"]],y=Inches(2.0),rh=Inches(0.5),hcolor=TEAL,fsz=10)
+        takeaway(s,"Six building blocks, one workflow: the webhook brings the applicant in, the agent decides, the page shows the result.")
+        footer(s)
+    canv=a.get("canvas",[])
+    chevs=a.get("chev",[[]])
+    meta=f"{a['build']}  ·  full click-by-click steps in the Learner Guide"
+    for ci,(img,cap) in enumerate(canv or [(None,"")]):
+        # A lab with two workflows (Lab 5) gets one slide per workflow. Use the
+        # SHORT title for those, because the full title plus a suffix wraps to a
+        # second line and runs through the intro line beneath it.
+        title=a["title"] if len(canv)<2 else (
+            short+" — Ingestion Workflow" if ci==0 else short+" — Answering Workflow")
+        flows=[chevs[ci]] if ci<len(chevs) else [chevs[0]]
+        lab_slide(f"{K} · LAB WORKFLOW",f"LAB {a['num']}",title,
+                  a["desc"] if ci==0 else cap,
+                  flows,_asset(img) if img else None,meta,cap=cap if ci==0 else "",
+                  color=TEAL)
+    # the real n8n canvas, as the learner sees it after import
+    if a.get("n8n_shot"):
+        flow_shot(a["n8n_shot"],f"LAB {a['num']} · THE WORKFLOW IN n8n")
+    # The application the learner actually sees. Each screenshot gets its OWN
+    # caption as the body — repeating the lab's takeaways on every one of these
+    # slides produced near-identical bullets on consecutive pages.
+    for si,(img,cap) in enumerate(a.get("site",[])):
+        body=[cap]
+        if si==0:
+            body += [x[1] for x in a["learned"][:2]]
+        website_lab(f"LAB {a['num']} · THE APPLICATION",short+" — What You'll Build",
+                    _asset(img),body,color=VIOLET)
+    # step screenshots, numbered how-to strips and galleries, in teaching order
+    for kind,ttl,payload,note in a.get("extras",[]):
+        kick=f"LAB {a['num']} · " + ("STEP BY STEP" if kind!="gallery" else "INSPIRATION")
+        if kind=="flow":
+            s=flow_h(ttl,payload,kicker=kick,color=TEAL); takeaway(s,note)
+        else:
+            shots_slide(kick,ttl,payload,note,color=VIOLET)
+    # verify + debrief, as one card slide rather than a wall of prose
+    s=concept_slide(f"LAB {a['num']} · VERIFY AND DEBRIEF",short,a["test"])
+    ncards(s,[(PALETTE[i%len(PALETTE)],x[0],x[1]) if isinstance(x,tuple) else (BLUE,f"Takeaway {i+1}",x)
+              for i,x in enumerate(a["learned"])],
+           y=Inches(2.5),h=Inches(3.5),cols=2)
+    takeaway(s,f"Lab {a['num']} — you can now "+a["objective"].split("(")[0].strip()+".")
+    footer(s)
 
 for t in C.TOPICS:
     tnum=t["num"]; K=KICKERS[tnum]; acc=ACCENTS[tnum]
@@ -830,50 +987,28 @@ for t in C.TOPICS:
             "Applied in "+", ".join(f"Lab {a['num']}" for a in labs),color=acc)
     if tnum==1:
         _p0=PAGE["n"]; topic1_intro(acc)
-        import slide_index as _si
         assert PAGE["n"]-_p0==_si.TOPIC1_INTRO, "slide_index.TOPIC1_INTRO is out of step with topic1_intro()"
-    # --- concepts, each as a visual slide, with its n8n screenshot after it ---
-    for key in CN.TOPIC_CONCEPTS[tnum]:
-        render_concept(CN.BY_KEY[key],K,accent=acc)
-        if key in CONCEPT_IMAGES:
-            img,ttl,cap=CONCEPT_IMAGES[key]
-            image_slide(ttl,img,cap,kicker=K,accent=acc)
-    # --- ONE visual slide per lab; the steps are in the Learner Guide ---
-    for a in labs:
-        short=a.get("short",a["title"])
-        canv=a.get("canvas",[])
-        chevs=a.get("chev",[[]])
-        meta=f"{a['build']}  ·  full click-by-click steps in the Learner Guide"
-        for ci,(img,cap) in enumerate(canv or [(None,"")]):
-            # A lab with two workflows (Lab 5) gets one slide per workflow. Use the
-            # SHORT title for those, because the full title plus a suffix wraps to a
-            # second line and runs through the intro line beneath it.
-            title=a["title"] if len(canv)<2 else (
-                short+" — Ingestion Workflow" if ci==0 else short+" — Answering Workflow")
-            flows=[chevs[ci]] if ci<len(chevs) else [chevs[0]]
-            lab_slide(f"{K} · LAB WORKFLOW",f"LAB {a['num']}",title,
-                      a["desc"] if ci==0 else cap,
-                      flows,_asset(img) if img else None,meta,cap=cap if ci==0 else "",
-                      color=TEAL)
-        # The application the learner actually sees. Each screenshot gets its OWN
-        # caption as the body — repeating the lab's takeaways on every one of these
-        # slides produced near-identical bullets on consecutive pages.
-        sites=a.get("site",[])
-        for si,(img,cap) in enumerate(sites):
-            body=[cap]
-            if si==0:
-                body += [x[1] for x in a["learned"][:2]]
-            website_lab(f"LAB {a['num']} · THE APPLICATION",short+" — What You'll Build",
-                        _asset(img),body,color=VIOLET)
-        # verify + debrief, as one card slide rather than a wall of prose
-        s=concept_slide(f"LAB {a['num']} · VERIFY AND DEBRIEF",short,a["test"])
-        ncards(s,[(PALETTE[i%len(PALETTE)],x[0],x[1]) if isinstance(x,tuple) else (BLUE,f"Takeaway {i+1}",x)
-                  for i,x in enumerate(a["learned"])],
-               y=Inches(2.5),h=Inches(3.5),cols=2)
-        takeaway(s,f"Lab {a['num']} — you can now "+a["objective"].split("(")[0].strip()+".")
-        footer(s)
-    if tnum==1: brk("Lunch Break","1 hour",AMBER)
-    if tnum==2: brk("Tea Break","15 minutes",TEAL)
+        # n8n fundamentals → Lab 1 → lunch → agent building blocks + webhooks → Lab 2
+        render_concepts(CN.TOPIC1_FUNDAMENTALS,"TOPIC 1 · n8n FUNDAMENTALS",acc)
+        lab_block(labs[0],K)
+        brk("Lunch Break","1 hour",AMBER)
+        render_concepts(CN.TOPIC1_AGENT,"TOPIC 1 · AI AGENT BUILDING BLOCKS",acc,
+                        after={"model_params":lambda: free_ai_credits(acc)})
+        render_concepts(CN.TOPIC1_WEBHOOK,"TOPIC 1 · WEBHOOKS",acc)
+        lab_block(labs[1],K)
+        continue
+    if tnum==2:
+        # knowledge before the lab: chatbot concepts → Lab 3 → HITL + guardrails → Lab 4
+        render_concepts(CN.TOPIC2_CHATBOT,"TOPIC 2 · AGENTIC CHATBOT",acc)
+        _p0=PAGE["n"]; telegram_demo(acc)
+        assert PAGE["n"]-_p0==_si.TELEGRAM_DEMO_SLIDES, "slide_index.TELEGRAM_DEMO_SLIDES is out of step with telegram_demo()"
+        lab_block(labs[0],K)
+        render_concepts(CN.TOPIC2_HITL,"TOPIC 2 · HUMAN IN THE LOOP & GUARDRAILS",acc)
+        lab_block(labs[1],K)
+        brk("Tea Break","15 minutes",TEAL)
+        continue
+    render_concepts(CN.TOPIC_CONCEPTS[tnum],K,acc)
+    for a in labs: lab_block(a,K)
 
 # ---------------------------------------------------------------- CLOSE
 section("WRAP-UP","Course Summary & Next Steps","")

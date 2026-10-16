@@ -1075,6 +1075,15 @@ for _k,(_a,_b) in slide_index.SLIDES.items():
     assert 1<=_a<=_b<=_actual, f"slide_index range {_k}={_a}-{_b} is outside 1..{_actual}"
 
 OUT=os.path.join(os.environ.get("DECK_OUT_DIR") or os.path.join(REPO,"courseware"),f"{C.SHORT_TITLE}-{C.VERSION}.pptx")
+# Edge-safe PDF: every autoshape carries <p:style><a:effectRef idx="2"> — the theme's drop
+# shadow. PowerPoint honours the shape's own empty <a:effectLst/> and draws no shadow, but
+# LibreOffice applies the theme shadow anyway and exports each one as a blurred greyscale
+# bitmap with a soft mask (~1,300 per deck). Microsoft Edge's PDF engine renders pages full of
+# those as BLANK. Point every shape at "no effect" so the PDF matches the deck and opens everywhere.
+from pptx.oxml.ns import qn as _qn
+for _s in prs.slides:
+    for _ref in _s._element.iter(_qn("a:effectRef")):
+        _ref.set("idx","0")
 prs.save(OUT)
 print(f"Saved {OUT}  ({_actual} slides)")
 print(f"slide_index verified: {slide_index.TOTAL} slides, {len(slide_index.SLIDES)} named blocks")

@@ -46,7 +46,7 @@ const WebhookConfig = (() => {
         "Test URL detected. Arm “Listen for test event” in n8n before each message — it accepts one request only.";
       status.className = "config-status is-warn";
     } else if (url.includes("/webhook/")) {
-      status.textContent = "Production URL detected. The workflow must be Active in n8n.";
+      status.textContent = "Production URL detected. The workflow must be Published in n8n.";
       status.className = "config-status is-ok";
     } else {
       status.textContent = "This does not look like an n8n webhook URL.";

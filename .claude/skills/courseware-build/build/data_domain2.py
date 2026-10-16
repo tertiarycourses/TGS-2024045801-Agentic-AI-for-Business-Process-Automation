@@ -84,6 +84,19 @@ DOMAIN2 = [
         build="Webhook → Agent → Acknowledge → Log Draft → RM Approval (Send & Wait) → IF → Send / Reassign",
         services="n8n Webhook, AI Agent, Google Gemini, Gmail Send-and-Wait, Google Sheets, IF node",
         folder="lab4-human-in-the-loop",
+        n8n_shot=dict(img="n8n-flow-lab4.png", title="Lab 4 — The Approval Workflow in n8n",
+            intro="The imported workflow on the n8n canvas. Everything up to RM Approval is the agent's work; nothing after it runs until a person decides.",
+            cards=[("BLUE","Concern in","Client Query Webhook receives the client's message; Normalise Query tidies it for the agent."),
+                   ("VIOLET","The agent","Rapport AI Agent drafts a non-advisory reply; Draft Parser returns tone, urgency and compliance flags."),
+                   ("TEAL","Log, then pause","Acknowledge Client answers at once, Log Draft records the draft, and RM Approval waits for a human."),
+                   ("AMBER","Two paths","If Approved: send and log the reply. Otherwise: Assign to Human Agent and email that person.")],
+            takeaway="RM Approval is a Gmail Send-and-Wait node: the execution genuinely pauses there until Approve or Decline is clicked."),
+        extras=[
+            ("shots","Lab 4 — Step: Connect the Website and Send a Concern",
+             ["lab4-site-config.png"],
+             "Paste your webhook Production URL into Lab configuration, pick a trainer demo query or type your own, "
+             "use your own email, and send. The widget promises a licensed manager reviews every reply."),
+        ],
         site=[("site-lab4.png",
                 "The Meridian client portal. The widget states plainly that a licensed manager "
                 "reviews every reply — the human-in-the-loop promise made visible to the client.")],

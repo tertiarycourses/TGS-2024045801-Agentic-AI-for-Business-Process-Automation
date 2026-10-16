@@ -1,6 +1,6 @@
 # Agentic AI for Business Process Automation — Learner Guide
 
-**WSQ Course Code:** TGS-2024045801  |  **TSC:** Artificial Intelligence Application (AER-TEM-3026-1.1)  |  **Conducted by:** Tertiary Infotech Academy Pte Ltd (UEN 201200696W)  |  **Version v2.3 · 16 October 2026**
+**WSQ Course Code:** TGS-2024045801  |  **TSC:** Artificial Intelligence Application (AER-TEM-3026-1.1)  |  **Conducted by:** Tertiary Infotech Academy Pte Ltd (UEN 201200696W)  |  **Version v2.5 · 17 October 2026**
 
 ## Document Version Control Record
 
@@ -13,6 +13,8 @@
 | 2.1 | 15 October 2026 | Topic 1 now opens with the modern view of agentic automation, replacing the separate Foundation section: a brief history of AI 2023–2026 (prompt, context and harness engineering to AI agents), agentic AI vs AI agents, workflow first vs agent first, AI-assisted workflow creation with n8n Assistant (plus claiming the free AI credits and a social media campaign demo), an n8n training-accounts slide, the five principles of AI security and why workflow first is more secure, and the business value of workflow-first agentic automation. | Dr. Alfred Ang |
 | 2.2 | 15 October 2026 | Topic 1 re-sequenced so each lab follows the concepts it needs: n8n fundamentals, then Lab 1, then the AI agent building blocks (AI agent, model, tools and MCP, instructions, memory) and webhooks, then Lab 2. Lab 1 now covers publishing the workflow, copying the form’s Production URL and creating a QR-code flyer, with step screenshots and flyers from previous learners. Lab 2 opens with how the building blocks fit together. Platform tiers updated for AI-assisted low-code and AI-generated full-code. New LMS login screenshot; Publish replaces the retired Active toggle. Schedule and slide references updated. | Dr. Alfred Ang |
 | 2.3 | 16 October 2026 | Every lab now follows the knowledge it needs. Topic 2 is taught in two blocks: rule-based vs agentic workflows, designing a safe agentic chatbot and a Telegram HR chatbot demo (BotFather /newbot, built with n8n Assistant from one prompt, then a live chat), then Lab 3; then human in, on and out of the loop, how an approval suspends a workflow, when to put a human in the loop and guardrails, then Lab 4. The agent loop is now explained as Context → Plan → Action → Verify and repeat. Lab workflow files and their n8n names are now 'Lab N - <description>', replacing the old LU/Activity names. Real n8n canvas screenshots added for Lab 2, Lab 3 and the Telegram demo, plus a live Telegram chat. Each lab's key concepts in the Learner Guide now sit directly before that lab. Day 2 schedule and slide references updated. | Dr. Alfred Ang |
+| 2.4 | 16 October 2026 | Real n8n screenshots added and explained: the Lab 4 approval workflow and the Lab 4 website with its lab configuration panel; n8n's Guardrails node (an input check and an output sanitiser) after the guardrails concept; a GET webhook example that publishes a recipe page, in the webhooks block before Lab 2; and the Build with AI start screen in the Telegram chatbot demo. PDFs made compatible with Microsoft Edge (the theme shadow LibreOffice exported as masked bitmaps is removed). Lab websites now say Published instead of the retired Active toggle. | Dr. Alfred Ang |
+| 2.5 | 17 October 2026 | Real n8n screenshots added and explained for Lab 5: the ingestion workflow (fetch the brochures, split and embed, insert into the vector store) directly after the ingestion workflow slide, the answering workflow (webhook, agent and model, retrieval tool) directly after the answering workflow slide, and a live Course Assistant conversation showing a misspelt question still retrieving the right brochures, fees quoted from the brochure, and the assistant admitting a gap instead of inventing a fee. Notes that the ingestion and answering workflows must use the same embedding model and memory key whichever provider is used. Slide references updated. | Dr. Alfred Ang |
 
 ## Contents
 
@@ -134,7 +136,7 @@ Use the Test URL while building — it shows the incoming data live on the canva
 
 ## Topic 01 — Overview of n8n and AI Agents
 
-Why agentic AI · Workflow first · Triggers & actions · LLM agents · Webhooks   (Deck reference: Slides 20–81.)
+Why agentic AI · Workflow first · Triggers & actions · LLM agents · Webhooks   (Deck reference: Slides 20–82.)
 
 
 ### Why Agentic AI, and Why Workflow First
@@ -476,12 +478,27 @@ Scan the QR code on your flyer with your phone, submit the form, and confirm the
 
 - **Configuring the Webhook node** — Four settings decide whether a browser's call succeeds. METHOD AND PATH give you the URL. ALLOWED ORIGINS (CORS) must permit the calling page, or the workflow will run perfectly and the browser will still refuse to read the reply — the classic 'Failed to fetch'. Set it to * in class and never in production. RESPONSE MODE should be 'Using Respond to Webhook Node' in every lab here, so the agent's answer travels back instead of an immediate 200 OK. AUTHENTICATION can be None for a demo, but Basic, Header or JWT for anything real — a public URL is a public door, and every call costs you model tokens.
 
+**Example: A GET Webhook That Publishes a Recipe Page**
+
+![One URL, one agent, one page back. A webhook does not have to sit behind a form — opening a link can run an agent.](assets/n8n-flow-recipe-get.png)
+
+*One URL, one agent, one page back. A webhook does not have to sit behind a form — opening a link can run an agent.*
+
+| Node | What it does |
+|---|---|
+| Webhook — GET | Opening the URL in a browser is the request. Anything the agent needs can ride in the query string. |
+| Recipe Agent | An OpenAI chat model writes the recipe. There is no memory: each request stands alone. |
+| search_web tool | The agent calls search_web, passing a search query, when it needs facts from the web. |
+| Page back | Publish Recipe Page (a Respond to Webhook node) returns the page, so the browser shows it at once. |
+
+> **Note:** GET suits a link anyone can click. Lab 2's bank form uses POST, because it sends a body of applicant data.
+
 
 ### Lab 2 — Webhook and AI Agent (Marina Trust Bank Onboarding)
 
 Learning outcome: this lab develops your ability to deploy an AI agent that is triggered by a webhook from an external website (A1, A2, K7, K8).
 
-Deck reference: Slides 77–81.
+Deck reference: Slides 78–82.
 
 **Goal**
 
@@ -594,7 +611,7 @@ Run TC1 (a new applicant) and confirm a green APPROVED card, a new row in the Cu
 
 ## Topic 02 — Agentic Chatbot and Human in the Loop
 
-Agentic workflows · Chatbots on webhooks · Approval gates · Accountability   (Deck reference: Slides 82–102.)
+Agentic workflows · Chatbots on webhooks · Approval gates · Accountability   (Deck reference: Slides 83–107.)
 
 
 ### Key Concepts for Lab 3 — Chatbot Webhook
@@ -609,7 +626,7 @@ Agentic workflows · Chatbots on webhooks · Approval gates · Accountability   
 
 **Demo: an HR policy chatbot on Telegram**
 
-What is a chatbot? An agent behind a chat channel. Before Lab 3 puts a chatbot behind a website, you build one on Telegram: Telegram Trigger → HR Agent — Ava → Chat model → Reply on Telegram. The HR Agent, Ava, answers only from sample HR policies written into its system instruction, never invents a number, refers salary, medical or disciplinary questions to HR, and remembers the conversation. (Deck reference: Slides 82–90.)
+What is a chatbot? An agent behind a chat channel. Before Lab 3 puts a chatbot behind a website, you build one on Telegram: Telegram Trigger → HR Agent — Ava → Chat model → Reply on Telegram. The HR Agent, Ava, answers only from sample HR policies written into its system instruction, never invents a number, refers salary, medical or disciplinary questions to HR, and remembers the conversation. (Deck reference: Slides 83–92.)
 
 Step 1 — create a Telegram bot with BotFather:
 
@@ -629,7 +646,18 @@ Step 1 — create a Telegram bot with BotFather:
    > *Why this step:* The token is the bot's password. Anyone holding it controls the bot; if it leaks, send /revoke to BotFather.
 
 
-Step 2 — build the workflow with n8n Assistant. Create a new workflow, open n8n Assistant and paste this prompt:
+Step 2 — build the workflow with n8n Assistant.
+
+![A new workflow: Add first step (manual) or Build with AI (n8n Assistant).](assets/n8n-build-with-ai.png)
+
+*A new workflow: Add first step (manual) or Build with AI (n8n Assistant).*
+
+- Create a new workflow. The empty canvas offers two starts: Add first step, or Build with AI.
+- Click Build with AI — this opens n8n Assistant, which builds the workflow from a plain-English prompt.
+- Add first step is the manual route: it opens the node search, here filtered to 'ai agent'.
+- Either way you get the same nodes. The Assistant just writes the first draft for you.
+
+Paste this prompt into n8n Assistant:
 
 ```bash
 Create a 3-node workflow:
@@ -691,7 +719,7 @@ Step 3 — connect the bot, publish and chat:
 
 Learning outcome: this lab develops your ability to deploy an agentic chatbot on a website that operates within regulatory limits (A1, A2, K7, K8).
 
-Deck reference: Slides 91–94.
+Deck reference: Slides 93–96.
 
 **Goal**
 
@@ -805,12 +833,27 @@ Ask 'Can you guarantee returns?' and 'Which stock should I buy?'. The agent must
 
 - **The accountability trail** — Log what the agent PROPOSED separately from what a human AUTHORISED. Keeping them apart is what lets an auditor ask whether anyone ever sent something a human never saw. Every approved action carries the name of the approver; every declined one is reassigned to a named person. No accountability column should ever be empty.
 
+**Guardrails in n8n — the Guardrails Node**
+
+![The two gates from the previous slide, built with n8n's Guardrails node: one before the agent, one after it.](assets/n8n-guardrails-nodes.png)
+
+*The two gates from the previous slide, built with n8n's Guardrails node: one before the agent, one after it.*
+
+| Node | What it does |
+|---|---|
+| Input guardrail | Guardrails · Check Text for Violations screens each message before the agent sees it, using its own chat model. |
+| Pass or Fail | Pass continues to the agent. Fail branches away, so a blocked message never reaches the model. |
+| The agent | Rapport AI Agent drafts the reply with its Gemini model and the Draft Parser. |
+| Output guardrail | Guardrails1 · Sanitize Text cleans the reply — for example removing personal data — before anything is sent. |
+
+> **Note:** Defence in depth: the prompt asks the agent to behave; the Guardrails nodes check that it did.
+
 
 ### Lab 4 — Human in the Loop (Client Rapport Assistant)
 
 Learning outcome: this lab develops your ability to apply a human approval gate so no AI-drafted communication is sent unsupervised (A1, A2, A3, K7, K8).
 
-Deck reference: Slides 99–101.
+Deck reference: Slides 102–106.
 
 **Goal**
 
@@ -829,6 +872,25 @@ Webhook → Agent → Acknowledge → Log Draft → RM Approval (Send & Wait) �
 ![Everything up to RM Approval is the agent's territory; the IF node after it splits into the approved path (top) and the reassignment path (bottom).](assets/canvas-lab4.png)
 
 *Everything up to RM Approval is the agent's territory; the IF node after it splits into the approved path (top) and the reassignment path (bottom).*
+
+![The imported workflow on the n8n canvas. Everything up to RM Approval is the agent's work; nothing after it runs until a person decides.](assets/n8n-flow-lab4.png)
+
+*The imported workflow on the n8n canvas. Everything up to RM Approval is the agent's work; nothing after it runs until a person decides.*
+
+| Part of the flow | What it does |
+|---|---|
+| Concern in | Client Query Webhook receives the client's message; Normalise Query tidies it for the agent. |
+| The agent | Rapport AI Agent drafts a non-advisory reply; Draft Parser returns tone, urgency and compliance flags. |
+| Log, then pause | Acknowledge Client answers at once, Log Draft records the draft, and RM Approval waits for a human. |
+| Two paths | If Approved: send and log the reply. Otherwise: Assign to Human Agent and email that person. |
+
+> **Note:** RM Approval is a Gmail Send-and-Wait node: the execution genuinely pauses there until Approve or Decline is clicked.
+
+**Key screens**
+
+![Step: Connect the Website and Send a Concern. Paste your webhook Production URL into Lab configuration, pick a trainer demo query or type your own, use your own email, and send. The widget promises a licensed manager reviews every reply.](assets/lab4-site-config.png)
+
+*Step: Connect the Website and Send a Concern. Paste your webhook Production URL into Lab configuration, pick a trainer demo query or type your own, use your own email, and send. The widget promises a licensed manager reviews every reply.*
 
 **Step-by-step**
 
@@ -909,7 +971,7 @@ Run all eight rows of sample-queries.csv. When you are done Drafts has 8 rows, A
 
 ## Topic 03 — Retrieval-Augmented Generation (RAG)
 
-Tokenization · Embeddings · Vector stores · Grounded answers   (Deck reference: Slides 103–115.)
+Tokenization · Embeddings · Vector stores · Grounded answers   (Deck reference: Slides 108–123.)
 
 
 ### Key Concepts for Lab 5 — RAG Customer Care Chatbot
@@ -945,7 +1007,7 @@ Tokenization · Embeddings · Vector stores · Grounded answers   (Deck referenc
 
 Learning outcome: this lab develops your ability to deploy a RAG application that grounds an agent in the organisation's own documents (A1, A2, A3, K5, K7, K8).
 
-Deck reference: Slides 112–115.
+Deck reference: Slides 117–123.
 
 **Goal**
 
@@ -965,9 +1027,47 @@ Ingestion: Drive → Split → Embed → Vector Store   ·   Answering: Webhook 
 
 *The ingestion workflow on the n8n canvas — run ONCE by hand. Twenty brochures are listed, downloaded, split, embedded and inserted into the vector store.*
 
+![Part 1 as it looks after import. You run it once, by hand, to load all 20 brochures into the vector store.](assets/n8n-flow-lab5-ingest.png)
+
+*Part 1 as it looks after import. You run it once, by hand, to load all 20 brochures into the vector store.*
+
+| Part of the flow | What it does |
+|---|---|
+| Fetch the brochures | When clicking 'Execute workflow' starts the run. List Brochures in Folder finds the 20 files in YOUR Drive folder, and Download Each Brochure pulls each one down. |
+| Split and embed | Default Data Loader reads each file, Whole-Brochure Splitter keeps one brochure as one chunk, and the Embeddings node turns every chunk into a vector. |
+| Insert into the store | Simple Vector Store (Insert) saves the 20 vectors under your memory key, cookbake_<your-name>. Clear Store is ON, so a re-run replaces instead of duplicating. |
+
+> **Note:** Ingestion is a batch job: re-run it when a brochure changes — and after every n8n restart.
+
 ![The answering workflow on the n8n canvas — runs on EVERY question. The Query Data Tool and its embedding model hang below the agent.](assets/canvas-lab5-agent.png)
 
 *The answering workflow on the n8n canvas — runs on EVERY question. The Query Data Tool and its embedding model hang below the agent.*
+
+![Part 2 runs on every question. The agent must search the brochures before it is allowed to answer.](assets/n8n-flow-lab5-agent.png)
+
+*Part 2 runs on every question. The agent must search the brochures before it is allowed to answer.*
+
+| Part of the flow | What it does |
+|---|---|
+| Question in, answer out | Webhook receives the visitor's question from the website as a POST. Respond to Webhook sends the agent's reply back to the chat window. |
+| The agent and its model | AI Agent reasons with the chat model. Its system message says: call the tool first and never invent a fee. No Memory is attached, so each question stands alone. |
+| The retrieval tool | Query Data Tool searches YOUR memory key and returns the 5 closest brochures. Shown here with OpenAI; the lab file ships with Gemini — swap one, swap both. |
+
+> **Note:** Same embedding model and same memory key in both workflows — or retrieval silently finds nothing.
+
+**Key screens**
+
+![The Course Assistant in Action. A real conversation on the Cook & Bake Academy site. Every fee in the reply came from a retrieved brochure.](assets/lab5-site-chat.png)
+
+*The Course Assistant in Action. A real conversation on the Cook & Bake Academy site. Every fee in the reply came from a retrieved brochure.*
+
+| What to notice | Why it matters |
+|---|---|
+| A typo still finds it | The visitor typed 'patries'. Embeddings match meaning, not spelling, so the pastry brochures BAK-102 and BAK-109 still come back. |
+| Facts quoted, not invented | Fees and durations are quoted exactly: BAK-102 is SGD $1480 for 8 weeks / 48 hours — the same S$1480 shown on the course card behind the chat. |
+| It admits a gap | It did not give BAK-104's fee and said so instead of guessing. The brochure does list SGD $420, so check what the tool returned: that is a retrieval gap. |
+
+> **Note:** 'I don't have that' is grounding working — fix gaps in retrieval, never by loosening the prompt.
 
 **Step-by-step**
 

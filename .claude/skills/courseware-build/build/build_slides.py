@@ -461,12 +461,33 @@ def lab_slide(kicker,tag,title,intro,flows,img,meta,cap="",color=TEAL):
             [[(cap,9,GREY,False)]],align=PP_ALIGN.CENTER)
     lab_band(s,tag,title.split("—",1)[-1].strip() if "—" in title else title,meta,color=color)
     footer(s); return s
+def side_cards(s,items,x,y,w,h,bsz=10):
+    """Numbered cards stacked in one column — items: (color, title, body)."""
+    n=len(items); gy=Inches(0.16); ch=int((h-gy*(n-1))/n)
+    for i,(col,t,body) in enumerate(items):
+        yy=int(y+(ch+gy)*i)
+        box(s,x,yy,w,ch,col)
+        bd=Inches(0.3)
+        oval(s,x+Inches(0.18),yy+Inches(0.14),bd,bd,col)
+        txt(s,x+Inches(0.18),yy+Inches(0.14),bd,bd,[[(str(i+1),12,WHITE,True)]],
+            align=PP_ALIGN.CENTER,anchor=MSO_ANCHOR.MIDDLE)
+        txt(s,x+Inches(0.6),yy+Inches(0.14),w-Inches(0.78),bd,[[(t,12.5,col,True)]],anchor=MSO_ANCHOR.MIDDLE)
+        txt(s,x+Inches(0.2),yy+Inches(0.54),w-Inches(0.4),ch-Inches(0.62),[[(body,bsz,INK,False)]],space=2)
 def flow_shot(d,kicker,acc=TEAL):
-    """A real n8n canvas screenshot with a title, an intro line, one card per part of the flow and a takeaway."""
+    """A real n8n canvas screenshot with a title, an intro line, one card per part of the flow and a takeaway.
+
+    layout="side" puts the screenshot on the left at full height with the cards
+    stacked beside it — for near-16:10 screenshots that the wide band would shrink."""
     s=concept_slide(kicker,d["title"],d["intro"],kcolor=acc)
-    pic_fit(s,_asset(d["img"]),Inches(0.85),Inches(1.95),Inches(11.63),Inches(2.55))
-    ncards(s,[(COLORS[c],t,b) for c,t,b in d["cards"]],y=Inches(4.65),h=Inches(1.5),
-           cols=len(d["cards"]),numbered=True,bsz=10)
+    cards=[(COLORS[c],t,b) for c,t,b in d["cards"]]
+    if d.get("layout")=="side":
+        for _c,t,b in cards:
+            assert len(b)<=200, f"Side card '{t}' is {len(b)} chars and will overflow its card: {b[:80]}..."
+        pic_fit(s,_asset(d["img"]),Inches(0.85),Inches(1.95),Inches(6.75),Inches(4.2))
+        side_cards(s,cards,Inches(7.9),Inches(1.95),Inches(4.58),Inches(4.2))
+    else:
+        pic_fit(s,_asset(d["img"]),Inches(0.85),Inches(1.95),Inches(11.63),Inches(2.55))
+        ncards(s,cards,y=Inches(4.65),h=Inches(1.5),cols=len(cards),numbered=True,bsz=10)
     takeaway(s,d["takeaway"]); footer(s); return s
 
 def chat_shot(d,kicker,acc=TEAL):
@@ -852,7 +873,8 @@ def telegram_demo(acc):
              kicker=k("DEMO · TELEGRAM BOT"),color=acc,size=12)
     takeaway(s,"The token is the bot's password — never share or commit it. If it leaks, send /revoke to BotFather for a new one.")
     # step 2 — n8n Assistant builds the workflow from one prompt
-    s=concept_slide(k("DEMO · n8n ASSISTANT"),"Demo Step 2: Build the Workflow with n8n Assistant",
+    chat_shot(D["assistant_shot"],k("DEMO · n8n ASSISTANT"),acc=acc)
+    s=concept_slide(k("DEMO · n8n ASSISTANT"),"Demo Step 2: Paste the Prompt into n8n Assistant",
      "Create a new workflow, open n8n Assistant and paste this prompt — it plans and builds the chatbot for you.",kcolor=acc)
     box(s,Inches(0.85),Inches(2.0),Inches(7.2),Inches(4.05),VIOLET)
     txt(s,Inches(1.1),Inches(2.12),Inches(6.8),Inches(0.3),[[("THE PROMPT",11,VIOLET,True)]])
@@ -926,6 +948,9 @@ def render_concepts(keys,kicker,acc,after=None):
         if key in CONCEPT_IMAGES:
             img,ttl,cap=CONCEPT_IMAGES[key]
             image_slide(ttl,img,cap,kicker=kicker,accent=acc)
+        # a real n8n canvas that shows this concept in practice (course_data.CONCEPT_SHOTS)
+        if key in C.CONCEPT_SHOTS:
+            flow_shot(C.CONCEPT_SHOTS[key],kicker,acc=acc)
         if after and key in after: after[key]()
 
 def lab_block(a,K):
@@ -942,6 +967,11 @@ def lab_block(a,K):
     canv=a.get("canvas",[])
     chevs=a.get("chev",[[]])
     meta=f"{a['build']}  ·  full click-by-click steps in the Learner Guide"
+    # n8n_shot is one dict, or a list with one real screenshot per workflow canvas
+    # (Lab 5) — those are interleaved so each sits right after its own workflow.
+    shots=a.get("n8n_shot") or []
+    shots=shots if isinstance(shots,list) else [shots]
+    paired=len(shots)>1 and len(shots)==len(canv)
     for ci,(img,cap) in enumerate(canv or [(None,"")]):
         # A lab with two workflows (Lab 5) gets one slide per workflow. Use the
         # SHORT title for those, because the full title plus a suffix wraps to a
@@ -953,9 +983,12 @@ def lab_block(a,K):
                   a["desc"] if ci==0 else cap,
                   flows,_asset(img) if img else None,meta,cap=cap if ci==0 else "",
                   color=TEAL)
+        if paired:
+            flow_shot(shots[ci],f"LAB {a['num']} · THE WORKFLOW IN n8n")
     # the real n8n canvas, as the learner sees it after import
-    if a.get("n8n_shot"):
-        flow_shot(a["n8n_shot"],f"LAB {a['num']} · THE WORKFLOW IN n8n")
+    if not paired:
+        for d in shots:
+            flow_shot(d,f"LAB {a['num']} · THE WORKFLOW IN n8n")
     # The application the learner actually sees. Each screenshot gets its OWN
     # caption as the body — repeating the lab's takeaways on every one of these
     # slides produced near-identical bullets on consecutive pages.
@@ -970,6 +1003,9 @@ def lab_block(a,K):
         kick=f"LAB {a['num']} · " + ("STEP BY STEP" if kind!="gallery" else "INSPIRATION")
         if kind=="flow":
             s=flow_h(ttl,payload,kicker=kick,color=TEAL); takeaway(s,note)
+        elif kind=="annotated":
+            # one screenshot explained by numbered cards (payload is an n8n_shot-style dict)
+            flow_shot(dict(payload,title=ttl),f"LAB {a['num']} · THE APPLICATION",acc=VIOLET)
         else:
             shots_slide(kick,ttl,payload,note,color=VIOLET)
     # verify + debrief, as one card slide rather than a wall of prose

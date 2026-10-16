@@ -5,7 +5,7 @@
    The n8n webhook URL is entered in the "Lab configuration" panel on the page,
    so you never have to edit this file. It is saved to localStorage.
 
-     • Production URL — shown in the Webhook node. Works only when the workflow is Active.
+     • Production URL — shown in the Webhook node. Works only when the workflow is Published.
      • Test URL       — shown while "Listen for test event" is armed. Accepts ONE request.
 
    DEFAULT_WEBHOOK_URL just pre-fills the box; the panel always wins.
@@ -171,7 +171,7 @@ function renderWebhookStatus() {
     webhookStatus.textContent = "Test URL detected. Arm “Listen for test event” in n8n before each submission.";
     webhookStatus.className = "config-status is-warn";
   } else if (url.includes("/webhook/")) {
-    webhookStatus.textContent = "Production URL detected. The workflow must be Active in n8n.";
+    webhookStatus.textContent = "Production URL detected. The workflow must be Published in n8n.";
     webhookStatus.className = "config-status is-ok";
   } else {
     webhookStatus.textContent = "This does not look like an n8n webhook URL.";

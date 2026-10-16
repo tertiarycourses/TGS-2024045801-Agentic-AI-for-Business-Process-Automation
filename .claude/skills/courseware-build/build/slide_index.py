@@ -66,9 +66,9 @@ _mark("admin", a0, _n)
 # MUST match topic1_intro() in build_slides.py — the build asserts it.
 TOPIC1_INTRO = 16
 
-# Topic 2's Telegram HR chatbot demo (overview, BotFather steps, n8n Assistant prompt, n8n canvas, connect-and-publish steps, live chat).
+# Topic 2's Telegram HR chatbot demo (overview, BotFather steps, Build with AI, n8n Assistant prompt, n8n canvas, connect-and-publish steps, live chat).
 # MUST match telegram_demo() in build_slides.py — the build asserts it.
-TELEGRAM_DEMO_SLIDES = 6
+TELEGRAM_DEMO_SLIDES = 7
 
 def _concepts(keys, extra_after=()):
     """Slides for a run of concepts: each concept, its screenshot, and any extra slide."""
@@ -76,6 +76,8 @@ def _concepts(keys, extra_after=()):
         _adv()
         if k in CONCEPT_IMAGE_KEYS:
             _adv()
+        if k in C.CONCEPT_SHOTS:
+            _adv()                               # real n8n canvas example of this concept
         if k in extra_after:
             _adv()
 
@@ -85,8 +87,8 @@ def _lab(a):
     if a.get("primer"):
         _adv()                                   # how the building blocks fit
     _adv(max(1, len(a.get("canvas", []))))       # one lab slide per workflow canvas
-    if a.get("n8n_shot"):
-        _adv()                                   # the real n8n canvas screenshot
+    shots = a.get("n8n_shot") or []
+    _adv(len(shots) if isinstance(shots, list) else 1)   # the real n8n canvas screenshot(s)
     _adv(len(a.get("site", [])))                 # the application screenshot(s)
     _adv(len(a.get("extras", [])))               # step screenshots, how-to strips, gallery
     _adv()                                       # verify + debrief

@@ -26,6 +26,51 @@ DOMAIN3 = [
                 ("canvas-lab5-agent.png",
                  "The answering workflow on the n8n canvas — runs on EVERY question. The Query Data Tool and "
                  "its embedding model hang below the agent.")],
+        # the real n8n canvases, one per workflow — each follows its own workflow slide
+        n8n_shot=[
+            dict(img="n8n-flow-lab5-ingest.png", layout="side",
+                 title="Lab 5 — The Ingestion Workflow in n8n",
+                 intro="Part 1 as it looks after import. You run it once, by hand, to load all 20 brochures into the vector store.",
+                 cards=[("BLUE","Fetch the brochures",
+                         "When clicking 'Execute workflow' starts the run. List Brochures in Folder finds the 20 files "
+                         "in YOUR Drive folder, and Download Each Brochure pulls each one down."),
+                        ("VIOLET","Split and embed",
+                         "Default Data Loader reads each file, Whole-Brochure Splitter keeps one brochure as one chunk, "
+                         "and the Embeddings node turns every chunk into a vector."),
+                        ("TEAL","Insert into the store",
+                         "Simple Vector Store (Insert) saves the 20 vectors under your memory key, cookbake_<your-name>. "
+                         "Clear Store is ON, so a re-run replaces instead of duplicating.")],
+                 takeaway="Ingestion is a batch job: re-run it when a brochure changes — and after every n8n restart."),
+            dict(img="n8n-flow-lab5-agent.png", layout="side",
+                 title="Lab 5 — The Answering Workflow in n8n",
+                 intro="Part 2 runs on every question. The agent must search the brochures before it is allowed to answer.",
+                 cards=[("BLUE","Question in, answer out",
+                         "Webhook receives the visitor's question from the website as a POST. Respond to Webhook sends "
+                         "the agent's reply back to the chat window."),
+                        ("VIOLET","The agent and its model",
+                         "AI Agent reasons with the chat model. Its system message says: call the tool first and never "
+                         "invent a fee. No Memory is attached, so each question stands alone."),
+                        ("TEAL","The retrieval tool",
+                         "Query Data Tool searches YOUR memory key and returns the 5 closest brochures. Shown here with "
+                         "OpenAI; the lab file ships with Gemini — swap one, swap both.")],
+                 takeaway="Same embedding model and same memory key in both workflows — or retrieval silently finds nothing."),
+        ],
+        extras=[
+            ("annotated","Lab 5 — The Course Assistant in Action",
+             dict(img="lab5-site-chat.png", layout="side",
+                  intro="A real conversation on the Cook & Bake Academy site. Every fee in the reply came from a retrieved brochure.",
+                  cards=[("BLUE","A typo still finds it",
+                          "The visitor typed 'patries'. Embeddings match meaning, not spelling, so the pastry "
+                          "brochures BAK-102 and BAK-109 still come back."),
+                         ("VIOLET","Facts quoted, not invented",
+                          "Fees and durations are quoted exactly: BAK-102 is SGD $1480 for 8 weeks / 48 hours — the "
+                          "same S$1480 shown on the course card behind the chat."),
+                         ("AMBER","It admits a gap",
+                          "It did not give BAK-104's fee and said so instead of guessing. The brochure does list "
+                          "SGD $420, so check what the tool returned: that is a retrieval gap.")],
+                  takeaway="'I don't have that' is grounding working — fix gaps in retrieval, never by loosening the prompt."),
+             None),
+        ],
         chev=[[("Manual Trigger","you run ingestion once"),("Drive — list + download","20 brochures"),("Splitter","1 brochure = 1 chunk"),("Embeddings","3072-dim vectors"),("Vector Store — Insert","stored, ready to search")],
               [("Webhook — POST","a visitor asks a question"),("AI Agent","+ Query Data Tool"),("Retrieve","nearest brochures only"),("Respond","answer grounded in those")]],
         steps=[

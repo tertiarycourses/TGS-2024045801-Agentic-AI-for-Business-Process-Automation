@@ -12,8 +12,8 @@ Guiding principle: the course material must be 100% aligned to the WSQ TSC
 TITLE        = "Agentic AI for Business Process Automation"
 SHORT_TITLE  = "Agentic AI for Business Process Automation"   # used in output filenames
 COURSE_CODE  = "TGS-2024045801"
-VERSION      = "v2.3"
-VERSION_DATE = "16 October 2026"
+VERSION      = "v2.5"
+VERSION_DATE = "17 October 2026"
 ORG          = "Tertiary Infotech Academy Pte Ltd"
 UEN          = "UEN: 201200696W"
 TRAINER      = "Dr. Alfred Ang"
@@ -131,6 +131,28 @@ DEMO_PROMPT=[
  "    if rejected, log my feedback in a Google Sheet.",
  "Use Gateway credits for the AI model. Ask me before publishing."]
 
+# ------------------------------------------------------------------ concept example screenshots
+# A real n8n canvas shown straight after the concept it illustrates (deck: its own slide after
+# that concept; LG: under "Key Concepts for Lab N" for the lab it prepares). Keyed by concept key.
+CONCEPT_SHOTS = {
+    "get_vs_post": dict(lab=2, img="n8n-flow-recipe-get.png",
+        title="Example: A GET Webhook That Publishes a Recipe Page",
+        intro="One URL, one agent, one page back. A webhook does not have to sit behind a form — opening a link can run an agent.",
+        cards=[("BLUE","Webhook — GET","Opening the URL in a browser is the request. Anything the agent needs can ride in the query string."),
+               ("VIOLET","Recipe Agent","An OpenAI chat model writes the recipe. There is no memory: each request stands alone."),
+               ("TEAL","search_web tool","The agent calls search_web, passing a search query, when it needs facts from the web."),
+               ("AMBER","Page back","Publish Recipe Page (a Respond to Webhook node) returns the page, so the browser shows it at once.")],
+        takeaway="GET suits a link anyone can click. Lab 2's bank form uses POST, because it sends a body of applicant data."),
+    "guardrails": dict(lab=4, img="n8n-guardrails-nodes.png",
+        title="Guardrails in n8n — the Guardrails Node",
+        intro="The two gates from the previous slide, built with n8n's Guardrails node: one before the agent, one after it.",
+        cards=[("BLUE","Input guardrail","Guardrails · Check Text for Violations screens each message before the agent sees it, using its own chat model."),
+               ("RED","Pass or Fail","Pass continues to the agent. Fail branches away, so a blocked message never reaches the model."),
+               ("VIOLET","The agent","Rapport AI Agent drafts the reply with its Gemini model and the Draft Parser."),
+               ("TEAL","Output guardrail","Guardrails1 · Sanitize Text cleans the reply — for example removing personal data — before anything is sent.")],
+        takeaway="Defence in depth: the prompt asks the agent to behave; the Guardrails nodes check that it did."),
+}
+
 # ------------------------------------------------------------------ Topic 2 demo (before Lab 3)
 # Telegram HR Policy Agent — labs/lab3-chatbot-webhook/Lab 3 Demo - Telegram HR Policy Agent.json.
 # Used by the deck AND the Learner Guide. Each step is
@@ -172,6 +194,12 @@ TELEGRAM_DEMO = dict(
          "The token is the bot's password. Anyone holding it controls the bot; if it leaks, send /revoke to BotFather."),
     ],
     # Step 2 — learners build the workflow themselves with n8n Assistant (AI Assistant).
+    assistant_shot=dict(img="n8n-build-with-ai.png", title="Demo Step 2: Open n8n Assistant with Build with AI",
+        bullets=["Create a new workflow. The empty canvas offers two starts: Add first step, or Build with AI.",
+                 "Click Build with AI — this opens n8n Assistant, which builds the workflow from a plain-English prompt.",
+                 "Add first step is the manual route: it opens the node search, here filtered to 'ai agent'.",
+                 "Either way you get the same nodes. The Assistant just writes the first draft for you."],
+        takeaway="Build with AI drafts the workflow; you still review every node before you publish."),
     prompt=[
         "Create a 3-node workflow:",
         "•  A user posts a message to a Telegram bot.",

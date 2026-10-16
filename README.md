@@ -49,15 +49,15 @@ the process — with AI only at the steps that need judgement.
 
 ## Courseware (public package)
 
-Current version **v2.3** — all artifacts live in [`courseware/`](courseware/); superseded versions are
+Current version **v2.5** — all artifacts live in [`courseware/`](courseware/); superseded versions are
 moved to `courseware/archive/`.
 
 | Artifact | File |
 |---|---|
-| Trainer slide deck | `courseware/Agentic AI for Business Process Automation-v2.3.pptx` (+ `.pdf`) |
-| Lesson Plan | `courseware/LP-Agentic AI for Business Process Automation.docx` (+ `.pdf`) |
-| Learner Guide | `courseware/LG-Agentic AI for Business Process Automation.docx` (+ `.pdf`) |
-| Learner Guide (Markdown mirror) | `courseware/LG-Agentic AI for Business Process Automation.md` |
+| Trainer slide deck | [`Agentic AI for Business Process Automation-v2.5.pptx`](courseware/Agentic%20AI%20for%20Business%20Process%20Automation-v2.5.pptx) · [PDF](courseware/Agentic%20AI%20for%20Business%20Process%20Automation-v2.5.pdf) |
+| Lesson Plan | [`LP-Agentic AI for Business Process Automation.docx`](courseware/LP-Agentic%20AI%20for%20Business%20Process%20Automation.docx) · [PDF](courseware/LP-Agentic%20AI%20for%20Business%20Process%20Automation.pdf) |
+| Learner Guide | [`LG-Agentic AI for Business Process Automation.docx`](courseware/LG-Agentic%20AI%20for%20Business%20Process%20Automation.docx) · [PDF](courseware/LG-Agentic%20AI%20for%20Business%20Process%20Automation.pdf) |
+| Learner Guide (Markdown mirror) | [`LG-Agentic AI for Business Process Automation.md`](courseware/LG-Agentic%20AI%20for%20Business%20Process%20Automation.md) |
 
 ## What goes on a slide, and what goes in the Learner Guide
 
@@ -66,8 +66,8 @@ visual structure — a chevron flow strip, outlined concept cards, a two-panel c
 table — closed by a takeaway band.
 
 **The click-by-click lab steps are deliberately not on the slides.** Each lab gets a single visual
-slide (workflow chevron + a rendered n8n canvas + a LAB band) — Labs 2 and 3 also get a screenshot of
-the real n8n canvas with a card per part of the flow — and the full steps live only in the Learner Guide. Keep it that way when editing — a step-by-step slide belongs in the LG.
+slide (workflow chevron + a rendered n8n canvas + a LAB band) — Labs 2 to 5 also get a screenshot of
+the real n8n canvas with a card per part of the flow (Lab 5 has one per workflow, plus a live chat with the course assistant) — and the full steps live only in the Learner Guide. Keep it that way when editing — a step-by-step slide belongs in the LG.
 
 The lab canvas screenshots are **rendered from each lab's own workflow JSON** by `render_flows.py`,
 so the picture on the slide is the canvas the learner imports and cannot drift out of date:

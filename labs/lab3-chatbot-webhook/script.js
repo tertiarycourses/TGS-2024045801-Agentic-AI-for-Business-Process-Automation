@@ -8,7 +8,7 @@
    The webhook URL is entered in the "Lab configuration" panel on the page, so
    you never edit this file. It is remembered in localStorage.
 
-     • Production URL — from the Chat Webhook node. Works while the workflow is Active.
+     • Production URL — from the Chat Webhook node. Works while the workflow is Published.
      • Test URL       — works while "Listen for test event" is armed. ONE message only.
    ========================================================================== */
 const STORAGE_KEY = "advisor.webhookUrl";
@@ -63,7 +63,7 @@ function renderWebhookStatus() {
       "Test URL detected. Arm “Listen for test event” before each message — it accepts one only.";
     webhookStatus.className = "config-status is-warn";
   } else if (url.includes("/webhook/")) {
-    webhookStatus.textContent = "Production URL detected. The workflow must be Active.";
+    webhookStatus.textContent = "Production URL detected. The workflow must be Published.";
     webhookStatus.className = "config-status is-ok";
   } else {
     webhookStatus.textContent = "This does not look like a webhook URL.";
